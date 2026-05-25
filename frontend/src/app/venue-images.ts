@@ -1,6 +1,6 @@
 /** Build a safe asset URL for images with spaces and special characters in filenames. */
 export function venueImg(filename: string): string {
-  return `/assets/images/${encodeURIComponent(filename)}`;
+  return `assets/images/${encodeURIComponent(filename)}`;
 }
 
 export interface GalleryItem {
