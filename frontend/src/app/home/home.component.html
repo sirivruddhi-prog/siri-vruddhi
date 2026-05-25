@@ -55,6 +55,42 @@
   </div>
 </section>
 
+<section class="teaser-video-section reveal" id="teaser">
+  <div class="teaser-inner">
+    <div class="section-head centered">
+      <span class="section-eyebrow">Experience the Venue</span>
+      <h2>A Glimpse of <span class="brand-title">Siri Vruddhi</span></h2>
+      <p class="section-lead">Watch our venue come alive — timeless spaces designed for your most cherished celebrations.</p>
+    </div>
+    <div class="teaser-video-wrapper">
+      <div class="teaser-video-frame">
+        <video
+          class="teaser-video"
+          controls
+          playsinline
+          preload="metadata"
+          poster=""
+        >
+          <source src="assets/videos/SIRI%20VRUDDHI%20TEASER.mp4" type="video/mp4" />
+          Your browser does not support video playback.
+        </video>
+        <div
+          class="teaser-play-overlay"
+          (click)="playTeaser($event)"
+          [class.hidden]="teaserPlaying"
+        >
+          <button type="button" class="teaser-play-btn" aria-label="Play teaser video">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="32" height="32">
+              <path d="M8 5v14l11-7z"/>
+            </svg>
+          </button>
+          <span class="teaser-play-label">Play Teaser</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <main>
   <section class="intro-block reveal">
     <div class="section-head">

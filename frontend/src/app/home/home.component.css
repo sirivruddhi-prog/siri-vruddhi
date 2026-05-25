@@ -44,3 +44,134 @@
 .hero-banner .cta {
   flex-wrap: wrap;
 }
+
+/* ─── Teaser Video Section ─── */
+
+.teaser-video-section {
+  background: var(--forest);
+  padding: 5rem 1.5rem;
+  margin: 0;
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+}
+
+.teaser-video-section .section-head h2 {
+  color: var(--white);
+}
+
+.teaser-video-section .section-lead {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.teaser-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.teaser-video-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.teaser-video-frame {
+  position: relative;
+  width: 100%;
+  max-width: 960px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow:
+    0 0 0 1px rgba(232, 197, 71, 0.25),
+    0 24px 80px rgba(0, 0, 0, 0.45),
+    0 0 60px rgba(201, 162, 39, 0.08);
+  background: #000;
+  aspect-ratio: 16 / 9;
+}
+
+.teaser-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Play overlay */
+.teaser-play-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  background: linear-gradient(
+    135deg,
+    rgba(26, 61, 46, 0.65) 0%,
+    rgba(0, 0, 0, 0.45) 100%
+  );
+  cursor: pointer;
+  transition: opacity 0.5s var(--ease);
+  z-index: 2;
+}
+
+.teaser-play-overlay.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.teaser-play-btn {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 2px solid rgba(232, 197, 71, 0.6);
+  background: rgba(201, 162, 39, 0.2);
+  backdrop-filter: blur(12px);
+  color: var(--gold-bright);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.4s var(--ease), background 0.4s, box-shadow 0.4s;
+  box-shadow: 0 0 40px rgba(201, 162, 39, 0.15);
+}
+
+.teaser-play-overlay:hover .teaser-play-btn {
+  transform: scale(1.12);
+  background: rgba(201, 162, 39, 0.35);
+  box-shadow:
+    0 0 60px rgba(201, 162, 39, 0.3),
+    0 0 0 8px rgba(201, 162, 39, 0.08);
+}
+
+.teaser-play-btn svg {
+  width: 32px;
+  height: 32px;
+  margin-left: 3px; /* visual centering of play triangle */
+}
+
+.teaser-play-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+@media (max-width: 768px) {
+  .teaser-video-section {
+    padding: 3.5rem 1rem;
+  }
+
+  .teaser-play-btn {
+    width: 64px;
+    height: 64px;
+  }
+
+  .teaser-play-btn svg {
+    width: 26px;
+    height: 26px;
+  }
+}

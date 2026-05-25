@@ -50,6 +50,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   activeSlide = 0;
   submitting = false;
+  teaserPlaying = false;
   private slideTimer?: ReturnType<typeof setInterval>;
 
   inquiry: InquiryRequest = {
@@ -86,6 +87,16 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   goToSlide(index: number): void {
     this.activeSlide = index;
+  }
+
+  playTeaser(event: Event): void {
+    const overlay = (event.currentTarget as HTMLElement);
+    const frame = overlay.closest('.teaser-video-frame');
+    const video = frame?.querySelector('video');
+    if (video) {
+      this.teaserPlaying = true;
+      video.play();
+    }
   }
 
   submitInquiry(): void {
