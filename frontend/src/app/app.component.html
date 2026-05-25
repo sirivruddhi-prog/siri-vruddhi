@@ -1,0 +1,48 @@
+<header class="site-header" [class.scrolled]="headerScrolled">
+  <nav class="nav-inner">
+    <a routerLink="/" class="logo" (click)="closeMenu()">
+      <img src="/assets/images/sri-chakra.svg" alt="" class="logo-chakra" width="36" height="36" />
+      <span class="logo-text brand-title">Siri Vruddhi</span>
+    </a>
+
+    <button
+      type="button"
+      class="nav-toggle"
+      [attr.aria-expanded]="menuOpen"
+      aria-label="Toggle menu"
+      (click)="toggleMenu()"
+    >
+      <span></span><span></span><span></span>
+    </button>
+
+    <div class="nav-links" [class.open]="menuOpen">
+      <a routerLink="/" fragment="about" (click)="closeMenu()">About</a>
+      <a routerLink="/" fragment="spaces" (click)="closeMenu()">Spaces</a>
+      <a routerLink="/" fragment="dining" (click)="closeMenu()">Dining</a>
+      <a routerLink="/gallery" routerLinkActive="active" (click)="closeMenu()">Gallery</a>
+      <a routerLink="/" fragment="contact" class="nav-cta" (click)="closeMenu()">Book a Tour</a>
+    </div>
+  </nav>
+</header>
+
+<router-outlet></router-outlet>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-logo">
+        <img src="/assets/images/sri-chakra.svg" alt="" class="logo-chakra" width="32" height="32" />
+        <span class="logo-text brand-title">Siri Vruddhi</span>
+      </div>
+      <p>Your sacred destination for cherished celebrations</p>
+    </div>
+    <nav class="footer-nav">
+      <a routerLink="/" fragment="about">About</a>
+      <a routerLink="/" fragment="spaces">Spaces</a>
+      <a routerLink="/" fragment="dining">Dining</a>
+      <a routerLink="/gallery">Gallery</a>
+      <a routerLink="/" fragment="contact">Inquire</a>
+    </nav>
+  </div>
+  <p class="footer-copy">© 2026 Siri Vruddhi Event Venue · Nelamangala, Near Budhihal, Karnataka</p>
+</footer>

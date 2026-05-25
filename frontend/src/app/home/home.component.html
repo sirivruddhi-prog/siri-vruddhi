@@ -1,0 +1,209 @@
+<section class="hero-banner" aria-label="Venue showcase">
+  <div class="hero-slides">
+    <div
+      *ngFor="let slide of heroSlides; let i = index"
+      class="hero-slide"
+      [class.active]="i === activeSlide"
+    >
+      <img [src]="slide.src" [alt]="slide.alt" loading="eager" />
+    </div>
+  </div>
+  <div class="hero-banner-overlay"></div>
+
+  <div class="hero-banner-content">
+    <span class="hero-eyebrow">Nelamangala · Near Budhihal</span>
+    <p class="hero-welcome">Welcome to</p>
+    <h1 class="brand-title">Siri Vruddhi</h1>
+    <p class="hero-tagline">
+      A sacred, elegant destination where weddings, engagements, upanayanam,
+      naming ceremonies, and treasured celebrations come alive in timeless beauty.
+    </p>
+    <div class="cta">
+      <a class="btn btn-primary" routerLink="/" fragment="contact">Plan Your Event</a>
+      <a class="btn btn-ghost" routerLink="/" fragment="spaces">Explore Spaces</a>
+      <a class="btn btn-ghost" routerLink="/gallery">View Gallery</a>
+    </div>
+  </div>
+
+  <div class="hero-arrows">
+    <button type="button" class="hero-arrow" aria-label="Previous slide" (click)="prevSlide()">‹</button>
+    <button type="button" class="hero-arrow" aria-label="Next slide" (click)="nextSlide()">›</button>
+  </div>
+
+  <div class="hero-controls" role="tablist" aria-label="Hero slides">
+    <button
+      *ngFor="let slide of heroSlides; let i = index"
+      type="button"
+      class="hero-dot"
+      [class.active]="i === activeSlide"
+      [attr.aria-label]="'Slide ' + (i + 1)"
+      (click)="goToSlide(i)"
+    ></button>
+  </div>
+
+  <a href="#stats" class="hero-scroll" aria-label="Scroll down">
+    <span></span>
+  </a>
+</section>
+
+<section id="stats" class="stats-bar reveal">
+  <div class="stats-inner">
+    <div class="stat" *ngFor="let s of stats">
+      <span class="stat-value">{{ s.value }}</span>
+      <span class="stat-label">{{ s.label }}</span>
+    </div>
+  </div>
+</section>
+
+<main>
+  <section class="intro-block reveal">
+    <div class="section-head">
+      <span class="section-eyebrow">The Experience</span>
+      <h2>Why <span class="brand-title">Siri Vruddhi</span></h2>
+      <p class="section-lead">
+        Beautiful indoor halls and serene outdoor gardens — tradition and modern comfort
+        woven together for gatherings that feel truly extraordinary.
+      </p>
+    </div>
+    <div class="feature-row">
+      <article class="feature-card">
+        <img class="feature-photo" [src]="spaces[1].image" alt="Grand foyer seating area" loading="lazy" />
+        <div class="feature-icon">🏛️</div>
+        <h3>Grand Foyer</h3>
+        <p>200+ guests welcomed through an unforgettable entrance with fountain & mural.</p>
+      </article>
+      <article class="feature-card">
+        <img class="feature-photo" [src]="spaces[0].image" alt="Mantapa and lawn" loading="lazy" />
+        <div class="feature-icon">🎋</div>
+        <h3>Elegant Spaces</h3>
+        <p>Multiple mantapas and outdoor areas for every ceremony and celebration.</p>
+      </article>
+      <article class="feature-card">
+        <img class="feature-photo" [src]="spaces[2].image" alt="Outdoor lawn area" loading="lazy" />
+        <div class="feature-icon">🍃</div>
+        <h3>Natural Serenity</h3>
+        <p>Gardens, birdsong, and open skies that make every moment feel sacred.</p>
+      </article>
+    </div>
+  </section>
+
+  <section id="about" class="about-split reveal">
+    <div class="about-visual">
+      <div class="about-frame">
+        <img [src]="aboutImage" alt="Siri Vruddhi exterior view" loading="lazy" />
+      </div>
+      <div class="about-badge">Est. for cherished celebrations</div>
+    </div>
+    <div class="about-copy">
+      <span class="section-eyebrow">Our Story</span>
+      <h2>About <span class="brand-title">Siri Vruddhi</span></h2>
+      <p>
+        Step into a sacred destination where cherished celebrations come to life — intimate
+        weddings, engagements, upanayanam, naming ceremonies, baby showers, birthdays, and more.
+      </p>
+      <p>
+        Blending timeless tradition with modern comfort, our indoor and outdoor spaces are
+        thoughtfully designed for every occasion. Located in the heart of Nelamangala near
+        Budhihal, we are your graceful home for every joyous gathering.
+      </p>
+      <div class="about-actions">
+        <a routerLink="/" fragment="contact" class="btn btn-primary">Start Planning</a>
+        <a routerLink="/gallery" class="btn btn-outline">View Gallery</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="spaces" class="spaces-section reveal">
+    <div class="section-head centered">
+      <span class="section-eyebrow">Venue Highlights</span>
+      <h2>Spaces &amp; Celebrations</h2>
+      <p class="section-lead">Every corner crafted for rituals, receptions, and unforgettable memories.</p>
+    </div>
+    <div class="spaces-grid">
+      <article class="space-card" *ngFor="let space of spaces; let i = index" [style.--delay]="i * 0.1 + 's'">
+        <div class="space-card-image" *ngIf="space.image">
+          <img [src]="space.image" [alt]="space.title" loading="lazy" />
+        </div>
+        <span class="space-icon">{{ space.icon }}</span>
+        <h3>{{ space.title }}</h3>
+        <p>{{ space.desc }}</p>
+        <span class="space-detail">{{ space.detail }}</span>
+      </article>
+    </div>
+  </section>
+
+  <section
+    id="dining"
+    class="dining-banner reveal"
+    [style.--dining-bg]="'url(' + diningBannerImage + ')'"
+  >
+    <div class="dining-content">
+      <span class="section-eyebrow light">Dining &amp; Comfort</span>
+      <h2>Where Every Meal Becomes a Memory</h2>
+      <p>
+        Our first-floor dining hall seats 60+ guests amid lush greenery and scenic views.
+        Enjoy nature's symphony — birds, gardens, and peaceful ambiance with every celebration.
+      </p>
+      <div class="dining-tags">
+        <span>60+ Seats</span>
+        <span>Garden Views</span>
+        <span>Indoor Comfort</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="contact-section reveal">
+    <div class="contact-panel">
+      <span class="section-eyebrow light">Get in Touch</span>
+      <h2>Plan Your Celebration</h2>
+      <p>
+        Share your vision and our event team will connect with you promptly to craft an
+        unforgettable experience at Siri Vruddhi.
+      </p>
+      <ul class="contact-perks">
+        <li>Personalized venue walkthrough</li>
+        <li>Flexible event packages</li>
+        <li>Nelamangala · Karnataka</li>
+      </ul>
+    </div>
+
+    <form class="contact-form" (ngSubmit)="submitInquiry()">
+      <div class="form-row">
+        <div class="form-field">
+          <label for="name">Your Name</label>
+          <input id="name" name="name" [(ngModel)]="inquiry.name" required placeholder="Full name" />
+        </div>
+        <div class="form-field">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" [(ngModel)]="inquiry.email" required placeholder="you@email.com" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-field">
+          <label for="phone">Phone</label>
+          <input id="phone" name="phone" [(ngModel)]="inquiry.phone" required placeholder="+91 XXXXX XXXXX" />
+        </div>
+        <div class="form-field">
+          <label for="eventType">Event Type</label>
+          <select id="eventType" name="eventType" [(ngModel)]="inquiry.eventType" required>
+            <option>Wedding</option>
+            <option>Engagement</option>
+            <option>Upanayanam</option>
+            <option>Naming Ceremony</option>
+            <option>Baby Shower</option>
+            <option>Birthday</option>
+            <option>Other Celebration</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-field">
+        <label for="message">Your Vision <span class="optional">(optional)</span></label>
+        <textarea id="message" name="message" [(ngModel)]="inquiry.message" placeholder="Tell us about your celebration, dates, and guest count..."></textarea>
+      </div>
+      <button class="btn btn-primary btn-block" type="submit" [disabled]="submitting">
+        {{ submitting ? 'Sending…' : 'Send Inquiry' }}
+      </button>
+      <div *ngIf="statusMessage" class="notice" [class.error]="statusError">{{ statusMessage }}</div>
+    </form>
+  </section>
+</main>

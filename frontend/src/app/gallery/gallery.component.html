@@ -1,0 +1,65 @@
+<div class="page-hero gallery-page-hero reveal">
+  <div class="page-hero-bg" [style.background-image]="'url(' + pageHeroImage + ')'"></div>
+  <div class="page-hero-overlay"></div>
+  <div class="page-hero-content">
+    <span class="section-eyebrow light">Visual Tour</span>
+    <h1 class="brand-title">Gallery</h1>
+    <p>Step inside Siri Vruddhi — ceremonies, gardens, dining, and celebrations captured in every frame.</p>
+  </div>
+</div>
+
+<section class="gallery-section reveal">
+  <div class="gallery-filters" role="tablist" aria-label="Filter gallery">
+    <button
+      *ngFor="let cat of categories"
+      type="button"
+      class="filter-btn"
+      [class.active]="activeCategory === cat"
+      (click)="filterCategory(cat)"
+    >
+      {{ cat }}
+    </button>
+  </div>
+
+  <div class="gallery-grid" *ngIf="filteredItems.length; else emptyGallery">
+    <button
+      type="button"
+      class="gallery-item"
+      *ngFor="let item of filteredItems; let i = index"
+      (click)="openLightbox(i)"
+      [attr.aria-label]="'View ' + item.title"
+    >
+      <img [src]="item.src" [alt]="item.alt" loading="lazy" />
+      <span class="gallery-item-overlay">
+        <span class="gallery-item-title">{{ item.title }}</span>
+        <span class="gallery-item-cat">{{ item.category }}</span>
+      </span>
+    </button>
+  </div>
+
+  <ng-template #emptyGallery>
+    <p class="gallery-empty">No photos in this category yet.</p>
+  </ng-template>
+</section>
+
+<section class="gallery-cta reveal">
+  <h2>Ready to see it in person?</h2>
+  <p>Book a private tour and envision your celebration at our venue.</p>
+  <a routerLink="/" fragment="contact" class="btn btn-primary">Book a Tour</a>
+</section>
+
+<div class="lightbox" *ngIf="lightboxOpen" role="dialog" aria-modal="true" aria-label="Image viewer">
+  <button type="button" class="lightbox-close" aria-label="Close" (click)="closeLightbox()">×</button>
+  <button type="button" class="lightbox-nav lightbox-prev" aria-label="Previous" (click)="prevImage()">‹</button>
+  <figure class="lightbox-figure">
+    <img
+      [src]="filteredItems[lightboxIndex].src"
+      [alt]="filteredItems[lightboxIndex].alt"
+    />
+    <figcaption>
+      <strong>{{ filteredItems[lightboxIndex].title }}</strong>
+      <span>{{ filteredItems[lightboxIndex].category }}</span>
+    </figcaption>
+  </figure>
+  <button type="button" class="lightbox-nav lightbox-next" aria-label="Next" (click)="nextImage()">›</button>
+</div>

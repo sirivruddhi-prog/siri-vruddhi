@@ -1,0 +1,26 @@
+const express = require('express');
+const pool = require('../db');
+
+const router = express.Router();
+
+router.post('/inquiries', async (req, res) => {
+  const { name, email, phone, eventType, message } = req.body;
+
+  if (!name || !email || !phone || !eventType) {
+    return res.status(400).json({ error: 'Please provide name, email, phone, and event type.' });
+  }
+
+  try {
+    const [result] = await pool.execute(
+      `INSERT INTO inquiries (name, email, phone, event_type, message) VALUES (?, ?, ?, ?, ?)`,
+      [name, email, phone, eventType, message || '']
+    );
+
+    res.status(201).json({ id: result.insertId, message: 'Inquiry received successfully.' });
+  } catch (error) {
+    console.error('Database error:', error);
+    res.status(500).json({ error: 'Unable to save inquiry. Please try again later.' });
+  }
+});
+
+module.exports = router;
