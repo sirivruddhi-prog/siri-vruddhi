@@ -175,3 +175,70 @@
     height: 26px;
   }
 }
+
+/* ─── Facilities Section ─── */
+.facilities-section {
+  padding: 5rem 0;
+}
+
+.facilities-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+
+.facility-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 2.25rem 2rem;
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(201, 162, 39, 0.12);
+  transition: transform 0.4s var(--ease), box-shadow 0.4s;
+  text-align: center;
+}
+
+.facility-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg);
+  border-color: rgba(201, 162, 39, 0.35);
+}
+
+.facility-icon {
+  font-size: 2.25rem;
+  margin-bottom: 1.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gold-soft);
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+}
+
+.facility-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  color: var(--forest);
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+}
+
+.facility-card p {
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+  font-weight: 300;
+  line-height: 1.6;
+}
+
+@media (max-width: 992px) {
+  .facilities-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 576px) {
+  .facilities-grid {
+    grid-template-columns: 1fr;
+  }
+}

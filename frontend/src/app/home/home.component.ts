@@ -18,10 +18,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   diningBannerImage = DINING_BANNER_IMAGE;
 
   stats = [
-    { value: '200+', label: 'Guest Capacity' },
-    { value: '2', label: 'Mantapa Spaces' },
+    { value: '300-500', label: 'Floating Crowd' },
+    { value: '200+', label: 'Seated Capacity' },
     { value: '60+', label: 'Dining Seats' },
-    { value: '1', label: 'Venue, Endless Memories' }
+    { value: '2', label: 'Mantapa Spaces' }
   ];
 
   spaces = [
@@ -41,10 +41,31 @@ export class HomeComponent implements OnInit, OnDestroy {
     },
     {
       icon: '🌿',
-      title: 'Outdoor Charm',
-      image: venueImg('Lawn and Mantapa area.JPG'),
-      desc: 'Serene gardens and traditional seating beneath picturesque trees.',
-      detail: 'Lush greenery for peaceful ceremonies and natural photo moments.'
+      title: 'Lawn & Outdoor Dining',
+      image: venueImg('Lawn Area for Outdoor Canopy Set up.JPG'),
+      desc: 'An expansive, lush green lawn area that can be converted into an enchanting open-air dining space.',
+      detail: 'Perfect for a 300-500 floating crowd, hosting banquet setups, canopies, and grand feasts.'
+    },
+    {
+      icon: '🌳',
+      title: 'Shaded Tree Kattes',
+      image: venueImg('Terminalia Katte.JPG'),
+      desc: 'Traditional stone-carved platforms (Kattes) built around towering trees like the Terminalia.',
+      detail: 'Breezy green shade, ideal for peaceful outdoor seating and serene photo moments.'
+    },
+    {
+      icon: '🏡',
+      title: 'Eco-Friendly Lodging',
+      image: venueImg('Room.JPG'),
+      desc: 'Premium guest rooms providing complete comfort and luxury accommodation for your family.',
+      detail: 'Equipped with comfortable double cots, cupboards, modern restrooms, and powered by solar energy.'
+    },
+    {
+      icon: '📸',
+      title: 'Photo Backdrop',
+      image: venueImg('Photo Wall Radha Krishna.JPG'),
+      desc: 'A gorgeous Radha Krishna mural that acts as an exquisite, custom photo wall for your celebrations.',
+      detail: 'Stunning artistic focal point in the foyer, ideal for capturing beautiful family memories.'
     }
   ];
 
