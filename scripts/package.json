@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy:ghpages:sh": "bash ./scripts/deploy-ghpages.sh",
+    "deploy:ghpages:ps1": "pwsh ./scripts/deploy-ghpages.ps1"
   },
   "keywords": [],
   "author": "",
