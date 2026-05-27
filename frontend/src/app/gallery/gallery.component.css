@@ -200,7 +200,7 @@
 }
 
 .lightbox-close:hover {
-  background: rgba(201, 162, 39, 0.4);
+  background: rgba(255, 90, 95, 0.16);
 }
 
 .lightbox-nav {
@@ -219,7 +219,7 @@
 }
 
 .lightbox-nav:hover {
-  background: rgba(201, 162, 39, 0.35);
+  background: rgba(255, 90, 95, 0.16);
 }
 
 .lightbox-prev {
