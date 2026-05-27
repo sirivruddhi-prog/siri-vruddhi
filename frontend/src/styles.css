@@ -23,6 +23,22 @@
   --font-body: 'Outfit', system-ui, sans-serif;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --header-h: 72px;
+
+  /* Greens / Forest tones */
+  --forest: #1a3d2e;
+
+  /* Gold tones */
+  --gold: #c9a227;
+  --gold-bright: #e8c547;
+  --gold-soft: rgba(201, 162, 39, 0.18);
+
+  /* Ink / Dark text */
+  --ink: #0b1220;
+  --ink-soft: #6b7280;
+
+  /* Cream / Form backgrounds */
+  --cream: #faf8f5;
+  --cream-dark: #e5e0da;
 }
 
 *,
