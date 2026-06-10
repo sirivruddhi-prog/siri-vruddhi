@@ -97,17 +97,19 @@ a {
 }
 
 .logo .brand-title {
-  color: #1a120d;
   font-size: 1.9rem;
   text-shadow: none;
-  transition: color 0.45s var(--ease), text-shadow 0.45s var(--ease);
+  transition:
+    color 0.45s var(--ease),
+    text-shadow 0.45s var(--ease),
+    background 0.45s var(--ease);
 }
 
 .logo-chakra {
   flex-shrink: 0;
   width: 40px;
   height: 40px;
-  filter: drop-shadow(0 2px 6px rgba(74, 55, 40, 0.35));
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35));
   transition: filter 0.45s var(--ease);
 }
 
@@ -116,20 +118,38 @@ a {
   line-height: 1;
 }
 
-/* Transparent header over hero — switches to cream bar on scroll */
+/* Header: transparent at top, cream bar only after scroll */
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 200;
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  box-shadow: none;
+  transition:
+    background 0.45s var(--ease),
+    box-shadow 0.45s var(--ease),
+    border-color 0.45s var(--ease);
+}
+
 .site-header:not(.scrolled) {
   background: linear-gradient(180deg, rgba(45, 35, 28, 0.72) 0%, rgba(45, 35, 28, 0.15) 55%, transparent 100%);
-  border-bottom-color: transparent;
-  box-shadow: none;
+}
+
+.site-header:not(.scrolled) .logo {
+  color: var(--stone);
 }
 
 .site-header:not(.scrolled) .logo .brand-title {
-  color: var(--stone);
-  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.45);
+  color: #f6f2ec !important;
+  -webkit-text-fill-color: #f6f2ec;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.5);
 }
 
 .site-header:not(.scrolled) .logo-chakra {
-  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.45));
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5));
 }
 
 .site-header:not(.scrolled) .nav-links a:not(.nav-cta):not(.nav-phone) {
@@ -154,43 +174,34 @@ a {
   background: var(--white);
 }
 
-.site-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 200;
-  background: rgba(246, 242, 236, 0.94);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(74, 55, 40, 0.1);
-  box-shadow: 0 2px 16px rgba(74, 55, 40, 0.05);
-  transition:
-    background 0.45s var(--ease),
-    box-shadow 0.45s var(--ease),
-    border-color 0.45s var(--ease);
-}
-
 .site-header.scrolled {
   box-shadow: 0 4px 24px rgba(74, 55, 40, 0.08);
   border-bottom-color: rgba(74, 55, 40, 0.14);
-  background: rgba(246, 242, 236, 0.96);
+  background: rgba(246, 242, 236, 0.98);
   backdrop-filter: blur(12px);
 }
 
 .site-header.scrolled .logo {
-  padding: 0.3rem 0.85rem 0.3rem 0.35rem;
+  padding: 0.35rem 0.9rem 0.35rem 0.4rem;
   border-radius: 999px;
-  background: rgba(74, 55, 40, 0.07);
-  border: 1px solid rgba(74, 55, 40, 0.12);
+  background: var(--walnut);
+  border: 1px solid rgba(26, 18, 13, 0.25);
+  box-shadow: 0 2px 12px rgba(74, 55, 40, 0.2);
 }
 
 .site-header.scrolled .logo .brand-title {
-  color: #1a120d;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.45rem;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  color: #f6f2ec !important;
+  -webkit-text-fill-color: #f6f2ec;
   text-shadow: none;
 }
 
 .site-header.scrolled .logo-chakra {
-  filter: drop-shadow(0 1px 3px rgba(74, 55, 40, 0.45));
+  filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.35));
 }
 
 .nav-inner {
@@ -208,8 +219,12 @@ a {
   align-items: center;
   gap: 0.65rem;
   text-decoration: none;
-  color: #1a120d;
-  transition: transform 0.35s var(--ease), background 0.45s var(--ease), border-color 0.45s var(--ease), padding 0.45s var(--ease);
+  transition:
+    transform 0.35s var(--ease),
+    background 0.45s var(--ease),
+    border-color 0.45s var(--ease),
+    padding 0.45s var(--ease),
+    box-shadow 0.45s var(--ease);
 }
 
 .logo:hover {
