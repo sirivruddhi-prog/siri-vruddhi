@@ -110,10 +110,22 @@ async function verifyResend() {
   }
 
   const body = await response.json().catch(() => ({}));
+  const message = body.message || `Resend API error (${response.status})`;
+
+  // Send-only keys cannot list domains but can still send inquiry emails.
+  if (/restricted to only send emails/i.test(message)) {
+    return {
+      ok: true,
+      provider: 'resend',
+      sendOnlyKey: true,
+      note: 'Send-only API key — email sending is enabled',
+    };
+  }
+
   return {
     ok: false,
     provider: 'resend',
-    error: body.message || `Resend API error (${response.status})`,
+    error: message,
   };
 }
 
