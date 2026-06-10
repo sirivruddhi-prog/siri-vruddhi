@@ -26,16 +26,18 @@ Visitor → sirivruddhi.com (Hostinger, Angular static files)
 
    | Setting | Example | Your value |
    |---------|---------|------------|
-   | **DB_HOST** | `mysql123.hostinger.com` | __________ |
+   | **DB_HOST** | `auth-db1553.hstgr.io` (from hPanel / phpMyAdmin URL) | __________ |
    | **DB_USER** | `u123456789_admin` | __________ |
    | **DB_PASSWORD** | (your password) | __________ |
    | **DB_DATABASE** | `u123456789_sirivruddhi` | __________ |
 
 ### 2. Import schema
 
-1. hPanel → **phpMyAdmin** → select your database
+1. hPanel → **phpMyAdmin** → click your database in the left sidebar (e.g. `u914954551_sirivruddhi_db`)
 2. **Import** → choose `backend/schema.sql` from this repo
 3. Run import — you should see an `inquiries` table
+
+> **Hostinger note:** Do not use `CREATE DATABASE` in the SQL file. Your database is already created in hPanel. If import fails with “Access denied to database `siri_vruddhi`”, you are using an old schema file — pull the latest `schema.sql` from this repo (it only creates the `inquiries` table).
 
 ### 3. Allow remote connections (required for Render)
 

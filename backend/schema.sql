@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS siri_vruddhi;
-USE siri_vruddhi;
+-- Hostinger: select database u914954551_sirivruddhi_db in phpMyAdmin first, then import.
+-- Do NOT use CREATE DATABASE — shared hosting users cannot create new databases.
 
 CREATE TABLE IF NOT EXISTS inquiries (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -10,9 +10,3 @@ CREATE TABLE IF NOT EXISTS inquiries (
   message TEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-
--- Optional seed data
-INSERT INTO inquiries (name, email, phone, event_type, message)
-VALUES
-('Anita Sharma', 'anita@example.com', '9988776655', 'Wedding', 'Please share venue availability for next March.'),
-('Rohan Kumar', 'rohan@example.com', '9876543210', 'Baby Shower', 'Looking for a weekend booking for a close family event.');
