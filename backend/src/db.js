@@ -7,8 +7,8 @@ let mysqlPool;
 let localDbFile;
 let localDb = { inquiries: [] };
 
-if (dbType === 'mysql') {
-  mysqlPool = mysql.createPool({
+function buildMysqlPool() {
+  const config = {
     host: process.env.DB_HOST || 'localhost',
     port: parseInt(process.env.DB_PORT || '3306', 10),
     user: process.env.DB_USER || 'root',
@@ -17,7 +17,18 @@ if (dbType === 'mysql') {
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0,
-  });
+    connectTimeout: 15000,
+  };
+
+  if (process.env.DB_SSL === 'true') {
+    config.ssl = { rejectUnauthorized: true };
+  }
+
+  return mysql.createPool(config);
+}
+
+if (dbType === 'mysql') {
+  mysqlPool = buildMysqlPool();
 } else {
   localDbFile = path.join(__dirname, '..', 'data', 'local-db.json');
   const localDbDir = path.dirname(localDbFile);
@@ -68,9 +79,23 @@ async function execute(query, params) {
     return [{ insertId: id }, undefined];
   }
 
+  if (normalizedQuery.startsWith('select 1')) {
+    return [[{ ok: 1 }], undefined];
+  }
+
   throw new Error('Local database only supports inquiry insert operations.');
+}
+
+async function ping() {
+  if (dbType === 'mysql') {
+    await mysqlPool.execute('SELECT 1');
+    return 'mysql';
+  }
+  return 'local';
 }
 
 module.exports = {
   execute,
+  ping,
+  dbType,
 };

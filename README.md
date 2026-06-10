@@ -5,6 +5,8 @@ Event venue website for **Siri Vruddhi**, Nelamangala.
 - **Frontend:** Angular 16 (`frontend/`)
 - **Backend:** Express API (`backend/`) — for contact form inquiries
 - **Database:** MySQL or local JSON file
+- **Domain:** [sirivruddhi.com](https://sirivruddhi.com) (GoDaddy)
+- **Hosting:** Hostinger
 
 ## Local development
 
@@ -31,62 +33,46 @@ Runs at `http://localhost:4200`.
 
 ---
 
-## Host on GitHub (Pages)
+## Production Deployment (Hostinger)
 
-This repo can publish the **Angular frontend** to **GitHub Pages** automatically.
+See [DEPLOY.md](DEPLOY.md) for full instructions covering:
 
-### 1. Create the GitHub repository
+1. Building the Angular frontend for production
+2. Uploading files to Hostinger via File Manager or FTP
+3. DNS setup (GoDaddy → Hostinger)
+4. SSL certificate installation
+5. Backend deployment for the contact form
 
-From the project root (first time only):
+### Quick deploy
 
-```bash
-git init
-git add .
-git commit -m "Initial commit: Siri Vruddhi venue website"
-gh repo create siri-vruddhi --public --source=. --remote=origin --push
+```powershell
+cd frontend
+npm install
+npx ng build --configuration production --base-href /
+# Upload contents of frontend/dist/siri-vruddhi/ to Hostinger public_html/
 ```
-
-Or create an empty repo on [github.com/new](https://github.com/new), then:
-
-```bash
-git remote add origin https://github.com/YOUR_USERNAME/siri-vruddhi.git
-git branch -M main
-git push -u origin main
-```
-
-### 2. Enable GitHub Pages
-
-1. Open your repo on GitHub → **Settings** → **Pages**
-2. Under **Build and deployment**, set **Source** to **GitHub Actions**
-3. After the workflow runs, the site will be at:
-
-   `https://YOUR_USERNAME.github.io/siri-vruddhi/`
-
-   (Replace `siri-vruddhi` with your repo name if different.)
-
-Each push to `main` redeploys the site via `.github/workflows/deploy-pages.yml`.
-
-### 3. Large image files
-
-Venue photos in `frontend/src/assets/images/` may be very large. GitHub rejects files over **100 MB** and warns above **50 MB**. Before pushing:
-
-- Compress images (e.g. 1920px wide, JPEG ~80% quality), or
-- Use [Git LFS](https://git-lfs.github.com/) for `*.JPG` / `*.jpg`
-
-### 4. Contact form on GitHub Pages
-
-GitHub Pages serves **static files only**. The inquiry form needs the **Express backend** hosted elsewhere (e.g. [Render](https://render.com), [Railway](https://railway.app), or a VPS). Then set the production API URL in `frontend/src/environments/environment.prod.ts` and rebuild.
 
 ---
 
-## Project structure
+## Backend + database (Render + Hostinger MySQL)
+
+See **[DEPLOY-BACKEND.md](DEPLOY-BACKEND.md)** for:
+
+- Hostinger MySQL setup and `schema.sql` import
+- Render deployment via `render.yaml` blueprint
+- DNS for `api.sirivruddhi.com`
+- Rebuilding the frontend for the live contact form
+
+---
 
 | Path | Description |
 |------|-------------|
 | `frontend/` | Angular app (home, gallery, contact UI) |
+| `frontend/.htaccess` | Apache rewrite rules for SPA routing on Hostinger |
 | `backend/` | Express API + `schema.sql` |
 | `frontend/src/app/venue-images.ts` | Image paths & gallery catalog |
-| `.github/workflows/deploy-pages.yml` | GitHub Pages deployment |
+| `.github/workflows/deploy-pages.yml` | GitHub Pages deployment (alternative) |
+| `DEPLOY.md` | Full deployment guide |
 
 ## Features
 
@@ -94,3 +80,4 @@ GitHub Pages serves **static files only**. The inquiry form needs the **Express 
 - Gallery with categories and lightbox
 - Contact / inquiry form (requires backend when deployed)
 - MySQL or local JSON persistence for inquiries
+

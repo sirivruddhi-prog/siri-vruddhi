@@ -3,9 +3,13 @@
   "version": "1.0.0",
   "description": "Express backend for Siri Vruddhi event venue website",
   "main": "index.js",
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "start": "node src/index.js",
-    "dev": "nodemon src/index.js"
+    "dev": "nodemon src/index.js",
+    "test:db": "node scripts/test-db.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
