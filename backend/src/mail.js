@@ -1,8 +1,13 @@
 const nodemailer = require('nodemailer');
 
 const notifyEmail = process.env.NOTIFY_EMAIL || 'sirivruddhi@gmail.com';
-const smtpConfigured =
-  process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS;
+const smtpUser = (process.env.SMTP_USER || '').trim();
+const smtpPass = (process.env.SMTP_PASS || '').replace(/\s/g, '');
+const smtpHost = (process.env.SMTP_HOST || '').trim();
+const smtpPort = parseInt(process.env.SMTP_PORT || '587', 10);
+const smtpSecure = process.env.SMTP_SECURE === 'true' || smtpPort === 465;
+
+const smtpConfigured = Boolean(smtpHost && smtpUser && smtpPass);
 
 let transporter;
 
@@ -13,20 +18,44 @@ function getTransporter() {
 
   if (!transporter) {
     transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: parseInt(process.env.SMTP_PORT || '587', 10),
-      secure: process.env.SMTP_SECURE === 'true',
+      host: smtpHost,
+      port: smtpPort,
+      secure: smtpSecure,
+      requireTLS: !smtpSecure,
       connectionTimeout: 10000,
       greetingTimeout: 10000,
       socketTimeout: 15000,
       auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
+        user: smtpUser,
+        pass: smtpPass,
       },
     });
   }
 
   return transporter;
+}
+
+function getMailStatus() {
+  return {
+    configured: smtpConfigured,
+    notifyEmail,
+    smtpHost: smtpHost || null,
+    smtpUser: smtpUser || null,
+  };
+}
+
+async function verifyMailConnection() {
+  const transport = getTransporter();
+  if (!transport) {
+    return { ok: false, error: 'SMTP not configured (set SMTP_HOST, SMTP_USER, SMTP_PASS on Render)' };
+  }
+
+  try {
+    await transport.verify();
+    return { ok: true };
+  } catch (error) {
+    return { ok: false, error: error.message };
+  }
 }
 
 async function sendInquiryNotification(inquiry) {
@@ -67,8 +96,11 @@ async function sendInquiryNotification(inquiry) {
     <p style="color:#666;margin-top:16px;">Submitted: ${submittedAt} (IST)</p>
   `;
 
-  await transport.sendMail({
-    from: process.env.SMTP_FROM || `"Siri Vruddhi Website" <${process.env.SMTP_USER}>`,
+  const info = await transport.sendMail({
+    from: {
+      name: 'Siri Vruddhi Website',
+      address: smtpUser,
+    },
     to: notifyEmail,
     replyTo: email,
     subject: `New inquiry: ${eventType} — ${name}`,
@@ -76,6 +108,7 @@ async function sendInquiryNotification(inquiry) {
     html,
   });
 
+  console.log(`Inquiry email sent for #${id} → ${notifyEmail} (${info.messageId})`);
   return true;
 }
 
@@ -89,4 +122,6 @@ function escapeHtml(value) {
 
 module.exports = {
   sendInquiryNotification,
+  getMailStatus,
+  verifyMailConnection,
 };

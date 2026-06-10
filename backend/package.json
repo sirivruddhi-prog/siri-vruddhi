@@ -9,7 +9,8 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
-    "test:db": "node scripts/test-db.js"
+    "test:db": "node scripts/test-db.js",
+    "test:email": "node scripts/test-email.js"
   },
   "dependencies": {
     "cors": "^2.8.5",

@@ -151,12 +151,43 @@ Render → **siri-vruddhi-api → Environment**:
 | `SMTP_PORT` | `587` |
 | `SMTP_SECURE` | `false` |
 | `SMTP_USER` | `sirivruddhi@gmail.com` |
-| `SMTP_PASS` | *(Gmail App Password — 16 chars)* |
-| `SMTP_FROM` | `"Siri Vruddhi Website" <sirivruddhi@gmail.com>` |
+| `SMTP_PASS` | *(Gmail App Password — 16 chars, no spaces)* |
+
+`SMTP_FROM` is not needed — the app sends from `SMTP_USER` automatically.
 
 Save → **Manual Deploy**.
 
-### 3. Test
+### 3. Verify SMTP on Render
+
+Open in browser:
+
+```text
+https://siri-vruddhi-api.onrender.com/api/health
+```
+
+Look for:
+
+```json
+"email": {
+  "configured": true,
+  "notifyEmail": "sirivruddhi@gmail.com",
+  "smtpHost": "smtp.gmail.com",
+  "smtpUser": "sirivruddhi@gmail.com"
+}
+```
+
+If `"configured": false` → **`SMTP_PASS` is missing** on Render.
+
+Then test SMTP login:
+
+```text
+https://siri-vruddhi-api.onrender.com/api/health/email
+```
+
+- `"ok": true` → email will work on inquiries  
+- `"ok": false` with error → fix App Password or 2-Step Verification
+
+### 4. Test inquiry
 
 Submit a test inquiry on sirivruddhi.com. Check:
 

@@ -29,7 +29,7 @@ router.post('/inquiries', async (req, res) => {
     res.status(201).json({ id: inquiry.id, message: 'Inquiry received successfully.' });
 
     sendInquiryNotification(inquiry).catch((mailError) => {
-      console.error('Inquiry email failed:', mailError.message);
+      console.error('Inquiry email failed:', mailError.message, mailError.code || '');
     });
   } catch (error) {
     console.error('Database error:', error);

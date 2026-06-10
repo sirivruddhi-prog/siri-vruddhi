@@ -3,6 +3,7 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const contactRoutes = require('./routes/contact');
 const { ping, dbType } = require('./db');
+const { getMailStatus, verifyMailConnection } = require('./mail');
 
 dotenv.config();
 
@@ -21,10 +22,12 @@ app.use('/api', contactRoutes);
 app.get('/api/health', async (req, res) => {
   try {
     const db = await ping();
+    const mail = getMailStatus();
     res.json({
       status: 'ok',
       service: 'Siri Vruddhi Backend',
       db,
+      email: mail,
     });
   } catch (error) {
     console.error('Health check failed:', error.message);
@@ -33,10 +36,31 @@ app.get('/api/health', async (req, res) => {
       service: 'Siri Vruddhi Backend',
       db: dbType,
       message: 'Database connection failed',
+      email: getMailStatus(),
     });
   }
 });
 
-app.listen(port, '0.0.0.0', () => {
+app.get('/api/health/email', async (req, res) => {
+  const mail = getMailStatus();
+  const verify = await verifyMailConnection();
+  res.status(verify.ok ? 200 : 503).json({
+    ...mail,
+    ...verify,
+  });
+});
+
+app.listen(port, '0.0.0.0', async () => {
   console.log(`Siri Vruddhi backend listening on port ${port} (${dbType})`);
+  const mail = getMailStatus();
+  if (!mail.configured) {
+    console.warn('Email DISABLED: add SMTP_USER and SMTP_PASS in Render Environment.');
+  } else {
+    const verify = await verifyMailConnection();
+    if (verify.ok) {
+      console.log(`Email enabled → ${mail.notifyEmail}`);
+    } else {
+      console.error(`Email SMTP verify failed: ${verify.error}`);
+    }
+  }
 });
