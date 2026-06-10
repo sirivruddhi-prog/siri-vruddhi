@@ -231,7 +231,25 @@
       <ul class="contact-perks">
         <li>Personalized venue walkthrough</li>
         <li>Flexible event packages</li>
-        <li>Nelamangala · Karnataka</li>
+        <li>Prompt response from our event team</li>
+      </ul>
+      <ul class="contact-details">
+        <li>
+          <span class="contact-detail-label">Phone</span>
+          <a [href]="'tel:' + contact.phoneTel">{{ contact.phoneDisplay }}</a>
+        </li>
+        <li>
+          <span class="contact-detail-label">Email</span>
+          <a [href]="'mailto:' + contact.email">{{ contact.email }}</a>
+        </li>
+        <li>
+          <span class="contact-detail-label">Location</span>
+          <a [href]="contact.mapsUrl" target="_blank" rel="noopener noreferrer">{{ contact.location }}</a>
+        </li>
+        <li>
+          <span class="contact-detail-label">Instagram</span>
+          <a [href]="contact.instagramUrl" target="_blank" rel="noopener noreferrer">&#64;sirivruddhi</a>
+        </li>
       </ul>
     </div>
 

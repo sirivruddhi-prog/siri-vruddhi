@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ContactService, InquiryRequest } from '../contact.service';
+import { SITE_CONTACT } from '../site-contact';
 import {
   ABOUT_IMAGE,
   DINING_BANNER_IMAGE,
@@ -13,6 +14,7 @@ import {
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit, OnDestroy {
+  contact = SITE_CONTACT;
   heroSlides = HERO_SLIDES;
   aboutImage = ABOUT_IMAGE;
   diningBannerImage = DINING_BANNER_IMAGE;

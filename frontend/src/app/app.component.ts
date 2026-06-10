@@ -1,4 +1,5 @@
 import { Component, HostListener } from '@angular/core';
+import { SITE_CONTACT } from './site-contact';
 
 @Component({
   selector: 'app-root',
@@ -7,6 +8,7 @@ import { Component, HostListener } from '@angular/core';
 })
 export class AppComponent {
   title = 'Siri Vruddhi';
+  contact = SITE_CONTACT;
   headerScrolled = false;
   menuOpen = false;
 
