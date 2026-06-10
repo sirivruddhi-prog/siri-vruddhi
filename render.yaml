@@ -32,13 +32,7 @@ services:
         sync: false
       - key: NOTIFY_EMAIL
         value: sirivruddhi@gmail.com
-      - key: SMTP_HOST
-        value: smtp.gmail.com
-      - key: SMTP_PORT
-        value: "587"
-      - key: SMTP_SECURE
-        value: "false"
-      - key: SMTP_USER
-        sync: false
-      - key: SMTP_PASS
+      - key: RESEND_FROM
+        value: Siri Vruddhi <onboarding@resend.dev>
+      - key: RESEND_API_KEY
         sync: false

@@ -66,6 +66,7 @@ Visitor → sirivruddhi.com (Hostinger, Angular static files)
    | `DB_USER` | Hostinger MySQL user |
    | `DB_PASSWORD` | Hostinger MySQL password |
    | `DB_DATABASE` | Hostinger database name |
+   | `RESEND_API_KEY` | Resend API key (`re_...`) |
 
 6. Click **Apply** — deploy takes ~2–5 minutes
 7. Test: `https://siri-vruddhi-api.onrender.com/api/health`  
@@ -107,7 +108,7 @@ https://api.sirivruddhi.com/api/health
 
 ## Part 4 — Update the live website
 
-The frontend is already configured to call `https://api.sirivruddhi.com/api`.
+The frontend is already configured to call `https://siri-vruddhi-api.onrender.com/api`.
 
 Rebuild and upload to Hostinger:
 
@@ -131,70 +132,78 @@ Upload everything inside `frontend/dist/siri-vruddhi/` to Hostinger `public_html
 
 Each new inquiry triggers an email to **`sirivruddhi@gmail.com`** after it is saved in MySQL.
 
-### 1. Create a Gmail App Password
+> **Important:** Render **blocks outbound SMTP** (Gmail ports 587/465). If `/api/health/email` returns `"error": "Connection timeout"`, you are using SMTP on Render. Use **Resend** instead (HTTPS API — free tier works).
 
-Gmail will not accept your normal login password for SMTP. Use an **App Password**:
+---
 
-1. Sign in to **sirivruddhi@gmail.com**
-2. Google Account → **Security** → turn on **2-Step Verification** (required)
-3. **Security → App passwords** → create one named e.g. `Siri Vruddhi Website`
-4. Copy the **16-character password** (no spaces)
+### Option A — Resend (recommended for Render)
 
-### 2. Add SMTP variables on Render
+#### 1. Create a Resend account
+
+1. Go to [resend.com](https://resend.com) and sign up with **sirivruddhi@gmail.com**
+2. **API Keys** → Create API Key → copy it (starts with `re_`)
+
+#### 2. Add to Render Environment
 
 Render → **siri-vruddhi-api → Environment**:
 
 | Variable | Value |
 |----------|--------|
+| `RESEND_API_KEY` | `re_xxxxxxxx` *(your API key)* |
 | `NOTIFY_EMAIL` | `sirivruddhi@gmail.com` |
-| `SMTP_HOST` | `smtp.gmail.com` |
-| `SMTP_PORT` | `587` |
-| `SMTP_SECURE` | `false` |
-| `SMTP_USER` | `sirivruddhi@gmail.com` |
-| `SMTP_PASS` | *(Gmail App Password — 16 chars, no spaces)* |
+| `RESEND_FROM` | `Siri Vruddhi <onboarding@resend.dev>` |
 
-`SMTP_FROM` is not needed — the app sends from `SMTP_USER` automatically.
+Remove `SMTP_*` variables from Render — they are not used when `RESEND_API_KEY` is set.
 
 Save → **Manual Deploy**.
 
-### 3. Verify SMTP on Render
-
-Open in browser:
-
-```text
-https://siri-vruddhi-api.onrender.com/api/health
-```
-
-Look for:
-
-```json
-"email": {
-  "configured": true,
-  "notifyEmail": "sirivruddhi@gmail.com",
-  "smtpHost": "smtp.gmail.com",
-  "smtpUser": "sirivruddhi@gmail.com"
-}
-```
-
-If `"configured": false` → **`SMTP_PASS` is missing** on Render.
-
-Then test SMTP login:
+#### 3. Verify
 
 ```text
 https://siri-vruddhi-api.onrender.com/api/health/email
 ```
 
-- `"ok": true` → email will work on inquiries  
-- `"ok": false` with error → fix App Password or 2-Step Verification
+Expected:
 
-### 4. Test inquiry
+```json
+{
+  "configured": true,
+  "provider": "resend",
+  "ok": true
+}
+```
 
-Submit a test inquiry on sirivruddhi.com. Check:
+#### 4. Test inquiry
 
-- Row in phpMyAdmin `inquiries` table
-- Email in **sirivruddhi@gmail.com** inbox (and spam folder)
+Submit a test inquiry on sirivruddhi.com. Check phpMyAdmin and the **sirivruddhi@gmail.com** inbox (and spam).
 
-If the inquiry saves but no email arrives, check Render **Logs** for `Inquiry email failed:`.
+#### 5. Later — send from `@sirivruddhi.com`
+
+In Resend → **Domains** → add `sirivruddhi.com`, verify DNS, then set:
+
+`RESEND_FROM=Siri Vruddhi <noreply@sirivruddhi.com>`
+
+---
+
+### Option B — Gmail SMTP (local dev only)
+
+SMTP works on your PC but **not on Render**. For local testing, use `backend/.env`:
+
+```env
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_SECURE=false
+SMTP_USER=sirivruddhi@gmail.com
+SMTP_PASS=your_gmail_app_password
+NOTIFY_EMAIL=sirivruddhi@gmail.com
+```
+
+Test locally:
+
+```powershell
+cd backend
+npm run test:email
+```
 
 ---
 
@@ -202,12 +211,16 @@ If the inquiry saves but no email arrives, check Render **Logs** for `Inquiry em
 
 | Problem | Fix |
 |---------|-----|
+| `/api/health/email` → `Connection timeout` | Render blocks SMTP — switch to **Resend** (`RESEND_API_KEY`) |
+| `configured: false` | Add `RESEND_API_KEY` on Render |
+| Resend `ok: false` | Invalid API key — create a new key in Resend dashboard |
 | Health returns `"Database connection failed"` | Check `DB_*` vars on Render; verify Remote MySQL `%` on Hostinger |
 | SSL connection error | Set `DB_SSL=true` on Render (already in `render.yaml`) |
 | CORS error in browser | Ensure `CORS_ORIGINS` includes `https://sirivruddhi.com` |
 | Form works locally but not live | Rebuild frontend after changing `environment.prod.ts` and re-upload |
 | Render free tier slow first request | Free services sleep after inactivity; upgrade to Starter ($7/mo) for always-on |
-| Inquiry saves but no email | Add Gmail App Password to `SMTP_PASS` on Render; check spam folder |
+| Inquiry saves but no email | Check Render Logs for `Inquiry email failed:`; verify Resend key |
+| Email in spam | Normal for `onboarding@resend.dev` — verify `sirivruddhi.com` domain in Resend |
 
 ### Test DB locally before Render
 
@@ -234,3 +247,6 @@ node scripts/test-db.js
 | `DB_PASSWORD` | from Hostinger |
 | `DB_DATABASE` | from Hostinger |
 | `CORS_ORIGINS` | `https://sirivruddhi.com,https://www.sirivruddhi.com` |
+| `RESEND_API_KEY` | from [resend.com](https://resend.com) |
+| `RESEND_FROM` | `Siri Vruddhi <onboarding@resend.dev>` |
+| `NOTIFY_EMAIL` | `sirivruddhi@gmail.com` |

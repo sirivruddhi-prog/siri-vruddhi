@@ -1,70 +1,24 @@
 const nodemailer = require('nodemailer');
 
 const notifyEmail = process.env.NOTIFY_EMAIL || 'sirivruddhi@gmail.com';
+const resendApiKey = (process.env.RESEND_API_KEY || '').trim();
+const resendFrom =
+  process.env.RESEND_FROM || 'Siri Vruddhi <onboarding@resend.dev>';
+
 const smtpUser = (process.env.SMTP_USER || '').trim();
 const smtpPass = (process.env.SMTP_PASS || '').replace(/\s/g, '');
 const smtpHost = (process.env.SMTP_HOST || '').trim();
 const smtpPort = parseInt(process.env.SMTP_PORT || '587', 10);
 const smtpSecure = process.env.SMTP_SECURE === 'true' || smtpPort === 465;
-
 const smtpConfigured = Boolean(smtpHost && smtpUser && smtpPass);
+
+const resendConfigured = Boolean(resendApiKey);
+const emailConfigured = resendConfigured || smtpConfigured;
+const emailProvider = resendConfigured ? 'resend' : smtpConfigured ? 'smtp' : null;
 
 let transporter;
 
-function getTransporter() {
-  if (!smtpConfigured) {
-    return null;
-  }
-
-  if (!transporter) {
-    transporter = nodemailer.createTransport({
-      host: smtpHost,
-      port: smtpPort,
-      secure: smtpSecure,
-      requireTLS: !smtpSecure,
-      connectionTimeout: 10000,
-      greetingTimeout: 10000,
-      socketTimeout: 15000,
-      auth: {
-        user: smtpUser,
-        pass: smtpPass,
-      },
-    });
-  }
-
-  return transporter;
-}
-
-function getMailStatus() {
-  return {
-    configured: smtpConfigured,
-    notifyEmail,
-    smtpHost: smtpHost || null,
-    smtpUser: smtpUser || null,
-  };
-}
-
-async function verifyMailConnection() {
-  const transport = getTransporter();
-  if (!transport) {
-    return { ok: false, error: 'SMTP not configured (set SMTP_HOST, SMTP_USER, SMTP_PASS on Render)' };
-  }
-
-  try {
-    await transport.verify();
-    return { ok: true };
-  } catch (error) {
-    return { ok: false, error: error.message };
-  }
-}
-
-async function sendInquiryNotification(inquiry) {
-  const transport = getTransporter();
-  if (!transport) {
-    console.warn('SMTP not configured — inquiry saved but no email sent.');
-    return false;
-  }
-
+function buildInquiryContent(inquiry) {
   const { id, name, email, phone, eventType, message } = inquiry;
   const submittedAt = new Date().toLocaleString('en-IN', {
     timeZone: 'Asia/Kolkata',
@@ -96,19 +50,156 @@ async function sendInquiryNotification(inquiry) {
     <p style="color:#666;margin-top:16px;">Submitted: ${submittedAt} (IST)</p>
   `;
 
+  return {
+    subject: `New inquiry: ${eventType} — ${name}`,
+    text,
+    html,
+    replyTo: email,
+  };
+}
+
+function getTransporter() {
+  if (!smtpConfigured) {
+    return null;
+  }
+
+  if (!transporter) {
+    transporter = nodemailer.createTransport({
+      host: smtpHost,
+      port: smtpPort,
+      secure: smtpSecure,
+      requireTLS: !smtpSecure,
+      connectionTimeout: 10000,
+      greetingTimeout: 10000,
+      socketTimeout: 15000,
+      auth: {
+        user: smtpUser,
+        pass: smtpPass,
+      },
+    });
+  }
+
+  return transporter;
+}
+
+function getMailStatus() {
+  return {
+    configured: emailConfigured,
+    provider: emailProvider,
+    notifyEmail,
+    resendFrom: resendConfigured ? resendFrom : null,
+    smtpHost: smtpConfigured ? smtpHost : null,
+    smtpUser: smtpConfigured ? smtpUser : null,
+    note: resendConfigured
+      ? 'Using Resend API (HTTPS) — works on Render'
+      : smtpConfigured
+        ? 'Using SMTP — may not work on Render (ports 587/465 blocked)'
+        : 'Set RESEND_API_KEY on Render',
+  };
+}
+
+async function verifyResend() {
+  const response = await fetch('https://api.resend.com/domains', {
+    headers: {
+      Authorization: `Bearer ${resendApiKey}`,
+    },
+  });
+
+  if (response.ok) {
+    return { ok: true, provider: 'resend' };
+  }
+
+  const body = await response.json().catch(() => ({}));
+  return {
+    ok: false,
+    provider: 'resend',
+    error: body.message || `Resend API error (${response.status})`,
+  };
+}
+
+async function verifyMailConnection() {
+  if (resendConfigured) {
+    return verifyResend();
+  }
+
+  const transport = getTransporter();
+  if (!transport) {
+    return {
+      ok: false,
+      error: 'Email not configured. Set RESEND_API_KEY on Render (SMTP is blocked there).',
+    };
+  }
+
+  try {
+    await transport.verify();
+    return { ok: true, provider: 'smtp' };
+  } catch (error) {
+    return { ok: false, provider: 'smtp', error: error.message };
+  }
+}
+
+async function sendViaResend(inquiry, content) {
+  const response = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${resendApiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      from: resendFrom,
+      to: [notifyEmail],
+      reply_to: content.replyTo,
+      subject: content.subject,
+      html: content.html,
+      text: content.text,
+    }),
+  });
+
+  const body = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(body.message || `Resend send failed (${response.status})`);
+  }
+
+  return body.id;
+}
+
+async function sendViaSmtp(inquiry, content) {
+  const transport = getTransporter();
+  if (!transport) {
+    return null;
+  }
+
   const info = await transport.sendMail({
     from: {
       name: 'Siri Vruddhi Website',
       address: smtpUser,
     },
     to: notifyEmail,
-    replyTo: email,
-    subject: `New inquiry: ${eventType} — ${name}`,
-    text,
-    html,
+    replyTo: content.replyTo,
+    subject: content.subject,
+    text: content.text,
+    html: content.html,
   });
 
-  console.log(`Inquiry email sent for #${id} → ${notifyEmail} (${info.messageId})`);
+  return info.messageId;
+}
+
+async function sendInquiryNotification(inquiry) {
+  if (!emailConfigured) {
+    console.warn('Email not configured — inquiry saved but no email sent.');
+    return false;
+  }
+
+  const content = buildInquiryContent(inquiry);
+
+  if (resendConfigured) {
+    const messageId = await sendViaResend(inquiry, content);
+    console.log(`Inquiry email sent via Resend for #${inquiry.id} → ${notifyEmail} (${messageId})`);
+    return true;
+  }
+
+  const messageId = await sendViaSmtp(inquiry, content);
+  console.log(`Inquiry email sent via SMTP for #${inquiry.id} → ${notifyEmail} (${messageId})`);
   return true;
 }
 

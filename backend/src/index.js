@@ -54,13 +54,13 @@ app.listen(port, '0.0.0.0', async () => {
   console.log(`Siri Vruddhi backend listening on port ${port} (${dbType})`);
   const mail = getMailStatus();
   if (!mail.configured) {
-    console.warn('Email DISABLED: add SMTP_USER and SMTP_PASS in Render Environment.');
+    console.warn('Email DISABLED: set RESEND_API_KEY on Render (or SMTP_* for local dev).');
   } else {
     const verify = await verifyMailConnection();
     if (verify.ok) {
-      console.log(`Email enabled → ${mail.notifyEmail}`);
+      console.log(`Email enabled (${mail.provider}) → ${mail.notifyEmail}`);
     } else {
-      console.error(`Email SMTP verify failed: ${verify.error}`);
+      console.error(`Email verify failed (${mail.provider}): ${verify.error}`);
     }
   }
 });
