@@ -127,6 +127,46 @@ Upload everything inside `frontend/dist/siri-vruddhi/` to Hostinger `public_html
 
 ---
 
+## Email notifications (sirivruddhi@gmail.com)
+
+Each new inquiry triggers an email to **`sirivruddhi@gmail.com`** after it is saved in MySQL.
+
+### 1. Create a Gmail App Password
+
+Gmail will not accept your normal login password for SMTP. Use an **App Password**:
+
+1. Sign in to **sirivruddhi@gmail.com**
+2. Google Account → **Security** → turn on **2-Step Verification** (required)
+3. **Security → App passwords** → create one named e.g. `Siri Vruddhi Website`
+4. Copy the **16-character password** (no spaces)
+
+### 2. Add SMTP variables on Render
+
+Render → **siri-vruddhi-api → Environment**:
+
+| Variable | Value |
+|----------|--------|
+| `NOTIFY_EMAIL` | `sirivruddhi@gmail.com` |
+| `SMTP_HOST` | `smtp.gmail.com` |
+| `SMTP_PORT` | `587` |
+| `SMTP_SECURE` | `false` |
+| `SMTP_USER` | `sirivruddhi@gmail.com` |
+| `SMTP_PASS` | *(Gmail App Password — 16 chars)* |
+| `SMTP_FROM` | `"Siri Vruddhi Website" <sirivruddhi@gmail.com>` |
+
+Save → **Manual Deploy**.
+
+### 3. Test
+
+Submit a test inquiry on sirivruddhi.com. Check:
+
+- Row in phpMyAdmin `inquiries` table
+- Email in **sirivruddhi@gmail.com** inbox (and spam folder)
+
+If the inquiry saves but no email arrives, check Render **Logs** for `Inquiry email failed:`.
+
+---
+
 ## Troubleshooting
 
 | Problem | Fix |
@@ -136,6 +176,7 @@ Upload everything inside `frontend/dist/siri-vruddhi/` to Hostinger `public_html
 | CORS error in browser | Ensure `CORS_ORIGINS` includes `https://sirivruddhi.com` |
 | Form works locally but not live | Rebuild frontend after changing `environment.prod.ts` and re-upload |
 | Render free tier slow first request | Free services sleep after inactivity; upgrade to Starter ($7/mo) for always-on |
+| Inquiry saves but no email | Add Gmail App Password to `SMTP_PASS` on Render; check spam folder |
 
 ### Test DB locally before Render
 

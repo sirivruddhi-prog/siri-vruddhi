@@ -1,5 +1,6 @@
 const express = require('express');
 const pool = require('../db');
+const { sendInquiryNotification } = require('../mail');
 
 const router = express.Router();
 
@@ -16,7 +17,22 @@ router.post('/inquiries', async (req, res) => {
       [name, email, phone, eventType, message || '']
     );
 
-    res.status(201).json({ id: result.insertId, message: 'Inquiry received successfully.' });
+    const inquiry = {
+      id: result.insertId,
+      name,
+      email,
+      phone,
+      eventType,
+      message: message || '',
+    };
+
+    try {
+      await sendInquiryNotification(inquiry);
+    } catch (mailError) {
+      console.error('Inquiry email failed:', mailError.message);
+    }
+
+    res.status(201).json({ id: inquiry.id, message: 'Inquiry received successfully.' });
   } catch (error) {
     console.error('Database error:', error);
     res.status(500).json({ error: 'Unable to save inquiry. Please try again later.' });
