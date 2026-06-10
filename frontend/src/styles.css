@@ -152,22 +152,24 @@ a {
   filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5));
 }
 
-.site-header:not(.scrolled) .nav-links a:not(.nav-cta):not(.nav-phone) {
-  color: rgba(255, 255, 255, 0.92);
-}
+@media (min-width: 769px) {
+  .site-header:not(.scrolled) .nav-links a:not(.nav-cta):not(.nav-phone) {
+    color: rgba(255, 255, 255, 0.92);
+  }
 
-.site-header:not(.scrolled) .nav-links a:not(.nav-cta):not(.nav-phone):hover {
-  color: var(--white);
-  background: rgba(255, 255, 255, 0.1);
-}
+  .site-header:not(.scrolled) .nav-links a:not(.nav-cta):not(.nav-phone):hover {
+    color: var(--white);
+    background: rgba(255, 255, 255, 0.1);
+  }
 
-.site-header:not(.scrolled) .nav-phone {
-  color: var(--bronze-pale) !important;
-}
+  .site-header:not(.scrolled) .nav-phone {
+    color: var(--bronze-pale) !important;
+  }
 
-.site-header:not(.scrolled) .nav-phone:hover {
-  color: var(--white) !important;
-  background: rgba(255, 255, 255, 0.1) !important;
+  .site-header:not(.scrolled) .nav-phone:hover {
+    color: var(--white) !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+  }
 }
 
 .site-header:not(.scrolled) .nav-toggle span {
@@ -1330,6 +1332,27 @@ section[id] {
     visibility: visible;
   }
 
+  .nav-links a:not(.nav-cta):not(.nav-phone) {
+    color: var(--walnut-soft);
+  }
+
+  .nav-links a:not(.nav-cta):not(.nav-phone):hover,
+  .nav-links a.active:not(.nav-cta):not(.nav-phone) {
+    color: var(--walnut);
+    background: rgba(74, 55, 40, 0.06);
+  }
+
+  .nav-phone {
+    width: 100%;
+    text-align: center;
+    color: var(--bronze) !important;
+  }
+
+  .nav-phone:hover {
+    color: var(--walnut) !important;
+    background: rgba(74, 55, 40, 0.06) !important;
+  }
+
   .nav-links a {
     width: 100%;
     text-align: center;
@@ -1340,9 +1363,12 @@ section[id] {
     margin-left: 0 !important;
   }
 
-  .nav-phone {
-    width: 100%;
-    text-align: center;
+  .site-header:not(.scrolled) .nav-toggle span {
+    background: var(--white);
+  }
+
+  .site-header.scrolled .nav-toggle span {
+    background: var(--walnut);
   }
 
   .whatsapp-float {
