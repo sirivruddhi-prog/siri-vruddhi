@@ -190,11 +190,11 @@ a {
 }
 
 .site-header.scrolled .logo .brand-title {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 1.45rem;
-  letter-spacing: 0.02em;
-  text-transform: none;
+  font-family: var(--font-brand);
+  font-weight: 400;
+  font-size: 1.9rem;
+  letter-spacing: 0.06em;
+  text-transform: lowercase;
   color: #f6f2ec !important;
   -webkit-text-fill-color: #f6f2ec;
   text-shadow: none;
