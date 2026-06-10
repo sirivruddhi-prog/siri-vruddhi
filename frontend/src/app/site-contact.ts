@@ -6,6 +6,6 @@ export const SITE_CONTACT = {
     encodeURIComponent('Hello Siri Vruddhi, I would like to enquire about your venue.'),
   email: 'sirivruddhi@gmail.com',
   instagramUrl: 'https://www.instagram.com/sirivruddhi/',
-  mapsUrl: 'https://maps.app.goo.gl/4Zq4KyMbuaJPfEzEA',
+  mapsUrl: 'https://maps.app.goo.gl/v7SxsyCN2xEzYUH59',
   location: 'Nelamangala · Near Budhihal, Karnataka',
 };

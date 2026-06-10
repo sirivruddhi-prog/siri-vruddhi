@@ -21,7 +21,7 @@
   border-radius: 999px;
   border: 1.5px solid var(--cream-dark);
   background: var(--white);
-  color: var(--forest);
+  color: var(--walnut);
   font-family: var(--font-body);
   font-size: 0.85rem;
   font-weight: 600;
@@ -33,9 +33,9 @@
 
 .filter-btn:hover,
 .filter-btn.active {
-  background: var(--forest);
-  border-color: var(--forest);
-  color: var(--gold-bright);
+  background: var(--walnut);
+  border-color: var(--walnut);
+  color: var(--bronze-pale);
 }
 
 .gallery-grid {
@@ -200,7 +200,7 @@
 }
 
 .lightbox-close:hover {
-  background: rgba(255, 90, 95, 0.16);
+  background: rgba(154, 123, 79, 0.16);
 }
 
 .lightbox-nav {
@@ -219,7 +219,7 @@
 }
 
 .lightbox-nav:hover {
-  background: rgba(255, 90, 95, 0.16);
+  background: rgba(154, 123, 79, 0.16);
 }
 
 .lightbox-prev {
