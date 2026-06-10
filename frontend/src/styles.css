@@ -97,9 +97,10 @@ a {
 }
 
 .logo .brand-title {
-  color: #2a1f15;
-  font-size: 1.85rem;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.65);
+  color: #1a120d;
+  font-size: 1.9rem;
+  text-shadow: none;
+  transition: color 0.45s var(--ease), text-shadow 0.45s var(--ease);
 }
 
 .logo-chakra {
@@ -176,6 +177,22 @@ a {
   backdrop-filter: blur(12px);
 }
 
+.site-header.scrolled .logo {
+  padding: 0.3rem 0.85rem 0.3rem 0.35rem;
+  border-radius: 999px;
+  background: rgba(74, 55, 40, 0.07);
+  border: 1px solid rgba(74, 55, 40, 0.12);
+}
+
+.site-header.scrolled .logo .brand-title {
+  color: #1a120d;
+  text-shadow: none;
+}
+
+.site-header.scrolled .logo-chakra {
+  filter: drop-shadow(0 1px 3px rgba(74, 55, 40, 0.45));
+}
+
 .nav-inner {
   max-width: 1280px;
   margin: 0 auto;
@@ -191,8 +208,8 @@ a {
   align-items: center;
   gap: 0.65rem;
   text-decoration: none;
-  color: var(--walnut);
-  transition: transform 0.35s var(--ease);
+  color: #1a120d;
+  transition: transform 0.35s var(--ease), background 0.45s var(--ease), border-color 0.45s var(--ease), padding 0.45s var(--ease);
 }
 
 .logo:hover {
