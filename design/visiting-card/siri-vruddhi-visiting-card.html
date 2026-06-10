@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Siri Vruddhi — Visiting Card (Print Ready)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,400&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.cdnfonts.com/css/samarkan" rel="stylesheet">
+  <style>
+    :root {
+      --walnut: #4a3728;
+      --walnut-deep: #2a1f15;
+      --bronze: #9a7b4f;
+      --bronze-light: #c4a574;
+      --stone: #f6f2ec;
+      --cream: #faf8f5;
+      --card-w: 90mm;
+      --card-h: 54mm;
+      --bleed: 3mm;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Outfit', system-ui, sans-serif;
+      background: #d8d0c8;
+      color: var(--walnut-deep);
+      padding: 2rem 1rem 3rem;
+      min-height: 100vh;
+    }
+
+    .toolbar {
+      max-width: 920px;
+      margin: 0 auto 1.5rem;
+      background: #fff;
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      box-shadow: 0 8px 32px rgba(74, 55, 40, 0.12);
+    }
+
+    .toolbar h1 {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+    }
+
+    .toolbar p {
+      font-size: 0.88rem;
+      color: #6b5344;
+      line-height: 1.55;
+      margin-bottom: 1rem;
+    }
+
+    .toolbar ol {
+      font-size: 0.82rem;
+      color: #6b5344;
+      margin-left: 1.2rem;
+      line-height: 1.6;
+    }
+
+    .toolbar-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .btn {
+      appearance: none;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 0.75rem 1.35rem;
+      border-radius: 999px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--bronze), var(--bronze-light));
+      color: var(--stone);
+      box-shadow: 0 4px 16px rgba(154, 123, 79, 0.35);
+    }
+
+    .btn-primary:hover { transform: translateY(-2px); }
+
+    .btn-secondary {
+      background: var(--walnut);
+      color: var(--stone);
+    }
+
+    .sheet {
+      max-width: 920px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .sheet-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #6b5344;
+      text-align: center;
+    }
+
+    /* Card canvas — includes bleed for professional print */
+    .card-wrap {
+      position: relative;
+      width: calc(var(--card-w) + var(--bleed) * 2);
+      height: calc(var(--card-h) + var(--bleed) * 2);
+      background: #fff;
+      box-shadow: 0 12px 40px rgba(74, 55, 40, 0.18);
+    }
+
+    .card {
+      position: absolute;
+      top: var(--bleed);
+      left: var(--bleed);
+      width: var(--card-w);
+      height: var(--card-h);
+      overflow: hidden;
+      border-radius: 2mm;
+    }
+
+    /* Crop marks */
+    .card-wrap::before,
+    .card-wrap::after {
+      content: '';
+      position: absolute;
+      pointer-events: none;
+    }
+
+    .crop-marks {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .crop-marks span {
+      position: absolute;
+      background: #999;
+    }
+
+    .crop-marks .tl-h { top: 0; left: var(--bleed); width: 8mm; height: 0.2mm; }
+    .crop-marks .tl-v { top: var(--bleed); left: 0; width: 0.2mm; height: 8mm; }
+    .crop-marks .tr-h { top: 0; right: var(--bleed); width: 8mm; height: 0.2mm; }
+    .crop-marks .tr-v { top: var(--bleed); right: 0; width: 0.2mm; height: 8mm; }
+    .crop-marks .bl-h { bottom: 0; left: var(--bleed); width: 8mm; height: 0.2mm; }
+    .crop-marks .bl-v { bottom: var(--bleed); left: 0; width: 0.2mm; height: 8mm; }
+    .crop-marks .br-h { bottom: 0; right: var(--bleed); width: 8mm; height: 0.2mm; }
+    .crop-marks .br-v { bottom: var(--bleed); right: 0; width: 0.2mm; height: 8mm; }
+
+    /* ── FRONT — dark brand panel + readable cream footer strip ── */
+    .card-front {
+      background: linear-gradient(165deg, #2a1f15 0%, #4a3728 62%, #3d342c 100%);
+      display: flex;
+      flex-direction: column;
+      border: 0.3mm solid #2a1f15;
+    }
+
+    .card-front .front-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 4mm 5mm 3mm;
+    }
+
+    .card-front .chakra {
+      width: 12mm;
+      height: 12mm;
+      margin-bottom: 2.5mm;
+      filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.35));
+    }
+
+    .card-front .brand {
+      font-family: 'Samarkan', 'Cormorant Garamond', Georgia, serif;
+      font-size: 11mm;
+      line-height: 1;
+      color: #f6f2ec;
+      letter-spacing: 0.05em;
+      text-transform: lowercase;
+      margin-bottom: 2mm;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+      -webkit-text-fill-color: #f6f2ec;
+    }
+
+    .card-front .tagline {
+      font-family: 'Outfit', system-ui, sans-serif;
+      font-size: 3.4mm;
+      font-weight: 600;
+      color: #d4bc94;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .card-front .front-footer {
+      background: #f6f2ec;
+      padding: 2.8mm 4mm;
+      border-top: 0.35mm solid #c4a574;
+    }
+
+    .card-front .services {
+      font-family: 'Outfit', system-ui, sans-serif;
+      font-size: 3.1mm;
+      font-weight: 600;
+      color: #1a120d;
+      line-height: 1.45;
+      text-align: center;
+      letter-spacing: 0.02em;
+    }
+
+    /* ── BACK ── */
+    .card-back {
+      background: linear-gradient(160deg, var(--walnut-deep) 0%, var(--walnut) 100%);
+      color: var(--stone);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 3mm;
+      padding: 5mm 5.5mm;
+      border: 0.3mm solid var(--walnut-deep);
+    }
+
+    .card-back .info {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 1.8mm;
+      min-width: 0;
+    }
+
+    .card-back .venue-type {
+      font-size: 2.4mm;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--bronze-light);
+      font-weight: 600;
+      margin-bottom: 0.5mm;
+    }
+
+    .card-back .row {
+      display: flex;
+      align-items: flex-start;
+      gap: 2mm;
+      font-size: 2.55mm;
+      line-height: 1.35;
+      color: rgba(246, 242, 236, 0.95);
+    }
+
+    .card-back .row svg {
+      flex-shrink: 0;
+      width: 3mm;
+      height: 3mm;
+      margin-top: 0.3mm;
+      color: var(--bronze-light);
+    }
+
+    .card-back .row a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .card-back .qr-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5mm;
+    }
+
+    .card-back .qr-block img {
+      width: 18mm;
+      height: 18mm;
+      border-radius: 1.5mm;
+      background: #fff;
+      padding: 1mm;
+    }
+
+    .card-back .qr-label {
+      font-size: 2mm;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--bronze-pale, #d4bc94);
+      text-align: center;
+    }
+
+    @media print {
+      body {
+        background: #fff;
+        padding: 0;
+      }
+
+      .toolbar { display: none !important; }
+
+      .sheet {
+        gap: 0;
+        max-width: none;
+      }
+
+      .sheet-label { display: none; }
+
+      .card-wrap {
+        box-shadow: none;
+        page-break-after: always;
+        margin: 0 auto;
+      }
+
+      .card-wrap:last-child {
+        page-break-after: auto;
+      }
+
+      @page {
+        size: A4 portrait;
+        margin: 15mm;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="toolbar">
+    <h1>Siri Vruddhi — Visiting Card</h1>
+    <p>
+      Standard size <strong>90 × 54 mm</strong> (ISO/IEC 7810 ID-1) with 3 mm bleed.
+      Open this file in Chrome → Print → Save as PDF, or send the PDF to your printer.
+    </p>
+    <ol>
+      <li>Click <strong>Save as PDF</strong> below (or Ctrl+P).</li>
+      <li>In print dialog: enable <strong>Background graphics</strong>.</li>
+      <li>For professional print: ask for <strong>350 GSM matte</strong> card stock, front + back, trim to 90×54 mm.</li>
+      <li>Share PDF + mention brand colours: walnut brown &amp; bronze gold.</li>
+    </ol>
+    <div class="toolbar-actions">
+      <button class="btn btn-primary" type="button" onclick="window.print()">Save as PDF / Print</button>
+      <button class="btn btn-secondary" type="button" onclick="downloadHtml()">Download HTML copy</button>
+    </div>
+  </div>
+
+  <div class="sheet">
+    <p class="sheet-label">Front side</p>
+    <div class="card-wrap">
+      <div class="crop-marks" aria-hidden="true">
+        <span class="tl-h"></span><span class="tl-v"></span>
+        <span class="tr-h"></span><span class="tr-v"></span>
+        <span class="bl-h"></span><span class="bl-v"></span>
+        <span class="br-h"></span><span class="br-v"></span>
+      </div>
+      <div class="card card-front">
+        <div class="front-main">
+          <img class="chakra" src="sri-chakra.svg" alt="">
+          <div class="brand">siri vruddhi</div>
+          <div class="tagline">Event Venue</div>
+        </div>
+        <div class="front-footer">
+          <p class="services">Weddings · Engagements · Upanayanam<br>Naming Ceremonies · Celebrations</p>
+        </div>
+      </div>
+    </div>
+
+    <p class="sheet-label">Back side</p>
+    <div class="card-wrap">
+      <div class="crop-marks" aria-hidden="true">
+        <span class="tl-h"></span><span class="tl-v"></span>
+        <span class="tr-h"></span><span class="tr-v"></span>
+        <span class="bl-h"></span><span class="bl-v"></span>
+        <span class="br-h"></span><span class="br-v"></span>
+      </div>
+      <div class="card card-back">
+        <div class="info">
+          <div class="venue-type">Sacred destination for cherished celebrations</div>
+          <div class="row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+            <span>+91 95389 09998</span>
+          </div>
+          <div class="row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+            <span>sirivruddhi@gmail.com</span>
+          </div>
+          <div class="row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-8 0 15.3 15.3 0 014-10z"/></svg>
+            <span>sirivruddhi.com</span>
+          </div>
+          <div class="row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span>Nelamangala · Near Budhihal, Karnataka</span>
+          </div>
+          <div class="row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/></svg>
+            <span>@sirivruddhi</span>
+          </div>
+        </div>
+        <div class="qr-block">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https%3A%2F%2Fsirivruddhi.com&color=4a3728&bgcolor=f6f2ec" width="300" height="300" alt="QR code — sirivruddhi.com">
+          <span class="qr-label">Scan to visit</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function downloadHtml() {
+      const blob = new Blob([document.documentElement.outerHTML], { type: 'text/html' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'siri-vruddhi-visiting-card.html';
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
+  </script>
+</body>
+</html>
