@@ -26,13 +26,11 @@ router.post('/inquiries', async (req, res) => {
       message: message || '',
     };
 
-    try {
-      await sendInquiryNotification(inquiry);
-    } catch (mailError) {
-      console.error('Inquiry email failed:', mailError.message);
-    }
-
     res.status(201).json({ id: inquiry.id, message: 'Inquiry received successfully.' });
+
+    sendInquiryNotification(inquiry).catch((mailError) => {
+      console.error('Inquiry email failed:', mailError.message);
+    });
   } catch (error) {
     console.error('Database error:', error);
     res.status(500).json({ error: 'Unable to save inquiry. Please try again later.' });
