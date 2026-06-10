@@ -16,7 +16,7 @@ $repoName = [System.IO.Path]::GetFileNameWithoutExtension($RepoRemoteUrl)
 Write-Host "Repo: $repoName"
 
 Write-Host "Installing frontend dependencies..."
-npm ci --prefix frontend
+npm install --prefix frontend
 
 Write-Host "Building frontend..."
 npm run build:github-pages --prefix frontend -- --base-href=/$repoName/
