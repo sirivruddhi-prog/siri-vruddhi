@@ -1433,6 +1433,12 @@ section[id] {
   section {
     margin: 4rem 0;
   }
+
+  /* Tall sections often fail scroll-reveal thresholds on narrow viewports */
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

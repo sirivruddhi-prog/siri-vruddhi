@@ -236,8 +236,29 @@
 }
 
 @media (max-width: 768px) {
+  .gallery-filters {
+    justify-content: flex-start;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 0.5rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .gallery-filters::-webkit-scrollbar {
+    display: none;
+  }
+
+  .gallery-filters .filter-btn {
+    flex: 0 0 auto;
+  }
+
   .gallery-grid {
     grid-template-columns: 1fr;
+  }
+
+  .gallery-item-overlay {
+    opacity: 1;
   }
 
   .lightbox-nav {

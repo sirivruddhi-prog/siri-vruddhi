@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { AfterViewInit, Component, HostListener } from '@angular/core';
 import {
   GALLERY_CATEGORIES,
   GALLERY_ITEMS,
@@ -11,7 +11,7 @@ import {
   templateUrl: './gallery.component.html',
   styleUrls: ['./gallery.component.css']
 })
-export class GalleryComponent implements OnInit {
+export class GalleryComponent implements AfterViewInit {
   pageHeroImage = GALLERY_PAGE_HERO_IMAGE;
   categories = GALLERY_CATEGORIES;
   activeCategory = 'All';
@@ -19,7 +19,7 @@ export class GalleryComponent implements OnInit {
   lightboxOpen = false;
   lightboxIndex = 0;
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
     this.initRevealObserver();
   }
 
@@ -71,11 +71,11 @@ export class GalleryComponent implements OnInit {
           }
         });
       },
-      { threshold: 0.08, rootMargin: '0px 0px -40px 0px' }
+      { threshold: 0, rootMargin: '0px' }
     );
 
-    setTimeout(() => {
+    requestAnimationFrame(() => {
       document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
-    }, 80);
+    });
   }
 }
