@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, HostListener } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { PublicSiteContent, SiteContentService } from '../site-content.service';
 import { GalleryItem } from '../venue-images';
 
@@ -7,7 +7,7 @@ import { GalleryItem } from '../venue-images';
   templateUrl: './gallery.component.html',
   styleUrls: ['./gallery.component.css']
 })
-export class GalleryComponent implements AfterViewInit {
+export class GalleryComponent implements OnInit {
   contentLoading = true;
   content: PublicSiteContent | null = null;
   pageHeroImage = '';
@@ -17,7 +17,9 @@ export class GalleryComponent implements AfterViewInit {
   lightboxOpen = false;
   lightboxIndex = 0;
 
-  constructor(private siteContent: SiteContentService) {
+  constructor(private siteContent: SiteContentService) {}
+
+  ngOnInit(): void {
     this.siteContent.load().subscribe({
       next: (content) => {
         this.content = content;
@@ -25,15 +27,13 @@ export class GalleryComponent implements AfterViewInit {
         this.categories = ['All', ...content.gallery.categories];
         this.filterCategory('All');
         this.contentLoading = false;
+        this.scheduleRevealObserver();
       },
       error: () => {
         this.contentLoading = false;
+        this.scheduleRevealObserver();
       },
     });
-  }
-
-  ngAfterViewInit(): void {
-    this.initRevealObserver();
   }
 
   filterCategory(category: string): void {
@@ -76,6 +76,12 @@ export class GalleryComponent implements AfterViewInit {
     if (event.key === 'ArrowLeft') this.prevImage();
   }
 
+  private scheduleRevealObserver(): void {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => this.initRevealObserver());
+    });
+  }
+
   private initRevealObserver(): void {
     if (typeof IntersectionObserver === 'undefined') return;
 
@@ -91,8 +97,6 @@ export class GalleryComponent implements AfterViewInit {
       { threshold: 0, rootMargin: '0px' }
     );
 
-    requestAnimationFrame(() => {
-      document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
-    });
+    document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
   }
 }

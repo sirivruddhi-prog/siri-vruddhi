@@ -53,13 +53,14 @@ export class HomeComponent implements OnInit, OnDestroy {
       next: (content) => {
         this.applyContent(content);
         this.contentLoading = false;
+        this.scheduleRevealObserver();
       },
       error: () => {
         this.contentLoading = false;
+        this.scheduleRevealObserver();
       },
     });
     this.slideTimer = setInterval(() => this.nextSlide(), 6000);
-    this.initRevealObserver();
   }
 
   ngOnDestroy(): void {
@@ -148,6 +149,12 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
   }
 
+  private scheduleRevealObserver(): void {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => this.initRevealObserver());
+    });
+  }
+
   private initRevealObserver(): void {
     if (typeof IntersectionObserver === 'undefined') return;
 
@@ -163,8 +170,6 @@ export class HomeComponent implements OnInit, OnDestroy {
       { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
     );
 
-    setTimeout(() => {
-      document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
-    }, 100);
+    document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
   }
 }
