@@ -1,0 +1,159 @@
+.admin-page {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.admin-page__header {
+  margin-bottom: 1.25rem;
+}
+
+.admin-page__header h1 {
+  font-family: var(--font-display);
+  font-size: 1.85rem;
+  color: var(--walnut);
+  margin-bottom: 0.35rem;
+}
+
+.admin-page__header p {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.admin-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.admin-card h2 {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  color: var(--walnut);
+}
+
+.admin-form-grid {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.admin-form-grid label {
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.admin-form-grid input,
+.admin-form-grid textarea,
+.admin-form-grid select {
+  border: 1px solid var(--cream-dark);
+  border-radius: 10px;
+  padding: 0.6rem 0.75rem;
+  font: inherit;
+}
+
+.admin-form-grid textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+.admin-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+
+.btn-primary,
+.btn-secondary,
+.btn-danger {
+  border: 0;
+  border-radius: 10px;
+  padding: 0.6rem 1rem;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: var(--walnut);
+  color: var(--white);
+}
+
+.btn-secondary {
+  background: var(--stone-dark);
+  color: var(--walnut);
+}
+
+.btn-danger {
+  background: #fde8e8;
+  color: #9b2c2c;
+}
+
+.btn-primary:disabled,
+.btn-secondary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.admin-msg {
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+}
+
+.admin-msg--ok {
+  color: var(--sage-deep);
+}
+
+.admin-msg--error {
+  color: #9b2c2c;
+}
+
+.admin-accordion {
+  border: 1px solid var(--stone-dark);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 0.75rem;
+}
+
+.admin-accordion__head {
+  width: 100%;
+  border: 0;
+  background: var(--white);
+  padding: 0.9rem 1rem;
+  text-align: left;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+}
+
+.admin-accordion__body {
+  padding: 1rem;
+  border-top: 1px solid var(--stone-dark);
+  background: var(--stone);
+}
+
+.admin-list-item {
+  border: 1px solid var(--cream-dark);
+  border-radius: 10px;
+  padding: 0.85rem;
+  margin-bottom: 0.65rem;
+  background: var(--white);
+}
+
+.admin-list-item__actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.admin-hint {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-top: 0.25rem;
+}

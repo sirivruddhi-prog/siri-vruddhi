@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { isAdminApp } from './admin/admin-context';
 import { SITE_CONTACT } from './site-contact';
+import { SiteContentService } from './site-content.service';
 
 @Component({
   selector: 'app-root',
@@ -18,9 +19,12 @@ export class AppComponent implements OnInit, OnDestroy {
   showSiteChrome = true;
   private routerSub?: Subscription;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private siteContent: SiteContentService) {}
 
   ngOnInit(): void {
+    this.siteContent.load().subscribe((content) => {
+      this.contact = content.contact;
+    });
     this.updateChrome(this.router.url);
     this.updateHeaderScroll();
 

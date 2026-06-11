@@ -1,0 +1,57 @@
+/** Full gallery seed — mirrors frontend venue-images.ts */
+function galleryItem(file, category, title) {
+  const label = title || file.replace(/\.(jpe?g|png|webp)$/i, '').trim();
+  return { file, category, title: label, visible: true };
+}
+
+const GALLERY_SEED_ITEMS = [
+  galleryItem('hero-1.jpg', 'Celebrations', 'Ceremony in Progress'),
+  galleryItem('hero-2.jpg', 'Celebrations', 'Outdoor Wedding Setup'),
+  galleryItem('hero-3.jpg', 'Celebrations', 'Wedding Lunch Celebration'),
+  galleryItem('Siri Vruddhi Entrance.JPG', 'Exterior'),
+  galleryItem('Siri Vruddhi Exterior View.JPG', 'Exterior'),
+  galleryItem('Siri Vruddhi Exterior.JPG', 'Exterior'),
+  galleryItem('Siri Vruddhi exteriors.JPG', 'Exterior'),
+  galleryItem('Siri Vruddhi Name Plate.JPG', 'Exterior'),
+  galleryItem('Parking.JPG', 'Exterior'),
+  galleryItem('Parking area.JPG', 'Exterior'),
+  galleryItem('Parking 2.JPG', 'Exterior'),
+  galleryItem('Foyer Entrance.JPG', 'Foyer'),
+  galleryItem('Foyer entrance1.JPG', 'Foyer'),
+  galleryItem('Foyer & Seating Area.JPG', 'Foyer'),
+  galleryItem('Foyer & Seating area(1).JPG', 'Foyer'),
+  galleryItem('Foyer & Seating area(2).JPG', 'Foyer'),
+  galleryItem('Areal view of the Foyer area.JPG', 'Foyer', 'Aerial View of Foyer'),
+  galleryItem('Photo Wall Radha Krishna.JPG', 'Foyer'),
+  galleryItem('Mantapa 1.JPG', 'Mantapa & Lawn'),
+  galleryItem('Mantapa 2.JPG', 'Mantapa & Lawn'),
+  galleryItem('Mantapa 1 adjoining the Indoor Hall.JPG', 'Mantapa & Lawn'),
+  galleryItem('Mantapa 2 with Lawn and 2 Kattes.JPG', 'Mantapa & Lawn'),
+  galleryItem('Areal View of the 2nd Mantapa.JPG', 'Mantapa & Lawn', 'Aerial View of 2nd Mantapa'),
+  galleryItem('Lawn and Mantapa area.JPG', 'Mantapa & Lawn'),
+  galleryItem('Lawn area for Canopy and Katte.JPG', 'Mantapa & Lawn'),
+  galleryItem('Lawn Area for Outdoor Canopy Set up.JPG', 'Mantapa & Lawn'),
+  galleryItem('Terminalia Katte.JPG', 'Mantapa & Lawn'),
+  galleryItem('Swing & Lawn area .JPG', 'Mantapa & Lawn', 'Swing & Lawn Area'),
+  galleryItem('Indoor Hall.JPG', 'Indoor Halls'),
+  galleryItem('Indoor hall 1.JPG', 'Indoor Halls'),
+  galleryItem('Indoor Hall 2.JPG', 'Indoor Halls'),
+  galleryItem('Event Halls.JPG', 'Indoor Halls'),
+  galleryItem('Indoor Function Hall with an open view.JPG', 'Indoor Halls'),
+  galleryItem('Indoor Function Hall with a view from Mantapa & Foyer area.JPG', 'Indoor Halls'),
+  galleryItem('DSC04678.JPG', 'Indoor Halls'),
+  galleryItem('Indoor Dining Hall.JPG', 'Dining'),
+  galleryItem('Dining Hall 2.JPG', 'Dining'),
+  galleryItem('Dining Hall Entrance.JPG', 'Dining'),
+  galleryItem('Dining Room entrance 1.JPG', 'Dining'),
+  galleryItem('Dining Area 2.JPG', 'Dining'),
+  galleryItem('Dining Area 3.JPG', 'Dining'),
+  galleryItem('Dining Area 4.JPG', 'Dining'),
+  galleryItem('Hand Wash Area.JPG', 'Amenities'),
+  galleryItem('Rest Room.JPG', 'Amenities'),
+  galleryItem('Room.JPG', 'Amenities'),
+  galleryItem('Room1.JPG', 'Amenities'),
+  galleryItem('Room 3.JPG', 'Amenities'),
+];
+
+module.exports = { GALLERY_SEED_ITEMS };

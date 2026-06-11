@@ -1,77 +1,119 @@
-.admin-shell {
+.admin-app-layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
   min-height: 100vh;
   background: var(--stone);
 }
 
-.admin-header {
+.admin-sidebar {
   position: sticky;
   top: 0;
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 0.85rem 1.5rem;
+  height: 100vh;
   background: var(--walnut);
   color: var(--white);
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+  padding: 1.25rem 1rem;
+  box-shadow: 2px 0 16px rgba(0, 0, 0, 0.08);
 }
 
-.admin-header__brand-block {
+.admin-sidebar__brand {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  min-width: 0;
+  gap: 0.65rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
 }
 
-.admin-header__logo {
-  flex: 0 0 auto;
-}
-
-.admin-header__brand {
+.admin-sidebar__title {
   font-family: var(--font-brand);
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   line-height: 1.2;
 }
 
-.admin-header__email {
-  font-size: 0.8rem;
-  opacity: 0.85;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.admin-sidebar__subtitle {
+  font-size: 0.75rem;
+  opacity: 0.8;
 }
 
-.admin-header__logout {
-  flex: 0 0 auto;
+.admin-sidebar__nav {
+  display: grid;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.admin-sidebar__nav a {
+  color: rgba(255, 255, 255, 0.88);
+  text-decoration: none;
+  padding: 0.55rem 0.75rem;
+  border-radius: 10px;
+  font-size: 0.92rem;
+  font-weight: 500;
+}
+
+.admin-sidebar__nav a:hover,
+.admin-sidebar__nav a.active {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--white);
+}
+
+.admin-sidebar__group {
+  margin: 0.85rem 0 0.35rem;
+  padding: 0 0.75rem;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.65;
+}
+
+.admin-sidebar__footer {
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.admin-sidebar__email {
+  font-size: 0.78rem;
+  opacity: 0.85;
+  margin-bottom: 0.65rem;
+  word-break: break-all;
+}
+
+.admin-sidebar__logout {
+  width: 100%;
   border: 1px solid rgba(255, 255, 255, 0.35);
   background: transparent;
   color: inherit;
-  border-radius: 999px;
-  padding: 0.45rem 1rem;
+  border-radius: 10px;
+  padding: 0.5rem 0.75rem;
   font: inherit;
   cursor: pointer;
 }
 
-.admin-header__logout:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.1);
+.admin-sidebar__logout:disabled {
+  opacity: 0.6;
 }
 
-.admin-header__logout:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+.admin-content-area {
+  min-width: 0;
 }
 
 .admin-main {
-  padding: 1.25rem 1.5rem 2rem;
+  padding: 1.5rem;
 }
 
-@media (max-width: 640px) {
-  .admin-header {
-    padding: 0.75rem 1rem;
+@media (max-width: 900px) {
+  .admin-app-layout {
+    grid-template-columns: 1fr;
   }
 
-  .admin-header__brand {
-    font-size: 1rem;
+  .admin-sidebar {
+    position: static;
+    height: auto;
+  }
+
+  .admin-sidebar__nav {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

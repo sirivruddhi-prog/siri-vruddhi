@@ -1,12 +1,15 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ContactService, InquiryRequest } from '../contact.service';
+import { PublicSiteContent, SiteContentService } from '../site-content.service';
 import { SITE_CONTACT } from '../site-contact';
-import {
-  ABOUT_IMAGE,
-  DINING_BANNER_IMAGE,
-  HERO_SLIDES,
-  venueImg
-} from '../venue-images';
+
+interface SpaceCard {
+  icon: string;
+  title: string;
+  image: string;
+  desc: string;
+  detail: string;
+}
 
 @Component({
   selector: 'app-home',
@@ -14,62 +17,15 @@ import {
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit, OnDestroy {
+  content: PublicSiteContent | null = null;
   contact = SITE_CONTACT;
-  heroSlides = HERO_SLIDES;
-  aboutImage = ABOUT_IMAGE;
-  diningBannerImage = DINING_BANNER_IMAGE;
-
-  stats = [
-    { value: '300-500', label: 'Floating Crowd' },
-    { value: '200+', label: 'Seated Capacity' },
-    { value: '60+', label: 'Dining Seats' },
-    { value: '2', label: 'Mantapa Spaces' }
-  ];
-
-  spaces = [
-    {
-      icon: '🪷',
-      title: 'Mantapa Spaces',
-      image: venueImg('Mantapa 2 with Lawn and 2 Kattes.JPG'),
-      desc: 'Two beautifully designed mantapas blending elegance and versatility for every ritual.',
-      detail: 'Mehendi, Haldi, Homas, Gowri Puja — or styled as beverage counters.'
-    },
-    {
-      icon: '✨',
-      title: 'Grand Foyer',
-      image: venueImg('Foyer & Seating Area.JPG'),
-      desc: 'An impressive entrance that welcomes 200+ guests with timeless grandeur.',
-      detail: 'Water fountain, Radha Krishna mural, and stunning hall views.'
-    },
-    {
-      icon: '🌿',
-      title: 'Lawn & Outdoor Dining',
-      image: venueImg('Lawn Area for Outdoor Canopy Set up.JPG'),
-      desc: 'An expansive, lush green lawn area that can be converted into an enchanting open-air dining space.',
-      detail: 'Perfect for a 300-500 floating crowd, hosting banquet setups, canopies, and grand feasts.'
-    },
-    {
-      icon: '🌳',
-      title: 'Shaded Tree Kattes',
-      image: venueImg('Terminalia Katte.JPG'),
-      desc: 'Traditional stone-carved platforms (Kattes) built around towering trees like the Terminalia.',
-      detail: 'Breezy green shade, ideal for peaceful outdoor seating and serene photo moments.'
-    },
-    {
-      icon: '🏡',
-      title: 'Eco-Friendly Lodging',
-      image: venueImg('Room.JPG'),
-      desc: 'Premium guest rooms providing complete comfort and luxury accommodation for your family.',
-      detail: 'Equipped with comfortable double cots, cupboards, modern restrooms, and powered by solar energy.'
-    },
-    {
-      icon: '📸',
-      title: 'Photo Backdrop',
-      image: venueImg('Photo Wall Radha Krishna.JPG'),
-      desc: 'A gorgeous Radha Krishna mural that acts as an exquisite, custom photo wall for your celebrations.',
-      detail: 'Stunning artistic focal point in the foyer, ideal for capturing beautiful family memories.'
-    }
-  ];
+  heroSlides: { src: string; alt: string }[] = [];
+  aboutImage = '';
+  diningBannerImage = '';
+  stats: { value: string; label: string }[] = [];
+  spaces: SpaceCard[] = [];
+  introFeatures: { icon: string; title: string; desc: string; image: string }[] = [];
+  facilities: { icon: string; title: string; desc: string }[] = [];
 
   activeSlide = 0;
   submitting = false;
@@ -86,9 +42,15 @@ export class HomeComponent implements OnInit, OnDestroy {
   statusMessage = '';
   statusError = false;
 
-  constructor(private contactService: ContactService) {}
+  constructor(
+    private contactService: ContactService,
+    private siteContent: SiteContentService
+  ) {}
 
   ngOnInit(): void {
+    this.siteContent.load().subscribe((content) => {
+      this.applyContent(content);
+    });
     this.slideTimer = setInterval(() => this.nextSlide(), 6000);
     this.initRevealObserver();
   }
@@ -99,13 +61,43 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
   }
 
+  private applyContent(content: PublicSiteContent): void {
+    this.content = content;
+    this.contact = content.contact;
+    this.heroSlides = content.hero.slides.map((slide) => ({
+      src: (slide as { src?: string; file?: string }).src || this.siteContent.img(slide.file || ''),
+      alt: slide.alt,
+    }));
+    this.stats = content.stats.items;
+    this.aboutImage = content.about.src || this.siteContent.img(content.about.imageFile || '');
+    this.diningBannerImage = content.dining.src || this.siteContent.img(content.dining.imageFile || '');
+    this.introFeatures = content.intro.features.map((feature) => ({
+      icon: feature.icon,
+      title: feature.title,
+      desc: feature.desc,
+      image: feature.src || this.siteContent.img(feature.imageFile || ''),
+    }));
+    this.spaces = content.spaces.items.map((space) => ({
+      icon: space.icon,
+      title: space.title,
+      image: space.src || this.siteContent.img(space.imageFile || ''),
+      desc: space.desc,
+      detail: space.detail,
+    }));
+    this.facilities = content.facilities.items;
+    if (this.activeSlide >= this.heroSlides.length) {
+      this.activeSlide = 0;
+    }
+  }
+
   nextSlide(): void {
+    if (!this.heroSlides.length) return;
     this.activeSlide = (this.activeSlide + 1) % this.heroSlides.length;
   }
 
   prevSlide(): void {
-    this.activeSlide =
-      (this.activeSlide - 1 + this.heroSlides.length) % this.heroSlides.length;
+    if (!this.heroSlides.length) return;
+    this.activeSlide = (this.activeSlide - 1 + this.heroSlides.length) % this.heroSlides.length;
   }
 
   goToSlide(index: number): void {

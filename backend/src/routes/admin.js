@@ -1,4 +1,6 @@
 const express = require('express');
+const multer = require('multer');
+const { saveMedia } = require('../media');
 const {
   isAdminConfigured,
   verifyPassword,
@@ -20,8 +22,26 @@ const {
   listInquiriesForExport,
   toCsv,
 } = require('../inquiries');
+const {
+  SECTION_KEYS,
+  getSection,
+  getAllSections,
+  updateSection,
+  getContentMeta,
+} = require('../site-content');
 
 const router = express.Router();
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 10 * 1024 * 1024, files: 1 },
+  fileFilter: (req, file, cb) => {
+    if (!file.mimetype.startsWith('image/')) {
+      cb(new Error('Only image uploads are allowed.'));
+      return;
+    }
+    cb(null, true);
+  },
+});
 
 router.post('/login', loginRateLimit, (req, res) => {
   if (!isAdminConfigured()) {
@@ -50,6 +70,86 @@ router.get('/me', requireAdmin, (req, res) => {
     ok: true,
     email: process.env.ADMIN_EMAIL || 'sirivruddhi@gmail.com',
   });
+});
+
+router.post('/media/upload', requireAdmin, (req, res) => {
+  upload.single('file')(req, res, async (err) => {
+    if (err) {
+      const message = err.message || 'Upload failed.';
+      return res.status(400).json({ error: message });
+    }
+    if (!req.file) {
+      return res.status(400).json({ error: 'Choose an image file to upload.' });
+    }
+
+    try {
+      const asset = await saveMedia(req.file, req);
+      return res.status(201).json(asset);
+    } catch (error) {
+      console.error('Media upload failed:', error);
+      return res.status(500).json({ error: 'Unable to upload image.' });
+    }
+  });
+});
+
+router.get('/dashboard', requireAdmin, async (req, res) => {
+  try {
+    const [inquiryData, contentMeta] = await Promise.all([
+      listInquiries({ limit: 1 }),
+      getContentMeta(),
+    ]);
+    return res.json({
+      inquiries: {
+        new: inquiryData.counts.new,
+        today: inquiryData.counts.today,
+        thisWeek: inquiryData.counts.thisWeek,
+        total: inquiryData.total,
+        duplicateCount: inquiryData.duplicateCount,
+        byEventType: inquiryData.counts.byEventType,
+      },
+      content: contentMeta,
+      sections: SECTION_KEYS,
+    });
+  } catch (error) {
+    console.error('Dashboard failed:', error);
+    return res.status(500).json({ error: 'Unable to load dashboard.' });
+  }
+});
+
+router.get('/site', requireAdmin, async (req, res) => {
+  try {
+    const sections = await getAllSections();
+    return res.json(sections);
+  } catch (error) {
+    console.error('Get all site content failed:', error);
+    return res.status(500).json({ error: 'Unable to load site content.' });
+  }
+});
+
+router.get('/site/:section', requireAdmin, async (req, res) => {
+  try {
+    const row = await getSection(req.params.section);
+    if (!row) {
+      return res.status(404).json({ error: 'Unknown content section.' });
+    }
+    return res.json(row);
+  } catch (error) {
+    console.error('Get site section failed:', error);
+    return res.status(500).json({ error: 'Unable to load section.' });
+  }
+});
+
+router.put('/site/:section', requireAdmin, async (req, res) => {
+  try {
+    if (!SECTION_KEYS.includes(req.params.section)) {
+      return res.status(404).json({ error: 'Unknown content section.' });
+    }
+    const result = await updateSection(req.params.section, req.body);
+    return res.json(result);
+  } catch (error) {
+    console.error('Update site section failed:', error);
+    return res.status(500).json({ error: 'Unable to save section.' });
+  }
 });
 
 router.get('/inquiries/export.csv', requireAdmin, async (req, res) => {

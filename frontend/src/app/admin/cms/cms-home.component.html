@@ -1,0 +1,183 @@
+<section class="admin-page">
+  <header class="admin-page__header">
+    <h1>Home page content</h1>
+    <p>Edit hero, about, spaces, facilities, dining, and contact section text. Upload images directly in each section.</p>
+  </header>
+
+  <p *ngIf="loading">Loading home page sections…</p>
+  <p class="admin-msg admin-msg--ok" *ngIf="message">{{ message }}</p>
+  <p class="admin-msg admin-msg--error" *ngIf="error">{{ error }}</p>
+
+  <ng-container *ngIf="!loading">
+    <div class="admin-accordion">
+      <button type="button" class="admin-accordion__head" (click)="toggle('hero')">Hero banner</button>
+      <div class="admin-accordion__body" *ngIf="openSection === 'hero'">
+        <div class="admin-form-grid">
+          <label>Eyebrow <input [(ngModel)]="hero.eyebrow" /></label>
+          <label>Welcome line <input [(ngModel)]="hero.welcome" /></label>
+          <label>Tagline <textarea [(ngModel)]="hero.tagline"></textarea></label>
+        </div>
+        <div class="admin-list-item" *ngFor="let slide of hero.slides; let i = index">
+          <app-media-upload label="Upload slide image" [previewUrl]="slide.url || ''" (uploaded)="applySlideUpload($event, slide)"></app-media-upload>
+          <label>Alt text <input [(ngModel)]="slide.alt" /></label>
+          <div class="admin-list-item__actions">
+            <button type="button" class="btn-danger" (click)="removeHeroSlide(i)">Remove slide</button>
+          </div>
+        </div>
+        <div class="admin-actions">
+          <button type="button" class="btn-secondary" (click)="addHeroSlide()">Add slide</button>
+          <button type="button" class="btn-primary" (click)="save('hero')" [disabled]="savingSection === 'hero'">Save hero</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="admin-accordion">
+      <button type="button" class="admin-accordion__head" (click)="toggle('stats')">Stats bar</button>
+      <div class="admin-accordion__body" *ngIf="openSection === 'stats'">
+        <div class="admin-list-item" *ngFor="let stat of stats.items; let i = index">
+          <label>Value <input [(ngModel)]="stat.value" /></label>
+          <label>Label <input [(ngModel)]="stat.label" /></label>
+          <button type="button" class="btn-danger" (click)="removeStat(i)">Remove</button>
+        </div>
+        <div class="admin-actions">
+          <button type="button" class="btn-secondary" (click)="addStat()">Add stat</button>
+          <button type="button" class="btn-primary" (click)="save('stats')" [disabled]="savingSection === 'stats'">Save stats</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="admin-accordion">
+      <button type="button" class="admin-accordion__head" (click)="toggle('teaser')">Video teaser</button>
+      <div class="admin-accordion__body" *ngIf="openSection === 'teaser'">
+        <div class="admin-form-grid">
+          <label>Eyebrow <input [(ngModel)]="teaser.eyebrow" /></label>
+          <label>Title <input [(ngModel)]="teaser.title" /></label>
+          <label>Lead <textarea [(ngModel)]="teaser.lead"></textarea></label>
+        </div>
+        <div class="admin-actions">
+          <button type="button" class="btn-primary" (click)="save('teaser')" [disabled]="savingSection === 'teaser'">Save teaser</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="admin-accordion">
+      <button type="button" class="admin-accordion__head" (click)="toggle('intro')">Intro features</button>
+      <div class="admin-accordion__body" *ngIf="openSection === 'intro'">
+        <div class="admin-form-grid">
+          <label>Eyebrow <input [(ngModel)]="intro.eyebrow" /></label>
+          <label>Title <input [(ngModel)]="intro.title" /></label>
+          <label>Lead <textarea [(ngModel)]="intro.lead"></textarea></label>
+        </div>
+        <div class="admin-list-item" *ngFor="let f of intro.features; let i = index">
+          <label>Icon <input [(ngModel)]="f.icon" /></label>
+          <label>Title <input [(ngModel)]="f.title" /></label>
+          <label>Description <textarea [(ngModel)]="f.desc"></textarea></label>
+          <app-media-upload label="Upload feature image" [previewUrl]="f.imageUrl || ''" (uploaded)="applyIntroUpload($event, f)"></app-media-upload>
+          <button type="button" class="btn-danger" (click)="removeIntroFeature(i)">Remove</button>
+        </div>
+        <div class="admin-actions">
+          <button type="button" class="btn-secondary" (click)="addIntroFeature()">Add feature</button>
+          <button type="button" class="btn-primary" (click)="save('intro')" [disabled]="savingSection === 'intro'">Save intro</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="admin-accordion">
+      <button type="button" class="admin-accordion__head" (click)="toggle('about')">About section</button>
+      <div class="admin-accordion__body" *ngIf="openSection === 'about'">
+        <div class="admin-form-grid">
+          <label>Eyebrow <input [(ngModel)]="about.eyebrow" /></label>
+          <label>Title <input [(ngModel)]="about.title" /></label>
+          <label>Badge <input [(ngModel)]="about.badge" /></label>
+          <app-media-upload label="Upload about image" [previewUrl]="about.imageUrl || ''" (uploaded)="applyAboutUpload($event)"></app-media-upload>
+        </div>
+        <div class="admin-list-item" *ngFor="let p of about.paragraphs; let i = index">
+          <label>Paragraph <textarea [(ngModel)]="about.paragraphs[i]"></textarea></label>
+          <button type="button" class="btn-danger" (click)="removeAboutParagraph(i)">Remove</button>
+        </div>
+        <div class="admin-actions">
+          <button type="button" class="btn-secondary" (click)="addAboutParagraph()">Add paragraph</button>
+          <button type="button" class="btn-primary" (click)="save('about')" [disabled]="savingSection === 'about'">Save about</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="admin-accordion">
+      <button type="button" class="admin-accordion__head" (click)="toggle('spaces')">Spaces grid</button>
+      <div class="admin-accordion__body" *ngIf="openSection === 'spaces'">
+        <div class="admin-form-grid">
+          <label>Eyebrow <input [(ngModel)]="spaces.eyebrow" /></label>
+          <label>Title <input [(ngModel)]="spaces.title" /></label>
+          <label>Lead <textarea [(ngModel)]="spaces.lead"></textarea></label>
+        </div>
+        <div class="admin-list-item" *ngFor="let s of spaces.items; let i = index">
+          <label>Icon <input [(ngModel)]="s.icon" /></label>
+          <label>Title <input [(ngModel)]="s.title" /></label>
+          <app-media-upload label="Upload space image" [previewUrl]="s.imageUrl || ''" (uploaded)="applySpaceUpload($event, s)"></app-media-upload>
+          <label>Short description <textarea [(ngModel)]="s.desc"></textarea></label>
+          <label>Detail line <textarea [(ngModel)]="s.detail"></textarea></label>
+          <button type="button" class="btn-danger" (click)="removeSpace(i)">Remove</button>
+        </div>
+        <div class="admin-actions">
+          <button type="button" class="btn-secondary" (click)="addSpace()">Add space</button>
+          <button type="button" class="btn-primary" (click)="save('spaces')" [disabled]="savingSection === 'spaces'">Save spaces</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="admin-accordion">
+      <button type="button" class="admin-accordion__head" (click)="toggle('facilities')">Facilities</button>
+      <div class="admin-accordion__body" *ngIf="openSection === 'facilities'">
+        <div class="admin-form-grid">
+          <label>Eyebrow <input [(ngModel)]="facilities.eyebrow" /></label>
+          <label>Title <input [(ngModel)]="facilities.title" /></label>
+          <label>Lead <textarea [(ngModel)]="facilities.lead"></textarea></label>
+        </div>
+        <div class="admin-list-item" *ngFor="let f of facilities.items; let i = index">
+          <label>Icon <input [(ngModel)]="f.icon" /></label>
+          <label>Title <input [(ngModel)]="f.title" /></label>
+          <label>Description <textarea [(ngModel)]="f.desc"></textarea></label>
+          <button type="button" class="btn-danger" (click)="removeFacility(i)">Remove</button>
+        </div>
+        <div class="admin-actions">
+          <button type="button" class="btn-secondary" (click)="addFacility()">Add facility</button>
+          <button type="button" class="btn-primary" (click)="save('facilities')" [disabled]="savingSection === 'facilities'">Save facilities</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="admin-accordion">
+      <button type="button" class="admin-accordion__head" (click)="toggle('dining')">Dining banner</button>
+      <div class="admin-accordion__body" *ngIf="openSection === 'dining'">
+        <div class="admin-form-grid">
+          <label>Eyebrow <input [(ngModel)]="dining.eyebrow" /></label>
+          <label>Title <input [(ngModel)]="dining.title" /></label>
+          <label>Description <textarea [(ngModel)]="dining.description"></textarea></label>
+          <app-media-upload label="Upload dining banner" [previewUrl]="dining.imageUrl || ''" (uploaded)="applyDiningUpload($event)"></app-media-upload>
+        </div>
+        <div class="admin-list-item" *ngFor="let tag of dining.tags; let i = index">
+          <label>Tag <input [(ngModel)]="dining.tags[i]" /></label>
+          <button type="button" class="btn-danger" (click)="removeDiningTag(i)">Remove</button>
+        </div>
+        <div class="admin-actions">
+          <button type="button" class="btn-secondary" (click)="addDiningTag()">Add tag</button>
+          <button type="button" class="btn-primary" (click)="save('dining')" [disabled]="savingSection === 'dining'">Save dining</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="admin-accordion">
+      <button type="button" class="admin-accordion__head" (click)="toggle('contactPanel')">Contact form panel</button>
+      <div class="admin-accordion__body" *ngIf="openSection === 'contactPanel'">
+        <div class="admin-form-grid">
+          <label>Eyebrow <input [(ngModel)]="contactPanel.eyebrow" /></label>
+          <label>Title <input [(ngModel)]="contactPanel.title" /></label>
+          <label>Lead <textarea [(ngModel)]="contactPanel.lead"></textarea></label>
+        </div>
+        <div class="admin-actions">
+          <button type="button" class="btn-primary" (click)="save('contactPanel')" [disabled]="savingSection === 'contactPanel'">Save contact panel</button>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</section>

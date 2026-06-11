@@ -1,0 +1,63 @@
+<section class="admin-page">
+  <header class="admin-page__header">
+    <h1>Gallery manager</h1>
+    <p>Upload photos directly here. Images are stored in your database and served automatically — no Hostinger file uploads needed.</p>
+  </header>
+
+  <p *ngIf="loading">Loading gallery…</p>
+
+  <article class="admin-card" *ngIf="!loading">
+    <h2>Gallery page header</h2>
+    <app-media-upload
+      label="Upload hero image"
+      [previewUrl]="content.pageHeroUrl || ''"
+      (uploaded)="applyHeroUpload($event)"
+    ></app-media-upload>
+    <div class="admin-form-grid">
+      <label>Hero alt text <input [(ngModel)]="content.pageHeroAlt" /></label>
+      <label>Page title <input [(ngModel)]="content.pageTitle" /></label>
+      <label>Page lead <textarea [(ngModel)]="content.pageLead"></textarea></label>
+      <label>CTA title <input [(ngModel)]="content.ctaTitle" /></label>
+      <label>CTA lead <textarea [(ngModel)]="content.ctaLead"></textarea></label>
+    </div>
+  </article>
+
+  <article class="admin-card" *ngIf="!loading">
+    <h2>Categories</h2>
+    <div class="admin-list-item" *ngFor="let cat of content.categories; let i = index">
+      <label>Category name <input [(ngModel)]="content.categories[i]" /></label>
+      <button type="button" class="btn-danger" (click)="removeCategory(i)">Remove</button>
+    </div>
+    <button type="button" class="btn-secondary" (click)="addCategory()">Add category</button>
+  </article>
+
+  <article class="admin-card" *ngIf="!loading">
+    <h2>Photos ({{ content.items.length }})</h2>
+    <div class="admin-list-item" *ngFor="let item of content.items; let i = index">
+      <app-media-upload
+        label="Upload photo"
+        [previewUrl]="itemPreview(item)"
+        (uploaded)="applyItemUpload($event, item)"
+      ></app-media-upload>
+      <label>Title <input [(ngModel)]="item.title" /></label>
+      <label>
+        Category
+        <select [(ngModel)]="item.category">
+          <option *ngFor="let cat of content.categories" [value]="cat">{{ cat }}</option>
+        </select>
+      </label>
+      <label>
+        <input type="checkbox" [(ngModel)]="item.visible" /> Visible on public site
+      </label>
+      <button type="button" class="btn-danger" (click)="removeItem(i)">Remove photo</button>
+    </div>
+    <div class="admin-actions">
+      <button type="button" class="btn-secondary" (click)="addItem()">Add photo slot</button>
+      <button type="button" class="btn-primary" (click)="save()" [disabled]="saving">
+        {{ saving ? 'Saving…' : 'Save gallery' }}
+      </button>
+    </div>
+    <p class="admin-msg admin-msg--ok" *ngIf="message">{{ message }}</p>
+    <p class="admin-msg admin-msg--error" *ngIf="error">{{ error }}</p>
+  </article>
+</section>

@@ -3,6 +3,8 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const dotenv = require('dotenv');
 const contactRoutes = require('./routes/contact');
+const siteRoutes = require('./routes/site');
+const mediaRoutes = require('./routes/media');
 const adminRoutes = require('./routes/admin');
 const { ping, dbType } = require('./db');
 const { getMailStatus, verifyMailConnection } = require('./mail');
@@ -19,8 +21,10 @@ const corsOrigins = process.env.CORS_ORIGINS
 app.set('trust proxy', 1);
 app.use(cors({ origin: corsOrigins, credentials: true }));
 app.use(cookieParser());
-app.use(express.json({ limit: '32kb' }));
+app.use(express.json({ limit: '512kb' }));
 app.use('/api', contactRoutes);
+app.use('/api', siteRoutes);
+app.use('/api', mediaRoutes);
 app.use('/api/admin', adminRoutes);
 
 app.get('/api/health', async (req, res) => {

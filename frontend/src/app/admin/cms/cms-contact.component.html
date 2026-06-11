@@ -1,0 +1,30 @@
+<section class="admin-page">
+  <header class="admin-page__header">
+    <h1>Contact &amp; links</h1>
+    <p>Phone, email, WhatsApp, maps, and location shown across the public website.</p>
+  </header>
+
+  <p *ngIf="loading">Loading…</p>
+
+  <article class="admin-card" *ngIf="!loading">
+    <div class="admin-form-grid">
+      <label>Phone display <input [(ngModel)]="content.phoneDisplay" /></label>
+      <label>Phone (tel link) <input [(ngModel)]="content.phoneTel" /></label>
+      <label>Email <input type="email" [(ngModel)]="content.email" /></label>
+      <label>Instagram URL <input [(ngModel)]="content.instagramUrl" /></label>
+      <label>Google Maps URL <input [(ngModel)]="content.mapsUrl" /></label>
+      <label>Location line <input [(ngModel)]="content.location" /></label>
+      <label>
+        WhatsApp pre-filled message
+        <textarea [(ngModel)]="content.whatsappMessage" rows="3"></textarea>
+      </label>
+    </div>
+    <div class="admin-actions">
+      <button type="button" class="btn-primary" (click)="save()" [disabled]="saving">
+        {{ saving ? 'Saving…' : 'Save changes' }}
+      </button>
+    </div>
+    <p class="admin-msg admin-msg--ok" *ngIf="message">{{ message }}</p>
+    <p class="admin-msg admin-msg--error" *ngIf="error">{{ error }}</p>
+  </article>
+</section>

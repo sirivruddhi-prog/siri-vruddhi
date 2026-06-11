@@ -10,6 +10,11 @@ import { LoginComponent } from './login/login.component';
 import { AdminLayoutComponent } from './admin-layout/admin-layout.component';
 import { InquiryListComponent } from './inquiries/inquiry-list.component';
 import { InquiryDetailComponent } from './inquiries/inquiry-detail.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { CmsContactComponent } from './cms/cms-contact.component';
+import { CmsHomeComponent } from './cms/cms-home.component';
+import { CmsGalleryComponent } from './cms/cms-gallery.component';
+import { MediaUploadComponent } from './shared/media-upload.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +22,11 @@ import { InquiryDetailComponent } from './inquiries/inquiry-detail.component';
     AdminLayoutComponent,
     InquiryListComponent,
     InquiryDetailComponent,
+    DashboardComponent,
+    CmsContactComponent,
+    CmsHomeComponent,
+    CmsGalleryComponent,
+    MediaUploadComponent,
   ],
   imports: [CommonModule, FormsModule, HttpClientModule, AdminRoutingModule],
   providers: [AdminService, AuthGuard, LoginGuard],

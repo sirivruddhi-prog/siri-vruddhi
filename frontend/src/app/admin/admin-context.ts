@@ -35,6 +35,14 @@ export function adminInquiryPath(id: number): string[] {
   return isAdminSubdomain() ? ['/inquiries', String(id)] : ['/admin/inquiries', String(id)];
 }
 
+export function adminDashboardPath(): string[] {
+  return isAdminSubdomain() ? ['/dashboard'] : ['/admin/dashboard'];
+}
+
+export function adminWebsitePath(section: string): string[] {
+  return isAdminSubdomain() ? ['/website', section] : ['/admin/website', section];
+}
+
 export function adminPortalUrl(path = '/inquiries'): string {
   if (isLocalDevHost()) {
     return `http://localhost:4200/admin${path}`;

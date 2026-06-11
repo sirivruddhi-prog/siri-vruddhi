@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { adminInquiriesPath } from '../admin-context';
+import { adminDashboardPath } from '../admin-context';
 import { AdminService } from '../admin.service';
 
 @Component({
@@ -26,7 +26,7 @@ export class LoginComponent {
     this.admin.login(this.password).subscribe({
       next: () => {
         this.loading = false;
-        this.router.navigate(adminInquiriesPath());
+        this.router.navigate(adminDashboardPath());
       },
       error: (err) => {
         this.loading = false;

@@ -51,6 +51,35 @@ export interface InquiryFilters {
   limit?: number;
 }
 
+export interface DashboardResponse {
+  inquiries: {
+    new: number;
+    today: number;
+    thisWeek: number;
+    total: number;
+    duplicateCount: number;
+    byEventType: Record<string, number>;
+  };
+  content: {
+    updatedAt: string | null;
+    sections: Record<string, string>;
+  };
+  sections: string[];
+}
+
+export interface SiteSectionResponse<T = unknown> {
+  content: T;
+  updatedAt: string;
+}
+
+export interface MediaUploadResponse {
+  id: number;
+  filename: string;
+  mimeType: string;
+  size: number;
+  url: string;
+}
+
 @Injectable()
 export class AdminService {
   private readonly baseUrl = `${environment.apiUrl}/admin`;
@@ -126,5 +155,23 @@ export class AdminService {
       params,
       responseType: 'blob',
     });
+  }
+
+  getDashboard(): Observable<DashboardResponse> {
+    return this.http.get<DashboardResponse>(`${this.baseUrl}/dashboard`, this.httpOptions);
+  }
+
+  getSiteSection<T>(section: string): Observable<SiteSectionResponse<T>> {
+    return this.http.get<SiteSectionResponse<T>>(`${this.baseUrl}/site/${section}`, this.httpOptions);
+  }
+
+  saveSiteSection<T>(section: string, content: T): Observable<SiteSectionResponse<T>> {
+    return this.http.put<SiteSectionResponse<T>>(`${this.baseUrl}/site/${section}`, content, this.httpOptions);
+  }
+
+  uploadMedia(file: File): Observable<MediaUploadResponse> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<MediaUploadResponse>(`${this.baseUrl}/media/upload`, formData, this.httpOptions);
   }
 }

@@ -1,10 +1,6 @@
 import { AfterViewInit, Component, HostListener } from '@angular/core';
-import {
-  GALLERY_CATEGORIES,
-  GALLERY_ITEMS,
-  GALLERY_PAGE_HERO_IMAGE,
-  GalleryItem
-} from '../gallery.data';
+import { PublicSiteContent, SiteContentService } from '../site-content.service';
+import { GalleryItem } from '../venue-images';
 
 @Component({
   selector: 'app-gallery',
@@ -12,12 +8,22 @@ import {
   styleUrls: ['./gallery.component.css']
 })
 export class GalleryComponent implements AfterViewInit {
-  pageHeroImage = GALLERY_PAGE_HERO_IMAGE;
-  categories = GALLERY_CATEGORIES;
+  content: PublicSiteContent | null = null;
+  pageHeroImage = '';
+  categories = ['All'];
   activeCategory = 'All';
-  filteredItems: GalleryItem[] = GALLERY_ITEMS;
+  filteredItems: GalleryItem[] = [];
   lightboxOpen = false;
   lightboxIndex = 0;
+
+  constructor(private siteContent: SiteContentService) {
+    this.siteContent.load().subscribe((content) => {
+      this.content = content;
+      this.pageHeroImage = content.gallery.pageHeroSrc || this.siteContent.img(content.gallery.pageHeroFile || '');
+      this.categories = ['All', ...content.gallery.categories];
+      this.filterCategory('All');
+    });
+  }
 
   ngAfterViewInit(): void {
     this.initRevealObserver();
@@ -25,10 +31,14 @@ export class GalleryComponent implements AfterViewInit {
 
   filterCategory(category: string): void {
     this.activeCategory = category;
+    const items = (this.content?.gallery.items || []).map((item) => ({
+      src: item.src || this.siteContent.img(item.file || ''),
+      alt: item.alt,
+      title: item.title,
+      category: item.category,
+    }));
     this.filteredItems =
-      category === 'All'
-        ? GALLERY_ITEMS
-        : GALLERY_ITEMS.filter((item) => item.category === category);
+      category === 'All' ? items : items.filter((item) => item.category === category);
   }
 
   openLightbox(index: number): void {

@@ -1,0 +1,62 @@
+<section class="admin-page dashboard">
+  <header class="admin-page__header">
+    <h1>Dashboard</h1>
+    <p>Overview of inquiries and website content.</p>
+  </header>
+
+  <p class="admin-msg admin-msg--error" *ngIf="error">{{ error }}</p>
+  <p *ngIf="loading">Loading dashboard…</p>
+
+  <ng-container *ngIf="!loading && data as d">
+    <div class="dashboard__cards">
+      <article class="dashboard__card dashboard__card--accent" (click)="goInquiries()">
+        <span>New inquiries</span>
+        <strong>{{ d.inquiries.new }}</strong>
+      </article>
+      <article class="dashboard__card" (click)="goInquiries()">
+        <span>Today</span>
+        <strong>{{ d.inquiries.today }}</strong>
+      </article>
+      <article class="dashboard__card" (click)="goInquiries()">
+        <span>This week</span>
+        <strong>{{ d.inquiries.thisWeek }}</strong>
+      </article>
+      <article class="dashboard__card" (click)="goInquiries()">
+        <span>Total inquiries</span>
+        <strong>{{ d.inquiries.total }}</strong>
+      </article>
+    </div>
+
+    <div class="dashboard__grid">
+      <article class="admin-card">
+        <h2>Quick actions</h2>
+        <div class="dashboard__actions">
+          <button type="button" class="btn-primary" (click)="goInquiries()">View inquiries</button>
+          <button type="button" class="btn-secondary" (click)="goWebsite('contact')">Edit contact info</button>
+          <button type="button" class="btn-secondary" (click)="goWebsite('home')">Edit home page</button>
+          <button type="button" class="btn-secondary" (click)="goWebsite('gallery')">Manage gallery</button>
+        </div>
+      </article>
+
+      <article class="admin-card">
+        <h2>Website content</h2>
+        <p class="admin-hint">Last updated: {{ formatDate(d.content.updatedAt) }}</p>
+        <ul class="dashboard__sections">
+          <li *ngFor="let section of d.sections">
+            <span>{{ section }}</span>
+            <span>{{ formatDate(d.content.sections[section]) }}</span>
+          </li>
+        </ul>
+      </article>
+
+      <article class="admin-card" *ngIf="d.inquiries.byEventType">
+        <h2>Inquiries by event type</h2>
+        <div class="dashboard__chips">
+          <span class="dashboard__chip" *ngFor="let item of d.inquiries.byEventType | keyvalue">
+            {{ item.key }} · {{ item.value }}
+          </span>
+        </div>
+      </article>
+    </div>
+  </ng-container>
+</section>

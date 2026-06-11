@@ -3,8 +3,8 @@
   <div class="page-hero-overlay"></div>
   <div class="page-hero-content">
     <span class="section-eyebrow light">Visual Tour</span>
-    <h1 class="brand-title">Gallery</h1>
-    <p>Step inside Siri Vruddhi — ceremonies, gardens, dining, and celebrations captured in every frame.</p>
+    <h1 class="brand-title">{{ content?.gallery.pageTitle || 'Gallery' }}</h1>
+    <p>{{ content?.gallery.pageLead }}</p>
   </div>
 </div>
 
@@ -43,8 +43,8 @@
 </section>
 
 <section class="gallery-cta reveal">
-  <h2>Ready to see it in person?</h2>
-  <p>Book a private tour and envision your celebration at our venue.</p>
+  <h2>{{ content?.gallery.ctaTitle }}</h2>
+  <p>{{ content?.gallery.ctaLead }}</p>
   <a routerLink="/" fragment="contact" class="btn btn-primary">Book a Tour</a>
 </section>
 

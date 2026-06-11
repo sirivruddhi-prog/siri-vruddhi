@@ -1,0 +1,36 @@
+.media-upload {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.media-upload__preview img {
+  width: 100%;
+  max-width: 280px;
+  border-radius: 10px;
+  object-fit: cover;
+  aspect-ratio: 4 / 3;
+  box-shadow: var(--shadow);
+}
+
+.media-upload__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  border-radius: 10px;
+  padding: 0.55rem 0.9rem;
+  background: var(--stone-dark);
+  color: var(--walnut);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.media-upload__button input {
+  display: none;
+}
+
+.media-upload__error {
+  color: #9b2c2c;
+  font-size: 0.85rem;
+}

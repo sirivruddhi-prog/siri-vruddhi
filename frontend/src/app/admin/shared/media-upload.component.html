@@ -1,0 +1,10 @@
+<div class="media-upload">
+  <div class="media-upload__preview" *ngIf="previewUrl">
+    <img [src]="previewUrl" alt="Uploaded preview" />
+  </div>
+  <label class="media-upload__button">
+    <input type="file" accept="image/*" (change)="onFileSelected($event)" [disabled]="uploading" />
+    {{ uploading ? 'Uploading…' : label }}
+  </label>
+  <p class="media-upload__error" *ngIf="error">{{ error }}</p>
+</div>

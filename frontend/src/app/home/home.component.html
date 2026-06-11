@@ -12,13 +12,10 @@
   <div class="hero-glow" aria-hidden="true"></div>
 
   <div class="hero-banner-content hero-animate">
-    <span class="hero-eyebrow">Nelamangala · Near Budhihal</span>
-    <p class="hero-welcome">Welcome to</p>
+    <span class="hero-eyebrow">{{ content?.hero.eyebrow }}</span>
+    <p class="hero-welcome">{{ content?.hero.welcome }}</p>
     <h1 class="brand-title">Siri Vruddhi</h1>
-    <p class="hero-tagline">
-      A sacred, elegant destination where weddings, engagements, upanayanam,
-      naming ceremonies, and treasured celebrations come alive in timeless beauty.
-    </p>
+    <p class="hero-tagline">{{ content?.hero.tagline }}</p>
     <div class="cta">
       <a class="btn btn-primary" routerLink="/" fragment="contact">Plan Your Event</a>
       <a class="btn btn-ghost" routerLink="/" fragment="spaces">Explore Spaces</a>
@@ -59,9 +56,9 @@
 <section class="teaser-video-section reveal" id="teaser">
   <div class="teaser-inner">
     <div class="section-head centered">
-      <span class="section-eyebrow">Experience the Venue</span>
-      <h2>A Glimpse of <span class="brand-title">Siri Vruddhi</span></h2>
-      <p class="section-lead">Watch our venue come alive — timeless spaces designed for your most cherished celebrations.</p>
+      <span class="section-eyebrow">{{ content?.teaser.eyebrow }}</span>
+      <h2>{{ content?.teaser.title }}</h2>
+      <p class="section-lead">{{ content?.teaser.lead }}</p>
     </div>
     <div class="teaser-video-wrapper">
       <div class="teaser-video-frame">
@@ -95,31 +92,16 @@
 <main>
   <section class="intro-block reveal">
     <div class="section-head">
-      <span class="section-eyebrow">The Experience</span>
-      <h2>Why <span class="brand-title">Siri Vruddhi</span></h2>
-      <p class="section-lead">
-        Beautiful indoor halls and serene outdoor gardens — tradition and modern comfort
-        woven together for gatherings that feel truly extraordinary.
-      </p>
+      <span class="section-eyebrow">{{ content?.intro.eyebrow }}</span>
+      <h2>{{ content?.intro.title }}</h2>
+      <p class="section-lead">{{ content?.intro.lead }}</p>
     </div>
     <div class="feature-row">
-      <article class="feature-card reveal">
-        <img class="feature-photo" [src]="spaces[1].image" alt="Grand foyer seating area" loading="lazy" />
-        <div class="feature-icon">🏛️</div>
-        <h3>Grand Foyer</h3>
-        <p>200+ guests welcomed through an unforgettable entrance with fountain & mural.</p>
-      </article>
-      <article class="feature-card reveal">
-        <img class="feature-photo" [src]="spaces[0].image" alt="Mantapa and lawn" loading="lazy" />
-        <div class="feature-icon">🎋</div>
-        <h3>Elegant Spaces</h3>
-        <p>Multiple mantapas and outdoor areas for every ceremony and celebration.</p>
-      </article>
-      <article class="feature-card reveal">
-        <img class="feature-photo" [src]="spaces[2].image" alt="Outdoor lawn area" loading="lazy" />
-        <div class="feature-icon">🍃</div>
-        <h3>Natural Serenity</h3>
-        <p>Gardens, birdsong, and open skies that make every moment feel sacred.</p>
+      <article class="feature-card reveal" *ngFor="let feature of introFeatures">
+        <img class="feature-photo" [src]="feature.image" [alt]="feature.title" loading="lazy" />
+        <div class="feature-icon">{{ feature.icon }}</div>
+        <h3>{{ feature.title }}</h3>
+        <p>{{ feature.desc }}</p>
       </article>
     </div>
   </section>
@@ -129,20 +111,12 @@
       <div class="about-frame">
         <img [src]="aboutImage" alt="Siri Vruddhi exterior view" loading="lazy" />
       </div>
-      <div class="about-badge">Est. for cherished celebrations</div>
+      <div class="about-badge">{{ content?.about.badge }}</div>
     </div>
     <div class="about-copy">
-      <span class="section-eyebrow">Our Story</span>
-      <h2>About <span class="brand-title">Siri Vruddhi</span></h2>
-      <p>
-        Step into a sacred destination where cherished celebrations come to life — intimate
-        weddings, engagements, upanayanam, naming ceremonies, baby showers, birthdays, and more.
-      </p>
-      <p>
-        Blending timeless tradition with modern comfort, our indoor and outdoor spaces are
-        thoughtfully designed for every occasion. Located in the heart of Nelamangala near
-        Budhihal, we are your graceful home for every joyous gathering.
-      </p>
+      <span class="section-eyebrow">{{ content?.about.eyebrow }}</span>
+      <h2>{{ content?.about.title }}</h2>
+      <p *ngFor="let paragraph of content?.about.paragraphs">{{ paragraph }}</p>
       <div class="about-actions">
         <a routerLink="/" fragment="contact" class="btn btn-primary">Start Planning</a>
         <a routerLink="/gallery" class="btn btn-outline">View Gallery</a>
@@ -152,9 +126,9 @@
 
   <section id="spaces" class="spaces-section reveal">
     <div class="section-head centered">
-      <span class="section-eyebrow">Venue Highlights</span>
-      <h2>Spaces &amp; Celebrations</h2>
-      <p class="section-lead">Every corner crafted for rituals, receptions, and unforgettable memories.</p>
+      <span class="section-eyebrow">{{ content?.spaces.eyebrow }}</span>
+      <h2>{{ content?.spaces.title }}</h2>
+      <p class="section-lead">{{ content?.spaces.lead }}</p>
     </div>
     <div class="spaces-grid">
       <article class="space-card" *ngFor="let space of spaces; let i = index" [style.--delay]="i * 0.1 + 's'">
@@ -171,30 +145,15 @@
 
   <section class="facilities-section reveal" id="facilities">
     <div class="section-head centered">
-      <span class="section-eyebrow">Venue Comforts</span>
-      <h2>Premium Facilities &amp; Comfort</h2>
-      <p class="section-lead">Thoughtfully designed amenities to make your celebrations seamless, comfortable, and sustainable.</p>
+      <span class="section-eyebrow">{{ content?.facilities.eyebrow }}</span>
+      <h2>{{ content?.facilities.title }}</h2>
+      <p class="section-lead">{{ content?.facilities.lead }}</p>
     </div>
     <div class="facilities-grid">
-      <article class="facility-card">
-        <span class="facility-icon">🏡</span>
-        <h3>Premium Rooms</h3>
-        <p>Luxurious on-site guest rooms providing complete comfort and a peaceful private space for the family.</p>
-      </article>
-      <article class="facility-card">
-        <span class="facility-icon">🛏️</span>
-        <h3>Double Cots</h3>
-        <p>Spacious, comfortable double cots provided in every room to guarantee a restful, refreshing sleep.</p>
-      </article>
-      <article class="facility-card">
-        <span class="facility-icon">👗</span>
-        <h3>Spacious Cupboards</h3>
-        <p>Ample wardrobe and cupboard storage to keep your grand attire, jewelry, and wedding packages perfectly organized.</p>
-      </article>
-      <article class="facility-card">
-        <span class="facility-icon">☀️</span>
-        <h3>Solar Powered</h3>
-        <p>Proudly powered by clean solar energy, ensuring robust eco-friendly backup and an environmentally conscious event.</p>
+      <article class="facility-card" *ngFor="let facility of facilities">
+        <span class="facility-icon">{{ facility.icon }}</span>
+        <h3>{{ facility.title }}</h3>
+        <p>{{ facility.desc }}</p>
       </article>
     </div>
   </section>
@@ -205,29 +164,20 @@
     [style.--dining-bg]="'url(' + diningBannerImage + ')'"
   >
     <div class="dining-content">
-      <span class="section-eyebrow light">Dining &amp; Comfort</span>
-      <h2>Where Every Meal Becomes a Memory</h2>
-      <p>
-        Our elegant first-floor dining hall accommodates 60+ seated guests with scenic views of the lush estate. 
-        For grander celebrations, our expansive lawn area can be seamlessly transformed into an enchanting 
-        open-air outdoor dining space. Ideal for hosting a floating crowd of 300 to 500 guests, it offers a 
-        magical banqueting experience under the open sky.
-      </p>
+      <span class="section-eyebrow light">{{ content?.dining.eyebrow }}</span>
+      <h2>{{ content?.dining.title }}</h2>
+      <p>{{ content?.dining.description }}</p>
       <div class="dining-tags">
-        <span>60+ Indoor Seats</span>
-        <span>Lawn Outdoor Dining</span>
-        <span>300-500 Floating Capacity</span>
+        <span *ngFor="let tag of content?.dining.tags">{{ tag }}</span>
       </div>
     </div>
   </section>
 
   <section id="contact" class="contact-section reveal">
     <div class="contact-panel">
-      <span class="section-eyebrow light">Enquire</span>
-      <h2>Plan Your Celebration</h2>
-      <p class="contact-lead">
-        Send your event details — we'll reply with availability and next steps.
-      </p>
+      <span class="section-eyebrow light">{{ content?.contactPanel.eyebrow }}</span>
+      <h2>{{ content?.contactPanel.title }}</h2>
+      <p class="contact-lead">{{ content?.contactPanel.lead }}</p>
       <div class="contact-quick-actions">
         <a [href]="'tel:' + contact.phoneTel" class="contact-action">
           <svg viewBox="0 0 24 24" aria-hidden="true" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75">
