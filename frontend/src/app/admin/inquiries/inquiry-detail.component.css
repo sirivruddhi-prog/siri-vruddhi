@@ -30,6 +30,13 @@
   color: var(--muted);
 }
 
+.duplicate-alert {
+  margin-top: 0.5rem;
+  color: #9b4d2a !important;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
 .inquiry-detail__actions {
   display: flex;
   flex-wrap: wrap;

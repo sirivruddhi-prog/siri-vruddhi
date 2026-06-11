@@ -5,6 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { AdminRoutingModule } from './admin-routing.module';
 import { AdminService } from './admin.service';
 import { AuthGuard } from './auth.guard';
+import { LoginGuard } from './login.guard';
 import { LoginComponent } from './login/login.component';
 import { AdminLayoutComponent } from './admin-layout/admin-layout.component';
 import { InquiryListComponent } from './inquiries/inquiry-list.component';
@@ -18,6 +19,6 @@ import { InquiryDetailComponent } from './inquiries/inquiry-detail.component';
     InquiryDetailComponent,
   ],
   imports: [CommonModule, FormsModule, HttpClientModule, AdminRoutingModule],
-  providers: [AdminService, AuthGuard],
+  providers: [AdminService, AuthGuard, LoginGuard],
 })
 export class AdminModule {}

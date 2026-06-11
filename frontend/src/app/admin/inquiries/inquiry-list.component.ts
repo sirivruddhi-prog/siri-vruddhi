@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AdminService, Inquiry, InquiryStatus } from '../admin.service';
+import { adminInquiryPath } from '../admin-context';
+import { AdminService, Inquiry, InquiryCounts, InquiryStatus } from '../admin.service';
 
 @Component({
   selector: 'app-inquiry-list',
@@ -14,9 +15,19 @@ export class InquiryListComponent implements OnInit {
   search = '';
   statusFilter: InquiryStatus | '' = '';
   eventTypeFilter = '';
-  counts = { new: 0, thisWeek: 0 };
+  dateFrom = '';
+  dateTo = '';
+  counts: InquiryCounts = {
+    new: 0,
+    today: 0,
+    thisWeek: 0,
+    byStatus: { new: 0, contacted: 0, visit_scheduled: 0, booked: 0, closed: 0 },
+    byEventType: {},
+  };
+  duplicateCount = 0;
   total = 0;
   exporting = false;
+  topEventTypes: { name: string; count: number }[] = [];
 
   readonly statuses: { value: InquiryStatus | ''; label: string }[] = [
     { value: '', label: 'All statuses' },
@@ -51,11 +62,18 @@ export class InquiryListComponent implements OnInit {
       status: this.statusFilter,
       eventType: this.eventTypeFilter || undefined,
       search: this.search.trim() || undefined,
+      dateFrom: this.dateFrom || undefined,
+      dateTo: this.dateTo || undefined,
     }).subscribe({
       next: (response) => {
         this.inquiries = response.inquiries;
         this.total = response.total;
         this.counts = response.counts;
+        this.duplicateCount = response.duplicateCount;
+        this.topEventTypes = Object.entries(response.counts.byEventType || {})
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 4)
+          .map(([name, count]) => ({ name, count }));
         this.loading = false;
       },
       error: () => {
@@ -69,8 +87,14 @@ export class InquiryListComponent implements OnInit {
     this.loadInquiries();
   }
 
+  clearDateFilters(): void {
+    this.dateFrom = '';
+    this.dateTo = '';
+    this.applyFilters();
+  }
+
   openInquiry(id: number): void {
-    this.router.navigate(['/admin/inquiries', id]);
+    this.router.navigate(adminInquiryPath(id));
   }
 
   exportCsv(): void {
@@ -83,6 +107,8 @@ export class InquiryListComponent implements OnInit {
       status: this.statusFilter,
       eventType: this.eventTypeFilter || undefined,
       search: this.search.trim() || undefined,
+      dateFrom: this.dateFrom || undefined,
+      dateTo: this.dateTo || undefined,
     }).subscribe({
       next: (blob) => {
         const url = URL.createObjectURL(blob);

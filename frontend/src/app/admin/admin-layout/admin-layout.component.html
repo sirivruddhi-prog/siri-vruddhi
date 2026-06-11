@@ -1,8 +1,11 @@
 <div class="admin-shell">
   <header class="admin-header">
-    <div>
-      <p class="admin-header__brand">Siri Vruddhi Admin</p>
-      <p class="admin-header__email">{{ email }}</p>
+    <div class="admin-header__brand-block">
+      <img src="assets/images/sri-chakra.svg" alt="" class="admin-header__logo" width="32" height="32" />
+      <div>
+        <p class="admin-header__brand">Siri Vruddhi Admin</p>
+        <p class="admin-header__email">{{ email }}</p>
+      </div>
     </div>
     <button type="button" class="admin-header__logout" (click)="logout()" [disabled]="loggingOut">
       {{ loggingOut ? 'Signing out…' : 'Logout' }}

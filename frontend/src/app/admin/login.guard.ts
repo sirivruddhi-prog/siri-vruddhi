@@ -2,17 +2,17 @@ import { Injectable } from '@angular/core';
 import { CanActivate, Router, UrlTree } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { adminLoginPath } from './admin-context';
+import { adminInquiriesPath } from './admin-context';
 import { AdminService } from './admin.service';
 
 @Injectable()
-export class AuthGuard implements CanActivate {
+export class LoginGuard implements CanActivate {
   constructor(private admin: AdminService, private router: Router) {}
 
   canActivate(): Observable<boolean | UrlTree> {
     return this.admin.getSession().pipe(
-      map(() => true),
-      catchError(() => of(this.router.createUrlTree(adminLoginPath())))
+      map(() => this.router.createUrlTree(adminInquiriesPath())),
+      catchError(() => of(true))
     );
   }
 }

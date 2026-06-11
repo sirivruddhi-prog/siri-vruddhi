@@ -1,10 +1,30 @@
 <section class="inquiry-list">
+  <div class="dashboard-cards">
+    <article class="dashboard-card dashboard-card--accent">
+      <span class="dashboard-card__label">New</span>
+      <strong class="dashboard-card__value">{{ counts.new }}</strong>
+    </article>
+    <article class="dashboard-card">
+      <span class="dashboard-card__label">Today</span>
+      <strong class="dashboard-card__value">{{ counts.today }}</strong>
+    </article>
+    <article class="dashboard-card">
+      <span class="dashboard-card__label">This week</span>
+      <strong class="dashboard-card__value">{{ counts.thisWeek }}</strong>
+    </article>
+    <article class="dashboard-card">
+      <span class="dashboard-card__label">Possible duplicates</span>
+      <strong class="dashboard-card__value">{{ duplicateCount }}</strong>
+    </article>
+  </div>
+
+  <div class="event-breakdown" *ngIf="topEventTypes.length">
+    <span class="event-breakdown__label">Top event types</span>
+    <span class="event-chip" *ngFor="let item of topEventTypes">{{ item.name }} · {{ item.count }}</span>
+  </div>
+
   <div class="inquiry-list__toolbar">
-    <div class="inquiry-list__stats">
-      <span class="stat-pill stat-pill--new">New: {{ counts.new }}</span>
-      <span class="stat-pill">This week: {{ counts.thisWeek }}</span>
-      <span class="stat-pill stat-pill--muted">{{ total }} total</span>
-    </div>
+    <span class="stat-pill stat-pill--muted">{{ total }} matching</span>
     <button type="button" class="btn-secondary" (click)="exportCsv()" [disabled]="exporting">
       {{ exporting ? 'Exporting…' : 'Export CSV' }}
     </button>
@@ -26,6 +46,16 @@
       </select>
     </label>
 
+    <label>
+      From
+      <input type="date" [(ngModel)]="dateFrom" (change)="applyFilters()" />
+    </label>
+
+    <label>
+      To
+      <input type="date" [(ngModel)]="dateTo" (change)="applyFilters()" />
+    </label>
+
     <label class="inquiry-list__search">
       Search
       <input
@@ -37,6 +67,7 @@
     </label>
 
     <button type="button" class="btn-primary" (click)="applyFilters()">Apply</button>
+    <button type="button" class="btn-link" (click)="clearDateFilters()" *ngIf="dateFrom || dateTo">Clear dates</button>
   </div>
 
   <p class="inquiry-list__error" *ngIf="error">{{ error }}</p>
@@ -57,7 +88,10 @@
       *ngFor="let inquiry of inquiries"
       (click)="openInquiry(inquiry.id)"
     >
-      <span class="status-badge" [attr.data-status]="inquiry.status">{{ statusLabel(inquiry.status) }}</span>
+      <span class="inquiry-row__status">
+        <span class="status-badge" [attr.data-status]="inquiry.status">{{ statusLabel(inquiry.status) }}</span>
+        <span class="duplicate-badge" *ngIf="inquiry.isDuplicate">Dup</span>
+      </span>
       <span>{{ inquiry.name }}</span>
       <span>{{ inquiry.eventType }}</span>
       <span>{{ inquiry.phone }}</span>

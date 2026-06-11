@@ -5,6 +5,9 @@
     <div>
       <h1>{{ item.name }}</h1>
       <p>{{ item.eventType }} · submitted {{ formatDate(item.createdAt) }}</p>
+      <p class="duplicate-alert" *ngIf="item.isDuplicate">
+        Possible duplicate — same phone or email as another inquiry within 7 days.
+      </p>
     </div>
     <span class="status-badge" [attr.data-status]="item.status">{{ item.status }}</span>
   </header>

@@ -17,7 +17,7 @@ services:
       - key: DB_TYPE
         value: mysql
       - key: CORS_ORIGINS
-        value: https://sirivruddhi.com,https://www.sirivruddhi.com,http://localhost:4200
+        value: https://sirivruddhi.com,https://www.sirivruddhi.com,https://admin.sirivruddhi.com,http://localhost:4200
       - key: DB_PORT
         value: "3306"
       - key: DB_SSL

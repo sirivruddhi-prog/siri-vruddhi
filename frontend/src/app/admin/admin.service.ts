@@ -21,6 +21,15 @@ export interface Inquiry {
   adminNotes: string | null;
   createdAt: string;
   updatedAt: string | null;
+  isDuplicate?: boolean;
+}
+
+export interface InquiryCounts {
+  new: number;
+  today: number;
+  thisWeek: number;
+  byStatus: Record<InquiryStatus, number>;
+  byEventType: Record<string, number>;
 }
 
 export interface InquiryListResponse {
@@ -28,16 +37,16 @@ export interface InquiryListResponse {
   total: number;
   page: number;
   limit: number;
-  counts: {
-    new: number;
-    thisWeek: number;
-  };
+  counts: InquiryCounts;
+  duplicateCount: number;
 }
 
 export interface InquiryFilters {
   status?: InquiryStatus | '';
   eventType?: string;
   search?: string;
+  dateFrom?: string;
+  dateTo?: string;
   page?: number;
   limit?: number;
 }
@@ -72,6 +81,12 @@ export class AdminService {
     if (filters.search) {
       params = params.set('search', filters.search);
     }
+    if (filters.dateFrom) {
+      params = params.set('dateFrom', filters.dateFrom);
+    }
+    if (filters.dateTo) {
+      params = params.set('dateTo', filters.dateTo);
+    }
     if (filters.page) {
       params = params.set('page', String(filters.page));
     }
@@ -99,6 +114,12 @@ export class AdminService {
     }
     if (filters.search) {
       params = params.set('search', filters.search);
+    }
+    if (filters.dateFrom) {
+      params = params.set('dateFrom', filters.dateFrom);
+    }
+    if (filters.dateTo) {
+      params = params.set('dateTo', filters.dateTo);
     }
     return this.http.get(`${this.baseUrl}/inquiries/export.csv`, {
       ...this.httpOptions,

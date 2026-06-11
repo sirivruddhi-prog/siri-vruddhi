@@ -40,7 +40,7 @@ router.post('/login', loginRateLimit, (req, res) => {
   return res.json({ ok: true, email: process.env.ADMIN_EMAIL || 'sirivruddhi@gmail.com' });
 });
 
-router.post('/logout', requireAdmin, (req, res) => {
+router.post('/logout', (req, res) => {
   clearAuthCookie(res);
   return res.json({ ok: true });
 });
@@ -58,6 +58,8 @@ router.get('/inquiries/export.csv', requireAdmin, async (req, res) => {
       status: req.query.status,
       eventType: req.query.eventType,
       search: req.query.search,
+      dateFrom: req.query.dateFrom,
+      dateTo: req.query.dateTo,
     });
     const csv = toCsv(rows);
     res.setHeader('Content-Type', 'text/csv; charset=utf-8');
@@ -75,6 +77,8 @@ router.get('/inquiries', requireAdmin, async (req, res) => {
       status: req.query.status,
       eventType: req.query.eventType,
       search: req.query.search,
+      dateFrom: req.query.dateFrom,
+      dateTo: req.query.dateTo,
       page: req.query.page,
       limit: req.query.limit,
     });

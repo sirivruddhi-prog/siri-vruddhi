@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { adminLoginPath } from '../admin-context';
 import { AdminService } from '../admin.service';
 
 @Component({
@@ -19,7 +20,7 @@ export class AdminLayoutComponent implements OnInit {
         this.email = session.email;
       },
       error: () => {
-        this.router.navigate(['/admin/login']);
+        this.router.navigate(adminLoginPath());
       },
     });
   }
@@ -29,14 +30,15 @@ export class AdminLayoutComponent implements OnInit {
       return;
     }
     this.loggingOut = true;
+
     this.admin.logout().subscribe({
-      next: () => {
+      complete: () => {
         this.loggingOut = false;
-        this.router.navigate(['/admin/login']);
+        this.router.navigate(adminLoginPath());
       },
       error: () => {
         this.loggingOut = false;
-        this.router.navigate(['/admin/login']);
+        this.router.navigate(adminLoginPath());
       },
     });
   }

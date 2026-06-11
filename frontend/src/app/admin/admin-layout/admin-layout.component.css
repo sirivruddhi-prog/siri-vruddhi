@@ -4,26 +4,46 @@
 }
 
 .admin-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding: 1rem 1.5rem;
+  padding: 0.85rem 1.5rem;
   background: var(--walnut);
   color: var(--white);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+}
+
+.admin-header__brand-block {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.admin-header__logo {
+  flex: 0 0 auto;
 }
 
 .admin-header__brand {
   font-family: var(--font-brand);
-  font-size: 1.35rem;
+  font-size: 1.2rem;
+  line-height: 1.2;
 }
 
 .admin-header__email {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   opacity: 0.85;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .admin-header__logout {
+  flex: 0 0 auto;
   border: 1px solid rgba(255, 255, 255, 0.35);
   background: transparent;
   color: inherit;
@@ -31,6 +51,10 @@
   padding: 0.45rem 1rem;
   font: inherit;
   cursor: pointer;
+}
+
+.admin-header__logout:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .admin-header__logout:disabled {
@@ -44,7 +68,10 @@
 
 @media (max-width: 640px) {
   .admin-header {
-    flex-direction: column;
-    align-items: flex-start;
+    padding: 0.75rem 1rem;
+  }
+
+  .admin-header__brand {
+    font-size: 1rem;
   }
 }

@@ -62,11 +62,124 @@ function isThisWeek(dateValue) {
   return date >= start;
 }
 
+function isToday(dateValue) {
+  const date = new Date(dateValue);
+  if (Number.isNaN(date.getTime())) {
+    return false;
+  }
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const end = new Date(today);
+  end.setDate(end.getDate() + 1);
+  return date >= today && date < end;
+}
+
+function normalizePhone(phone) {
+  const digits = String(phone || '').replace(/\D/g, '');
+  if (digits.length < 10) {
+    return '';
+  }
+  return digits.slice(-10);
+}
+
 function buildCounts(rows) {
+  const byStatus = Object.fromEntries(STATUSES.map((status) => [status, 0]));
+  const byEventType = {};
+  let today = 0;
+  let thisWeek = 0;
+  let newCount = 0;
+
+  rows.forEach((row) => {
+    const status = row.status || 'new';
+    byStatus[status] = (byStatus[status] || 0) + 1;
+    if (status === 'new') {
+      newCount += 1;
+    }
+
+    const eventType = row.event_type || row.eventType || 'Other';
+    byEventType[eventType] = (byEventType[eventType] || 0) + 1;
+
+    const createdAt = row.created_at || row.createdAt;
+    if (isToday(createdAt)) {
+      today += 1;
+    }
+    if (isThisWeek(createdAt)) {
+      thisWeek += 1;
+    }
+  });
+
   return {
-    new: rows.filter((row) => (row.status || 'new') === 'new').length,
-    thisWeek: rows.filter((row) => isThisWeek(row.created_at || row.createdAt)).length,
+    new: newCount,
+    today,
+    thisWeek,
+    byStatus,
+    byEventType,
   };
+}
+
+function findDuplicateIds(rows) {
+  const duplicateIds = new Set();
+  const buckets = new Map();
+
+  rows.forEach((row) => {
+    const createdAt = new Date(row.created_at || row.createdAt).getTime();
+    if (Number.isNaN(createdAt)) {
+      return;
+    }
+
+    const keys = [
+      normalizePhone(row.phone) ? `phone:${normalizePhone(row.phone)}` : null,
+      row.email ? `email:${String(row.email).trim().toLowerCase()}` : null,
+    ].filter(Boolean);
+
+    keys.forEach((key) => {
+      if (!buckets.has(key)) {
+        buckets.set(key, []);
+      }
+      buckets.get(key).push({ id: row.id, createdAt });
+    });
+  });
+
+  const windowMs = 7 * 24 * 60 * 60 * 1000;
+  buckets.forEach((entries) => {
+    if (entries.length < 2) {
+      return;
+    }
+    entries.sort((a, b) => a.createdAt - b.createdAt);
+    for (let i = 0; i < entries.length; i += 1) {
+      for (let j = i + 1; j < entries.length; j += 1) {
+        if (entries[j].createdAt - entries[i].createdAt <= windowMs) {
+          duplicateIds.add(entries[i].id);
+          duplicateIds.add(entries[j].id);
+        }
+      }
+    }
+  });
+
+  return duplicateIds;
+}
+
+function matchesDateRange(row, dateFrom, dateTo) {
+  if (!dateFrom && !dateTo) {
+    return true;
+  }
+  const created = new Date(row.created_at || row.createdAt);
+  if (Number.isNaN(created.getTime())) {
+    return false;
+  }
+  if (dateFrom) {
+    const from = new Date(`${dateFrom}T00:00:00`);
+    if (created < from) {
+      return false;
+    }
+  }
+  if (dateTo) {
+    const to = new Date(`${dateTo}T23:59:59.999`);
+    if (created > to) {
+      return false;
+    }
+  }
+  return true;
 }
 
 async function listInquiries(filters = {}) {
@@ -74,6 +187,8 @@ async function listInquiries(filters = {}) {
     status,
     eventType,
     search,
+    dateFrom,
+    dateTo,
     page = 1,
     limit = 50,
   } = filters;
@@ -102,6 +217,16 @@ async function listInquiries(filters = {}) {
       params.push(like, like, like, like, like, like);
     }
 
+    if (dateFrom) {
+      conditions.push('created_at >= ?');
+      params.push(`${dateFrom} 00:00:00`);
+    }
+
+    if (dateTo) {
+      conditions.push('created_at <= ?');
+      params.push(`${dateTo} 23:59:59`);
+    }
+
     const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
 
     const [countRows] = await mysqlPool.execute(
@@ -110,8 +235,11 @@ async function listInquiries(filters = {}) {
     );
     const total = countRows[0].total;
 
-    const [allRows] = await mysqlPool.execute('SELECT status, created_at FROM inquiries');
+    const [allRows] = await mysqlPool.execute(
+      'SELECT id, name, email, phone, event_type, status, created_at FROM inquiries'
+    );
     const counts = buildCounts(allRows);
+    const duplicateIds = findDuplicateIds(allRows);
 
     const [rows] = await mysqlPool.execute(
       `SELECT id, name, email, phone, event_type, message, status, admin_notes, created_at, updated_at
@@ -122,11 +250,15 @@ async function listInquiries(filters = {}) {
     );
 
     return {
-      inquiries: rows.map(normalizeRow),
+      inquiries: rows.map((row) => ({
+        ...normalizeRow(row),
+        isDuplicate: duplicateIds.has(row.id),
+      })),
       total,
       page: safePage,
       limit: safeLimit,
       counts,
+      duplicateCount: duplicateIds.size,
     };
   }
 
@@ -144,17 +276,27 @@ async function listInquiries(filters = {}) {
     rows = rows.filter((row) => matchesSearch(row, search));
   }
 
-  const counts = buildCounts(localDb.inquiries || []);
+  if (dateFrom || dateTo) {
+    rows = rows.filter((row) => matchesDateRange(row, dateFrom, dateTo));
+  }
+
+  const allRows = localDb.inquiries || [];
+  const counts = buildCounts(allRows);
+  const duplicateIds = findDuplicateIds(allRows);
   rows.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
   const total = rows.length;
   const paged = rows.slice(offset, offset + safeLimit);
 
   return {
-    inquiries: paged.map(normalizeRow),
+    inquiries: paged.map((row) => ({
+      ...normalizeRow(row),
+      isDuplicate: duplicateIds.has(row.id),
+    })),
     total,
     page: safePage,
     limit: safeLimit,
     counts,
+    duplicateCount: duplicateIds.size,
   };
 }
 
@@ -165,16 +307,26 @@ async function getInquiry(id) {
   }
 
   if (dbType === 'mysql') {
+    const [allRows] = await mysqlPool.execute(
+      'SELECT id, name, email, phone, event_type, status, created_at FROM inquiries'
+    );
+    const duplicateIds = findDuplicateIds(allRows);
     const [rows] = await mysqlPool.execute(
       `SELECT id, name, email, phone, event_type, message, status, admin_notes, created_at, updated_at
        FROM inquiries WHERE id = ?`,
       [inquiryId]
     );
-    return rows.length ? normalizeRow(rows[0]) : null;
+    return rows.length
+      ? { ...normalizeRow(rows[0]), isDuplicate: duplicateIds.has(rows[0].id) }
+      : null;
   }
 
-  const row = (localDb.inquiries || []).find((item) => item.id === inquiryId);
-  return row ? normalizeRow(row) : null;
+  const allRows = localDb.inquiries || [];
+  const duplicateIds = findDuplicateIds(allRows);
+  const row = allRows.find((item) => item.id === inquiryId);
+  return row
+    ? { ...normalizeRow(row), isDuplicate: duplicateIds.has(row.id) }
+    : null;
 }
 
 async function updateInquiry(id, updates) {

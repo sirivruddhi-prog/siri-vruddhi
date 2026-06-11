@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { adminInquiriesPath } from '../admin-context';
 import { AdminService, Inquiry, InquiryStatus } from '../admin.service';
 
 @Component({
@@ -33,7 +34,7 @@ export class InquiryDetailComponent implements OnInit {
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (!id) {
-      this.router.navigate(['/admin/inquiries']);
+      this.router.navigate(adminInquiriesPath());
       return;
     }
 
@@ -109,6 +110,6 @@ export class InquiryDetailComponent implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(['/admin/inquiries']);
+    this.router.navigate(adminInquiriesPath());
   }
 }

@@ -1,4 +1,4 @@
-<header class="site-header" [class.scrolled]="headerScrolled">
+<header class="site-header" *ngIf="showSiteChrome" [class.scrolled]="headerScrolled">
   <nav class="nav-inner">
     <a routerLink="/" class="logo" (click)="closeMenu()">
       <img src="assets/images/sri-chakra.svg" alt="" class="logo-chakra" width="36" height="36" />
@@ -31,6 +31,7 @@
 <router-outlet></router-outlet>
 
 <a
+  *ngIf="showSiteChrome"
   class="whatsapp-float"
   [href]="contact.whatsappUrl"
   target="_blank"
@@ -43,7 +44,7 @@
   </svg>
 </a>
 
-<footer class="site-footer">
+<footer class="site-footer" *ngIf="showSiteChrome">
   <div class="footer-bar">
     <a routerLink="/" class="footer-logo">
       <img src="assets/images/sri-chakra.svg" alt="" class="logo-chakra" width="28" height="28" />

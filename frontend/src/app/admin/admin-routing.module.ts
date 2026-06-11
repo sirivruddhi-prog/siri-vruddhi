@@ -2,12 +2,13 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AdminLayoutComponent } from './admin-layout/admin-layout.component';
 import { AuthGuard } from './auth.guard';
+import { LoginGuard } from './login.guard';
 import { InquiryDetailComponent } from './inquiries/inquiry-detail.component';
 import { InquiryListComponent } from './inquiries/inquiry-list.component';
 import { LoginComponent } from './login/login.component';
 
 const routes: Routes = [
-  { path: 'login', component: LoginComponent, title: 'Admin Login — Siri Vruddhi' },
+  { path: 'login', component: LoginComponent, canActivate: [LoginGuard], title: 'Admin Login — Siri Vruddhi' },
   {
     path: '',
     component: AdminLayoutComponent,
