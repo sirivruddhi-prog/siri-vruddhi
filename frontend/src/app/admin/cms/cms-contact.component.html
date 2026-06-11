@@ -4,16 +4,21 @@
     <p>Phone, email, WhatsApp, maps, and location shown across the public website.</p>
   </header>
 
-  <p *ngIf="loading">Loading…</p>
+  <div class="admin-tip" *ngIf="!loading">
+    <span class="admin-tip__icon">☎</span>
+    <p>Changes here update the footer, contact page, and WhatsApp links across the live website instantly after you save.</p>
+  </div>
+
+  <app-admin-loader *ngIf="loading" message="Loading contact settings…"></app-admin-loader>
 
   <article class="admin-card" *ngIf="!loading">
     <div class="admin-form-grid">
-      <label>Phone display <input [(ngModel)]="content.phoneDisplay" /></label>
-      <label>Phone (tel link) <input [(ngModel)]="content.phoneTel" /></label>
-      <label>Email <input type="email" [(ngModel)]="content.email" /></label>
-      <label>Instagram URL <input [(ngModel)]="content.instagramUrl" /></label>
-      <label>Google Maps URL <input [(ngModel)]="content.mapsUrl" /></label>
-      <label>Location line <input [(ngModel)]="content.location" /></label>
+      <label>Phone display <input [(ngModel)]="content.phoneDisplay" placeholder="+91 98765 43210" /></label>
+      <label>Phone (tel link) <input [(ngModel)]="content.phoneTel" placeholder="+919876543210" /></label>
+      <label>Email <input type="email" [(ngModel)]="content.email" placeholder="hello@example.com" /></label>
+      <label>Instagram URL <input [(ngModel)]="content.instagramUrl" placeholder="https://instagram.com/..." /></label>
+      <label>Google Maps URL <input [(ngModel)]="content.mapsUrl" placeholder="https://maps.google.com/..." /></label>
+      <label>Location line <input [(ngModel)]="content.location" placeholder="City, State" /></label>
       <label>
         WhatsApp pre-filled message
         <textarea [(ngModel)]="content.whatsappMessage" rows="3"></textarea>
@@ -21,6 +26,7 @@
     </div>
     <div class="admin-actions">
       <button type="button" class="btn-primary" (click)="save()" [disabled]="saving">
+        <span class="adm-btn-spinner" *ngIf="saving" aria-hidden="true"></span>
         {{ saving ? 'Saving…' : 'Save changes' }}
       </button>
     </div>

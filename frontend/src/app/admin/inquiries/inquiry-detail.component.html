@@ -1,27 +1,40 @@
-<section class="inquiry-detail" *ngIf="!loading && inquiry as item">
+<section class="admin-page inquiry-detail" *ngIf="!loading && inquiry as item">
   <button type="button" class="inquiry-detail__back" (click)="goBack()">← Back to inbox</button>
 
-  <header class="inquiry-detail__header">
-    <div>
-      <h1>{{ item.name }}</h1>
-      <p>{{ item.eventType }} · submitted {{ formatDate(item.createdAt) }}</p>
-      <p class="duplicate-alert" *ngIf="item.isDuplicate">
-        Possible duplicate — same phone or email as another inquiry within 7 days.
-      </p>
+  <header class="inquiry-detail__hero">
+    <div class="inquiry-detail__identity">
+      <span class="inquiry-avatar inquiry-avatar--lg">{{ item.name.charAt(0) }}</span>
+      <div>
+        <h1>{{ item.name }}</h1>
+        <p class="inquiry-detail__meta">{{ item.eventType }} · submitted {{ formatDate(item.createdAt) }}</p>
+        <p class="inquiry-detail__duplicate" *ngIf="item.isDuplicate">
+          <span class="duplicate-badge">!</span>
+          Possible duplicate — same phone or email within 7 days
+        </p>
+      </div>
     </div>
-    <span class="status-badge" [attr.data-status]="item.status">{{ item.status }}</span>
+    <span class="status-badge status-badge--lg" [attr.data-status]="item.status">{{ statusLabel(item.status) }}</span>
   </header>
 
-  <div class="inquiry-detail__actions">
-    <a class="action-link" [href]="phoneHref(item.phone)">Call</a>
-    <a class="action-link" [href]="whatsappHref(item.phone)" target="_blank" rel="noopener">WhatsApp</a>
-    <a class="action-link" [href]="emailHref(item.email)">Email</a>
+  <div class="inquiry-detail__quick">
+    <a class="quick-action" [href]="phoneHref(item.phone)">
+      <span class="quick-action__icon">☎</span>
+      <span>Call</span>
+    </a>
+    <a class="quick-action quick-action--whatsapp" [href]="whatsappHref(item.phone)" target="_blank" rel="noopener">
+      <span class="quick-action__icon">✆</span>
+      <span>WhatsApp</span>
+    </a>
+    <a class="quick-action quick-action--email" [href]="emailHref(item.email)">
+      <span class="quick-action__icon">✉</span>
+      <span>Email</span>
+    </a>
   </div>
 
   <div class="inquiry-detail__grid">
-    <article class="detail-card">
+    <article class="admin-card detail-card">
       <h2>Contact details</h2>
-      <dl>
+      <dl class="detail-dl">
         <div><dt>Name</dt><dd>{{ item.name }}</dd></div>
         <div><dt>Phone</dt><dd>{{ item.phone }}</dd></div>
         <div><dt>Email</dt><dd>{{ item.email }}</dd></div>
@@ -31,8 +44,9 @@
       </dl>
     </article>
 
-    <article class="detail-card">
+    <article class="admin-card detail-card detail-card--followup">
       <h2>Follow-up</h2>
+      <p class="admin-hint">Update status and add private notes your team can reference later.</p>
 
       <label for="inquiry-status">Status</label>
       <select id="inquiry-status" [(ngModel)]="selectedStatus">
@@ -47,15 +61,19 @@
         placeholder="Called 10 Jun, visit scheduled Sunday…"
       ></textarea>
 
-      <p class="inquiry-detail__error" *ngIf="error">{{ error }}</p>
-      <p class="inquiry-detail__saved" *ngIf="saveMessage">{{ saveMessage }}</p>
+      <p class="admin-msg admin-msg--error" *ngIf="error">{{ error }}</p>
+      <p class="admin-msg admin-msg--ok" *ngIf="saveMessage">{{ saveMessage }}</p>
 
-      <button type="button" class="btn-primary" (click)="save()" [disabled]="saving">
-        {{ saving ? 'Saving…' : 'Save changes' }}
-      </button>
+      <div class="admin-actions">
+        <button type="button" class="btn-primary" (click)="save()" [disabled]="saving">
+          <span class="adm-btn-spinner" *ngIf="saving" aria-hidden="true"></span>
+          {{ saving ? 'Saving…' : 'Save changes' }}
+        </button>
+      </div>
     </article>
   </div>
 </section>
 
-<p class="inquiry-detail__loading" *ngIf="loading">Loading inquiry…</p>
-<p class="inquiry-detail__error" *ngIf="!loading && error && !inquiry">{{ error }}</p>
+<app-admin-loader *ngIf="loading" message="Loading inquiry…"></app-admin-loader>
+
+<p class="admin-msg admin-msg--error" *ngIf="!loading && error && !inquiry">{{ error }}</p>

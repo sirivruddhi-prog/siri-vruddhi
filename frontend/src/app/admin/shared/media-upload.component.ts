@@ -4,7 +4,7 @@ import { AdminService, MediaUploadResponse } from '../admin.service';
 @Component({
   selector: 'app-media-upload',
   templateUrl: './media-upload.component.html',
-  styleUrls: ['./media-upload.component.css'],
+  styleUrls: ['../admin-theme.css', './media-upload.component.css'],
 })
 export class MediaUploadComponent {
   @Input() previewUrl = '';

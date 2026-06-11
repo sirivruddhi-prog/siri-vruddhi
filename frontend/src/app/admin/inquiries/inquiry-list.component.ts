@@ -6,7 +6,7 @@ import { AdminService, Inquiry, InquiryCounts, InquiryStatus } from '../admin.se
 @Component({
   selector: 'app-inquiry-list',
   templateUrl: './inquiry-list.component.html',
-  styleUrls: ['./inquiry-list.component.css'],
+  styleUrls: ['../admin-theme.css', '../admin-shared.css', './inquiry-list.component.css'],
 })
 export class InquiryListComponent implements OnInit {
   inquiries: Inquiry[] = [];

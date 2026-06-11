@@ -32,7 +32,10 @@
                 "output": "/assets"
               }
             ],
-            "styles": ["src/styles.css"],
+            "styles": [
+              "src/styles.css",
+              "src/app/admin/admin-forms.css"
+            ],
             "scripts": []
           },
           "configurations": {

@@ -4,7 +4,13 @@
     <p>Edit hero, about, spaces, facilities, dining, and contact section text. Upload images directly in each section.</p>
   </header>
 
-  <p *ngIf="loading">Loading home page sections…</p>
+  <div class="admin-tip" *ngIf="!loading">
+    <span class="admin-tip__icon">⌂</span>
+    <p>Expand each section below to edit copy and upload images. Save per section — changes go live on the public home page.</p>
+  </div>
+
+  <app-admin-loader *ngIf="loading" message="Loading home page sections…"></app-admin-loader>
+
   <p class="admin-msg admin-msg--ok" *ngIf="message">{{ message }}</p>
   <p class="admin-msg admin-msg--error" *ngIf="error">{{ error }}</p>
 
@@ -17,16 +23,19 @@
           <label>Welcome line <input [(ngModel)]="hero.welcome" /></label>
           <label>Tagline <textarea [(ngModel)]="hero.tagline"></textarea></label>
         </div>
-        <div class="admin-list-item" *ngFor="let slide of hero.slides; let i = index">
+        <div class="admin-list-item admin-list-item--fields-2" *ngFor="let slide of hero.slides; let i = index">
           <app-media-upload label="Upload slide image" [previewUrl]="slide.url || ''" (uploaded)="applySlideUpload($event, slide)"></app-media-upload>
-          <label>Alt text <input [(ngModel)]="slide.alt" /></label>
+          <label>Alt text <input [(ngModel)]="slide.alt" placeholder="Describe this slide" /></label>
           <div class="admin-list-item__actions">
             <button type="button" class="btn-danger" (click)="removeHeroSlide(i)">Remove slide</button>
           </div>
         </div>
         <div class="admin-actions">
           <button type="button" class="btn-secondary" (click)="addHeroSlide()">Add slide</button>
-          <button type="button" class="btn-primary" (click)="save('hero')" [disabled]="savingSection === 'hero'">Save hero</button>
+          <button type="button" class="btn-primary" (click)="save('hero')" [disabled]="savingSection === 'hero'">
+            <span class="adm-btn-spinner" *ngIf="savingSection === 'hero'" aria-hidden="true"></span>
+            {{ savingSection === 'hero' ? 'Saving…' : 'Save hero' }}
+          </button>
         </div>
       </div>
     </div>
@@ -34,14 +43,17 @@
     <div class="admin-accordion">
       <button type="button" class="admin-accordion__head" (click)="toggle('stats')">Stats bar</button>
       <div class="admin-accordion__body" *ngIf="openSection === 'stats'">
-        <div class="admin-list-item" *ngFor="let stat of stats.items; let i = index">
-          <label>Value <input [(ngModel)]="stat.value" /></label>
-          <label>Label <input [(ngModel)]="stat.label" /></label>
+        <div class="admin-list-item admin-list-item--fields-2" *ngFor="let stat of stats.items; let i = index">
+          <label>Value <input [(ngModel)]="stat.value" placeholder="e.g. 500+" /></label>
+          <label>Label <input [(ngModel)]="stat.label" placeholder="e.g. Guest capacity" /></label>
           <button type="button" class="btn-danger" (click)="removeStat(i)">Remove</button>
         </div>
         <div class="admin-actions">
           <button type="button" class="btn-secondary" (click)="addStat()">Add stat</button>
-          <button type="button" class="btn-primary" (click)="save('stats')" [disabled]="savingSection === 'stats'">Save stats</button>
+          <button type="button" class="btn-primary" (click)="save('stats')" [disabled]="savingSection === 'stats'">
+            <span class="adm-btn-spinner" *ngIf="savingSection === 'stats'" aria-hidden="true"></span>
+            {{ savingSection === 'stats' ? 'Saving…' : 'Save stats' }}
+          </button>
         </div>
       </div>
     </div>
@@ -55,7 +67,10 @@
           <label>Lead <textarea [(ngModel)]="teaser.lead"></textarea></label>
         </div>
         <div class="admin-actions">
-          <button type="button" class="btn-primary" (click)="save('teaser')" [disabled]="savingSection === 'teaser'">Save teaser</button>
+          <button type="button" class="btn-primary" (click)="save('teaser')" [disabled]="savingSection === 'teaser'">
+            <span class="adm-btn-spinner" *ngIf="savingSection === 'teaser'" aria-hidden="true"></span>
+            {{ savingSection === 'teaser' ? 'Saving…' : 'Save teaser' }}
+          </button>
         </div>
       </div>
     </div>
@@ -77,7 +92,10 @@
         </div>
         <div class="admin-actions">
           <button type="button" class="btn-secondary" (click)="addIntroFeature()">Add feature</button>
-          <button type="button" class="btn-primary" (click)="save('intro')" [disabled]="savingSection === 'intro'">Save intro</button>
+          <button type="button" class="btn-primary" (click)="save('intro')" [disabled]="savingSection === 'intro'">
+            <span class="adm-btn-spinner" *ngIf="savingSection === 'intro'" aria-hidden="true"></span>
+            {{ savingSection === 'intro' ? 'Saving…' : 'Save intro' }}
+          </button>
         </div>
       </div>
     </div>
@@ -92,12 +110,17 @@
           <app-media-upload label="Upload about image" [previewUrl]="about.imageUrl || ''" (uploaded)="applyAboutUpload($event)"></app-media-upload>
         </div>
         <div class="admin-list-item" *ngFor="let p of about.paragraphs; let i = index">
-          <label>Paragraph <textarea [(ngModel)]="about.paragraphs[i]"></textarea></label>
-          <button type="button" class="btn-danger" (click)="removeAboutParagraph(i)">Remove</button>
+          <label>Paragraph <textarea [(ngModel)]="about.paragraphs[i]" placeholder="About section copy"></textarea></label>
+          <div class="admin-list-item__actions">
+            <button type="button" class="btn-danger" (click)="removeAboutParagraph(i)">Remove paragraph</button>
+          </div>
         </div>
         <div class="admin-actions">
           <button type="button" class="btn-secondary" (click)="addAboutParagraph()">Add paragraph</button>
-          <button type="button" class="btn-primary" (click)="save('about')" [disabled]="savingSection === 'about'">Save about</button>
+          <button type="button" class="btn-primary" (click)="save('about')" [disabled]="savingSection === 'about'">
+            <span class="adm-btn-spinner" *ngIf="savingSection === 'about'" aria-hidden="true"></span>
+            {{ savingSection === 'about' ? 'Saving…' : 'Save about' }}
+          </button>
         </div>
       </div>
     </div>
@@ -120,7 +143,10 @@
         </div>
         <div class="admin-actions">
           <button type="button" class="btn-secondary" (click)="addSpace()">Add space</button>
-          <button type="button" class="btn-primary" (click)="save('spaces')" [disabled]="savingSection === 'spaces'">Save spaces</button>
+          <button type="button" class="btn-primary" (click)="save('spaces')" [disabled]="savingSection === 'spaces'">
+            <span class="adm-btn-spinner" *ngIf="savingSection === 'spaces'" aria-hidden="true"></span>
+            {{ savingSection === 'spaces' ? 'Saving…' : 'Save spaces' }}
+          </button>
         </div>
       </div>
     </div>
@@ -141,7 +167,10 @@
         </div>
         <div class="admin-actions">
           <button type="button" class="btn-secondary" (click)="addFacility()">Add facility</button>
-          <button type="button" class="btn-primary" (click)="save('facilities')" [disabled]="savingSection === 'facilities'">Save facilities</button>
+          <button type="button" class="btn-primary" (click)="save('facilities')" [disabled]="savingSection === 'facilities'">
+            <span class="adm-btn-spinner" *ngIf="savingSection === 'facilities'" aria-hidden="true"></span>
+            {{ savingSection === 'facilities' ? 'Saving…' : 'Save facilities' }}
+          </button>
         </div>
       </div>
     </div>
@@ -155,13 +184,16 @@
           <label>Description <textarea [(ngModel)]="dining.description"></textarea></label>
           <app-media-upload label="Upload dining banner" [previewUrl]="dining.imageUrl || ''" (uploaded)="applyDiningUpload($event)"></app-media-upload>
         </div>
-        <div class="admin-list-item" *ngFor="let tag of dining.tags; let i = index">
-          <label>Tag <input [(ngModel)]="dining.tags[i]" /></label>
+        <div class="admin-list-item admin-list-item--inline" *ngFor="let tag of dining.tags; let i = index">
+          <label>Tag <input [(ngModel)]="dining.tags[i]" placeholder="e.g. South Indian" /></label>
           <button type="button" class="btn-danger" (click)="removeDiningTag(i)">Remove</button>
         </div>
         <div class="admin-actions">
           <button type="button" class="btn-secondary" (click)="addDiningTag()">Add tag</button>
-          <button type="button" class="btn-primary" (click)="save('dining')" [disabled]="savingSection === 'dining'">Save dining</button>
+          <button type="button" class="btn-primary" (click)="save('dining')" [disabled]="savingSection === 'dining'">
+            <span class="adm-btn-spinner" *ngIf="savingSection === 'dining'" aria-hidden="true"></span>
+            {{ savingSection === 'dining' ? 'Saving…' : 'Save dining' }}
+          </button>
         </div>
       </div>
     </div>
@@ -175,7 +207,10 @@
           <label>Lead <textarea [(ngModel)]="contactPanel.lead"></textarea></label>
         </div>
         <div class="admin-actions">
-          <button type="button" class="btn-primary" (click)="save('contactPanel')" [disabled]="savingSection === 'contactPanel'">Save contact panel</button>
+          <button type="button" class="btn-primary" (click)="save('contactPanel')" [disabled]="savingSection === 'contactPanel'">
+            <span class="adm-btn-spinner" *ngIf="savingSection === 'contactPanel'" aria-hidden="true"></span>
+            {{ savingSection === 'contactPanel' ? 'Saving…' : 'Save contact panel' }}
+          </button>
         </div>
       </div>
     </div>

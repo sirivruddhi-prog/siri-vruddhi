@@ -1,0 +1,311 @@
+/* Global admin form controls — loaded app-wide, scoped to admin shell */
+body.admin-app {
+  --adm-bg: #f3efe8;
+  --adm-surface: #ffffff;
+  --adm-surface-muted: #faf7f2;
+  --adm-border: rgba(74, 55, 40, 0.12);
+  --adm-border-strong: rgba(74, 55, 40, 0.22);
+  --adm-text: #3d2e24;
+  --adm-text-soft: #7a6656;
+  --adm-gold: #c4a574;
+  --adm-gold-soft: rgba(196, 165, 116, 0.22);
+  --adm-success: #3d6b4f;
+  --adm-success-bg: #e8f3ec;
+  --adm-warn: #9b4d2a;
+  --adm-warn-bg: #fde8d8;
+  --adm-info: #4a6a8a;
+  --adm-info-bg: #e8f0f8;
+  --adm-shadow: 0 4px 24px rgba(45, 35, 28, 0.06);
+  --adm-shadow-lg: 0 12px 36px rgba(45, 35, 28, 0.1);
+  --adm-radius: 16px;
+  --adm-radius-sm: 12px;
+  --adm-input-height: 2.75rem;
+}
+
+/* ─── Field labels ─── */
+body.admin-app .admin-field,
+body.admin-app .admin-form-grid > label,
+body.admin-app .admin-list-item > label:not(.admin-toggle):not(.media-upload__button),
+body.admin-app .admin-gallery-item__fields > label,
+body.admin-app .inquiry-filters label,
+body.admin-app .detail-card--followup label {
+  display: grid;
+  gap: 0.45rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--adm-text-soft);
+  margin: 0;
+}
+
+/* ─── Text inputs, selects, textareas ─── */
+body.admin-app input:not([type='checkbox']):not([type='file']):not([type='radio']):not([type='hidden']),
+body.admin-app select,
+body.admin-app textarea {
+  width: 100%;
+  min-height: var(--adm-input-height);
+  border: 1.5px solid var(--adm-border);
+  border-radius: var(--adm-radius-sm);
+  padding: 0.72rem 0.95rem;
+  font: inherit;
+  font-size: 0.94rem;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--adm-text);
+  background: var(--adm-surface-muted);
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+  box-shadow: inset 0 1px 2px rgba(45, 35, 28, 0.04);
+}
+
+body.admin-app textarea {
+  min-height: 6.5rem;
+  resize: vertical;
+  text-transform: none;
+  letter-spacing: normal;
+  font-weight: 400;
+  line-height: 1.55;
+}
+
+body.admin-app select {
+  appearance: none;
+  padding-right: 2.5rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%237a6656' d='M1.4 1.4 6 6l4.6-4.6L12 3.4 6 9.4 0 3.4z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.95rem center;
+  background-size: 0.65rem;
+  cursor: pointer;
+}
+
+body.admin-app input::placeholder,
+body.admin-app textarea::placeholder {
+  color: #a89888;
+  font-weight: 400;
+}
+
+body.admin-app input:hover:not(:disabled):not(:focus),
+body.admin-app select:hover:not(:disabled):not(:focus),
+body.admin-app textarea:hover:not(:disabled):not(:focus) {
+  border-color: var(--adm-border-strong);
+  background: #fff;
+}
+
+body.admin-app input:focus,
+body.admin-app select:focus,
+body.admin-app textarea:focus {
+  outline: none;
+  border-color: var(--adm-gold);
+  box-shadow: 0 0 0 3px var(--adm-gold-soft), inset 0 1px 2px rgba(45, 35, 28, 0.03);
+  background: var(--adm-surface);
+}
+
+body.admin-app input:disabled,
+body.admin-app select:disabled,
+body.admin-app textarea:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ─── Form grid layout ─── */
+body.admin-app .admin-form-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+body.admin-app .admin-form-grid > label:has(textarea),
+body.admin-app .admin-form-grid > label:has(app-media-upload) {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 720px) {
+  body.admin-app .admin-form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ─── List items (categories, stats, features, etc.) ─── */
+body.admin-app .admin-list-item,
+body.admin-app .admin-gallery-item {
+  margin-bottom: 0.75rem;
+}
+
+body.admin-app .admin-list-item {
+  display: grid;
+  gap: 1rem;
+  padding: 1.15rem 1.2rem;
+  border: 1px solid var(--adm-border);
+  border-radius: var(--adm-radius-sm);
+  background: var(--adm-surface);
+  box-shadow: var(--adm-shadow);
+}
+
+body.admin-app .admin-list-item--inline {
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  gap: 0.85rem;
+}
+
+body.admin-app .admin-list-item--inline > .btn-danger {
+  margin-bottom: 0.15rem;
+  white-space: nowrap;
+}
+
+body.admin-app .admin-list-item__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--adm-border);
+}
+
+body.admin-app .admin-list-item--fields-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+body.admin-app .admin-list-item--fields-2 > .btn-danger,
+body.admin-app .admin-list-item--fields-2 > app-media-upload,
+body.admin-app .admin-list-item--fields-2 > .admin-list-item__actions {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 640px) {
+  body.admin-app .admin-list-item--fields-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ─── Gallery photo cards ─── */
+body.admin-app .admin-gallery-item {
+  display: grid;
+  grid-template-columns: minmax(160px, 220px) 1fr;
+  gap: 1.25rem;
+  padding: 1.25rem;
+  border: 1px solid var(--adm-border);
+  border-radius: var(--adm-radius);
+  background: var(--adm-surface);
+  box-shadow: var(--adm-shadow);
+}
+
+body.admin-app .admin-gallery-item__media {
+  min-width: 0;
+}
+
+body.admin-app .admin-gallery-item__fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+  align-content: start;
+}
+
+body.admin-app .admin-gallery-item__fields > label:first-child {
+  grid-column: 1 / -1;
+}
+
+body.admin-app .admin-gallery-item__footer {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  padding-top: 0.85rem;
+  margin-top: 0.25rem;
+  border-top: 1px solid var(--adm-border);
+}
+
+@media (max-width: 800px) {
+  body.admin-app .admin-gallery-item {
+    grid-template-columns: 1fr;
+  }
+
+  body.admin-app .admin-gallery-item__fields {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ─── Toggle switch (visibility, etc.) ─── */
+body.admin-app .admin-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: normal;
+  color: var(--adm-text);
+  cursor: pointer;
+  user-select: none;
+}
+
+body.admin-app .admin-toggle input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+body.admin-app .admin-toggle__track {
+  position: relative;
+  width: 2.75rem;
+  height: 1.5rem;
+  border-radius: 999px;
+  background: #ddd5cb;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+
+body.admin-app .admin-toggle__track::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 1.125rem;
+  height: 1.125rem;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(45, 35, 28, 0.2);
+  transition: transform 0.2s;
+}
+
+body.admin-app .admin-toggle input:checked + .admin-toggle__track {
+  background: var(--adm-success);
+}
+
+body.admin-app .admin-toggle input:checked + .admin-toggle__track::after {
+  transform: translateX(1.25rem);
+}
+
+body.admin-app .admin-toggle input:focus-visible + .admin-toggle__track {
+  box-shadow: 0 0 0 3px var(--adm-gold-soft);
+}
+
+/* ─── Buttons in list context ─── */
+body.admin-app .btn-danger {
+  border: 1px solid rgba(155, 77, 42, 0.25);
+  background: var(--adm-warn-bg);
+  color: var(--adm-warn);
+  font-size: 0.82rem;
+  padding: 0.55rem 0.9rem;
+}
+
+body.admin-app .btn-danger:hover:not(:disabled) {
+  background: #f9d4bc;
+  transform: translateY(-1px);
+}
+
+body.admin-app .btn-secondary {
+  border: 1px solid var(--adm-border);
+}
+
+/* ─── Inquiry filters polish ─── */
+body.admin-app .inquiry-filters input,
+body.admin-app .inquiry-filters select {
+  min-height: 2.5rem;
+}
+
+body.admin-app .detail-card--followup textarea {
+  min-height: 7.5rem;
+}

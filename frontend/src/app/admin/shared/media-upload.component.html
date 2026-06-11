@@ -1,10 +1,17 @@
-<div class="media-upload">
-  <div class="media-upload__preview" *ngIf="previewUrl">
-    <img [src]="previewUrl" alt="Uploaded preview" />
-  </div>
-  <label class="media-upload__button">
-    <input type="file" accept="image/*" (change)="onFileSelected($event)" [disabled]="uploading" />
-    {{ uploading ? 'Uploading…' : label }}
-  </label>
-  <p class="media-upload__error" *ngIf="error">{{ error }}</p>
-</div>
+<div class="media-upload" [class.media-upload--has-preview]="!!previewUrl">
+  <div class="media-upload__zone">
+    <div class="media-upload__preview" *ngIf="previewUrl">
+      <img [src]="previewUrl" alt="Uploaded preview" />
+    </div>
+    <div class="media-upload__empty" *ngIf="!previewUrl">
+      <span class="media-upload__icon" aria-hidden="true">↑</span>
+      <span class="media-upload__hint">JPG or PNG · auto-compressed</span>
+    </div>
+    <label class="media-upload__button">
+      <input type="file" accept="image/*" (change)="onFileSelected($event)" [disabled]="uploading" />
+      <span class="adm-btn-spinner" *ngIf="uploading" aria-hidden="true"></span>
+      {{ uploading ? 'Uploading…' : (previewUrl ? 'Replace image' : label) }}
+    </label>
+  </div>
+  <p class="media-upload__error" *ngIf="error">{{ error }}</p>
+</div>

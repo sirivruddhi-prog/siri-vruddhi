@@ -4,7 +4,7 @@ import { AdminService, MediaUploadResponse } from '../admin.service';
 @Component({
   selector: 'app-cms-home',
   templateUrl: './cms-home.component.html',
-  styleUrls: ['../admin-shared.css'],
+  styleUrls: ['../admin-theme.css', '../admin-shared.css'],
 })
 export class CmsHomeComponent implements OnInit {
   hero: any = {};

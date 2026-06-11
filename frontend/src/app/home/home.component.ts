@@ -17,6 +17,7 @@ interface SpaceCard {
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit, OnDestroy {
+  contentLoading = true;
   content: PublicSiteContent | null = null;
   contact = SITE_CONTACT;
   heroSlides: { src: string; alt: string }[] = [];
@@ -48,8 +49,14 @@ export class HomeComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.siteContent.load().subscribe((content) => {
-      this.applyContent(content);
+    this.siteContent.load().subscribe({
+      next: (content) => {
+        this.applyContent(content);
+        this.contentLoading = false;
+      },
+      error: () => {
+        this.contentLoading = false;
+      },
     });
     this.slideTimer = setInterval(() => this.nextSlide(), 6000);
     this.initRevealObserver();

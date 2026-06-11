@@ -6,7 +6,7 @@ import { AdminService, Inquiry, InquiryStatus } from '../admin.service';
 @Component({
   selector: 'app-inquiry-detail',
   templateUrl: './inquiry-detail.component.html',
-  styleUrls: ['./inquiry-detail.component.css'],
+  styleUrls: ['../admin-theme.css', '../admin-shared.css', './inquiry-detail.component.css'],
 })
 export class InquiryDetailComponent implements OnInit {
   inquiry: Inquiry | null = null;
@@ -111,5 +111,10 @@ export class InquiryDetailComponent implements OnInit {
 
   goBack(): void {
     this.router.navigate(adminInquiriesPath());
+  }
+
+  statusLabel(status: InquiryStatus): string {
+    const match = this.statuses.find((item) => item.value === status);
+    return match?.label || status;
   }
 }

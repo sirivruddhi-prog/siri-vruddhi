@@ -1,3 +1,6 @@
+<app-page-loader *ngIf="contentLoading" message="Loading venue content…"></app-page-loader>
+
+<ng-container *ngIf="!contentLoading">
 <section class="hero-banner" aria-label="Venue showcase">
   <div class="hero-slides">
     <div
@@ -228,9 +231,11 @@
         <textarea id="message" name="message" [(ngModel)]="inquiry.message" rows="3" placeholder="Dates, guest count, event type…"></textarea>
       </div>
       <button class="btn btn-primary btn-block" type="submit" [disabled]="submitting">
+        <span class="btn-spinner" *ngIf="submitting" aria-hidden="true"></span>
         {{ submitting ? 'Sending…' : 'Send Inquiry' }}
       </button>
       <div *ngIf="statusMessage" class="notice" [class.error]="statusError">{{ statusMessage }}</div>
     </form>
   </section>
 </main>
+</ng-container>

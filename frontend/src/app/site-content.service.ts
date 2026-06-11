@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { catchError, shareReplay } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { catchError, finalize, shareReplay, tap } from 'rxjs/operators';
 import { environment } from '../environments/environment';
 import { SITE_CONTACT } from './site-contact';
 import { GALLERY_ITEMS, HERO_SLIDES, venueImg } from './venue-images';
@@ -68,6 +68,8 @@ export interface PublicSiteContent {
 @Injectable({ providedIn: 'root' })
 export class SiteContentService {
   private cache$?: Observable<PublicSiteContent>;
+  private readonly loadingSubject = new BehaviorSubject(false);
+  readonly loading$ = this.loadingSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
@@ -76,8 +78,11 @@ export class SiteContentService {
       this.cache$ = undefined;
     }
     if (!this.cache$) {
+      this.loadingSubject.next(true);
       this.cache$ = this.http.get<PublicSiteContent>(`${environment.apiUrl}/site`).pipe(
         catchError(() => of(this.buildFallback())),
+        tap(() => this.loadingSubject.next(false)),
+        finalize(() => this.loadingSubject.next(false)),
         shareReplay(1)
       );
     }

@@ -8,6 +8,7 @@ import { GalleryItem } from '../venue-images';
   styleUrls: ['./gallery.component.css']
 })
 export class GalleryComponent implements AfterViewInit {
+  contentLoading = true;
   content: PublicSiteContent | null = null;
   pageHeroImage = '';
   categories = ['All'];
@@ -17,11 +18,17 @@ export class GalleryComponent implements AfterViewInit {
   lightboxIndex = 0;
 
   constructor(private siteContent: SiteContentService) {
-    this.siteContent.load().subscribe((content) => {
-      this.content = content;
-      this.pageHeroImage = content.gallery.pageHeroSrc || this.siteContent.img(content.gallery.pageHeroFile || '');
-      this.categories = ['All', ...content.gallery.categories];
-      this.filterCategory('All');
+    this.siteContent.load().subscribe({
+      next: (content) => {
+        this.content = content;
+        this.pageHeroImage = content.gallery.pageHeroSrc || this.siteContent.img(content.gallery.pageHeroFile || '');
+        this.categories = ['All', ...content.gallery.categories];
+        this.filterCategory('All');
+        this.contentLoading = false;
+      },
+      error: () => {
+        this.contentLoading = false;
+      },
     });
   }
 

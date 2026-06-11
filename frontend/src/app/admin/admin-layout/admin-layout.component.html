@@ -1,31 +1,71 @@
+<app-admin-loading-bar></app-admin-loading-bar>
+
 <div class="admin-app-layout">
   <aside class="admin-sidebar">
     <div class="admin-sidebar__brand">
-      <img src="assets/images/sri-chakra.svg" alt="" width="28" height="28" />
+      <div class="admin-sidebar__logo-wrap">
+        <img src="assets/images/sri-chakra.svg" alt="" width="30" height="30" />
+      </div>
       <div>
         <p class="admin-sidebar__title">Siri Vruddhi</p>
-        <p class="admin-sidebar__subtitle">Admin</p>
+        <p class="admin-sidebar__subtitle">Venue Admin</p>
       </div>
     </div>
 
     <nav class="admin-sidebar__nav">
-      <a routerLink="dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Dashboard</a>
-      <a routerLink="inquiries" routerLinkActive="active">Inquiries</a>
+      <a routerLink="dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="admin-nav-item">
+        <span class="admin-nav-item__icon" aria-hidden="true">◈</span>
+        <span>Dashboard</span>
+      </a>
+      <a routerLink="inquiries" routerLinkActive="active" class="admin-nav-item">
+        <span class="admin-nav-item__icon" aria-hidden="true">✉</span>
+        <span>Inquiries</span>
+      </a>
+
       <p class="admin-sidebar__group">Website CMS</p>
-      <a routerLink="website/contact" routerLinkActive="active">Contact &amp; links</a>
-      <a routerLink="website/home" routerLinkActive="active">Home page</a>
-      <a routerLink="website/gallery" routerLinkActive="active">Gallery</a>
+
+      <a routerLink="website/contact" routerLinkActive="active" class="admin-nav-item">
+        <span class="admin-nav-item__icon" aria-hidden="true">☎</span>
+        <span>Contact &amp; links</span>
+      </a>
+      <a routerLink="website/home" routerLinkActive="active" class="admin-nav-item">
+        <span class="admin-nav-item__icon" aria-hidden="true">⌂</span>
+        <span>Home page</span>
+      </a>
+      <a routerLink="website/gallery" routerLinkActive="active" class="admin-nav-item">
+        <span class="admin-nav-item__icon" aria-hidden="true">▣</span>
+        <span>Gallery</span>
+      </a>
     </nav>
 
     <div class="admin-sidebar__footer">
-      <p class="admin-sidebar__email">{{ email }}</p>
+      <div class="admin-sidebar__user">
+        <span class="admin-sidebar__avatar">{{ email.charAt(0).toUpperCase() }}</span>
+        <div>
+          <p class="admin-sidebar__email">{{ email }}</p>
+          <p class="admin-sidebar__role">Administrator</p>
+        </div>
+      </div>
       <button type="button" class="admin-sidebar__logout" (click)="logout()" [disabled]="loggingOut">
-        {{ loggingOut ? 'Signing out…' : 'Logout' }}
+        <span class="adm-btn-spinner" *ngIf="loggingOut" aria-hidden="true"></span>
+        {{ loggingOut ? 'Signing out…' : 'Sign out' }}
       </button>
     </div>
   </aside>
 
-  <div class="admin-content-area">
+  <div class="admin-frame">
+    <header class="admin-topbar">
+      <div class="admin-topbar__titles">
+        <p class="admin-topbar__eyebrow">Siri Vruddhi · Operations</p>
+        <h1 class="admin-topbar__title">{{ pageTitle }}</h1>
+      </div>
+      <div class="admin-topbar__actions">
+        <a href="https://sirivruddhi.com" target="_blank" rel="noopener noreferrer" class="admin-topbar__link">
+          View live site ↗
+        </a>
+      </div>
+    </header>
+
     <main class="admin-main">
       <router-outlet></router-outlet>
     </main>

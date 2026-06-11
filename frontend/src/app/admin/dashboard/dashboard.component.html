@@ -1,62 +1,92 @@
 <section class="admin-page dashboard">
-  <header class="admin-page__header">
-    <h1>Dashboard</h1>
-    <p>Overview of inquiries and website content.</p>
-  </header>
+  <div class="dashboard-hero" *ngIf="!loading">
+    <div class="dashboard-hero__copy">
+      <p class="dashboard-hero__greeting">{{ greeting }}</p>
+      <h2>Welcome back to your venue command center</h2>
+      <p>Track inquiries, update website content, and manage gallery photos — all in one place.</p>
+    </div>
+    <div class="dashboard-hero__badge">
+      <span class="dashboard-hero__badge-label">Live site</span>
+      <a href="https://sirivruddhi.com" target="_blank" rel="noopener noreferrer">sirivruddhi.com ↗</a>
+    </div>
+  </div>
 
   <p class="admin-msg admin-msg--error" *ngIf="error">{{ error }}</p>
-  <p *ngIf="loading">Loading dashboard…</p>
+
+  <app-admin-loader *ngIf="loading" message="Loading dashboard…"></app-admin-loader>
 
   <ng-container *ngIf="!loading && data as d">
-    <div class="dashboard__cards">
-      <article class="dashboard__card dashboard__card--accent" (click)="goInquiries()">
-        <span>New inquiries</span>
-        <strong>{{ d.inquiries.new }}</strong>
+    <div class="adm-stats">
+      <article class="adm-stat adm-stat--new adm-stat--clickable" (click)="goInquiries()">
+        <span class="adm-stat__icon">✦</span>
+        <span class="adm-stat__label">New inquiries</span>
+        <strong class="adm-stat__value">{{ d.inquiries.new }}</strong>
       </article>
-      <article class="dashboard__card" (click)="goInquiries()">
-        <span>Today</span>
-        <strong>{{ d.inquiries.today }}</strong>
+      <article class="adm-stat adm-stat--today adm-stat--clickable" (click)="goInquiries()">
+        <span class="adm-stat__icon">◷</span>
+        <span class="adm-stat__label">Today</span>
+        <strong class="adm-stat__value">{{ d.inquiries.today }}</strong>
       </article>
-      <article class="dashboard__card" (click)="goInquiries()">
-        <span>This week</span>
-        <strong>{{ d.inquiries.thisWeek }}</strong>
+      <article class="adm-stat adm-stat--week adm-stat--clickable" (click)="goInquiries()">
+        <span class="adm-stat__icon">▦</span>
+        <span class="adm-stat__label">This week</span>
+        <strong class="adm-stat__value">{{ d.inquiries.thisWeek }}</strong>
       </article>
-      <article class="dashboard__card" (click)="goInquiries()">
-        <span>Total inquiries</span>
-        <strong>{{ d.inquiries.total }}</strong>
+      <article class="adm-stat adm-stat--total adm-stat--clickable" (click)="goInquiries()">
+        <span class="adm-stat__icon">∑</span>
+        <span class="adm-stat__label">All inquiries</span>
+        <strong class="adm-stat__value">{{ d.inquiries.total }}</strong>
       </article>
     </div>
 
-    <div class="dashboard__grid">
-      <article class="admin-card">
-        <h2>Quick actions</h2>
-        <div class="dashboard__actions">
-          <button type="button" class="btn-primary" (click)="goInquiries()">View inquiries</button>
-          <button type="button" class="btn-secondary" (click)="goWebsite('contact')">Edit contact info</button>
-          <button type="button" class="btn-secondary" (click)="goWebsite('home')">Edit home page</button>
-          <button type="button" class="btn-secondary" (click)="goWebsite('gallery')">Manage gallery</button>
+    <div class="dashboard-grid">
+      <section class="dashboard-panel">
+        <header class="dashboard-panel__head">
+          <h2>Quick actions</h2>
+          <p>Jump straight to the tools you use most.</p>
+        </header>
+        <div class="action-tiles">
+          <button type="button" class="action-tile" [ngClass]="tile.accent" *ngFor="let tile of actionTiles" (click)="tile.action()">
+            <span class="action-tile__icon">{{ tile.icon }}</span>
+            <span class="action-tile__title">{{ tile.title }}</span>
+            <span class="action-tile__desc">{{ tile.desc }}</span>
+            <span class="action-tile__arrow">→</span>
+          </button>
         </div>
-      </article>
+      </section>
 
-      <article class="admin-card">
-        <h2>Website content</h2>
-        <p class="admin-hint">Last updated: {{ formatDate(d.content.updatedAt) }}</p>
-        <ul class="dashboard__sections">
-          <li *ngFor="let section of d.sections">
-            <span>{{ section }}</span>
-            <span>{{ formatDate(d.content.sections[section]) }}</span>
-          </li>
-        </ul>
-      </article>
-
-      <article class="admin-card" *ngIf="d.inquiries.byEventType">
-        <h2>Inquiries by event type</h2>
-        <div class="dashboard__chips">
-          <span class="dashboard__chip" *ngFor="let item of d.inquiries.byEventType | keyvalue">
-            {{ item.key }} · {{ item.value }}
-          </span>
+      <section class="dashboard-panel" *ngIf="d.inquiries.byEventType">
+        <header class="dashboard-panel__head">
+          <h2>Leads by event type</h2>
+          <p>See which celebrations drive the most interest.</p>
+        </header>
+        <div class="bar-chart">
+          <div class="bar-chart__row" *ngFor="let item of eventTypeEntries(d.inquiries.byEventType)">
+            <span class="bar-chart__label">{{ item.key }}</span>
+            <div class="bar-chart__track">
+              <span class="bar-chart__fill" [style.width]="barWidth(item.value, d.inquiries.total)"></span>
+            </div>
+            <span class="bar-chart__value">{{ item.value }}</span>
+          </div>
         </div>
-      </article>
+        <p class="dashboard-duplicates" *ngIf="d.inquiries.duplicateCount">
+          <span class="duplicate-badge">!</span>
+          {{ d.inquiries.duplicateCount }} possible duplicate inquiries need review
+        </p>
+      </section>
+
+      <section class="dashboard-panel dashboard-panel--wide">
+        <header class="dashboard-panel__head">
+          <h2>Website content health</h2>
+          <p>Last site update: <strong>{{ formatDate(d.content.updatedAt) }}</strong></p>
+        </header>
+        <div class="content-grid">
+          <div class="content-chip" *ngFor="let section of d.sections">
+            <span class="content-chip__name">{{ sectionLabel(section) }}</span>
+            <span class="content-chip__date">{{ formatDate(d.content.sections[section]) }}</span>
+          </div>
+        </div>
+      </section>
     </div>
   </ng-container>
 </section>

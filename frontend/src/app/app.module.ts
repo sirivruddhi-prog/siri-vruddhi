@@ -8,9 +8,10 @@ import { AppComponent } from './app.component';
 import { AdminRedirectComponent } from './admin/admin-redirect.component';
 import { HomeComponent } from './home/home.component';
 import { GalleryComponent } from './gallery/gallery.component';
+import { PageLoaderComponent } from './shared/page-loader.component';
 
 @NgModule({
-  declarations: [AppComponent, HomeComponent, GalleryComponent, AdminRedirectComponent],
+  declarations: [AppComponent, HomeComponent, GalleryComponent, AdminRedirectComponent, PageLoaderComponent],
   imports: [BrowserModule, HttpClientModule, FormsModule, AppRoutingModule],
   providers: [],
   bootstrap: [AppComponent]

@@ -14,7 +14,7 @@ interface ContactContent {
 @Component({
   selector: 'app-cms-contact',
   templateUrl: './cms-contact.component.html',
-  styleUrls: ['../admin-shared.css'],
+  styleUrls: ['../admin-theme.css', '../admin-shared.css'],
 })
 export class CmsContactComponent implements OnInit {
   content: ContactContent = {

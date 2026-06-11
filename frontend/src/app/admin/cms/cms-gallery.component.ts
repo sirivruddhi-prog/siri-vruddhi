@@ -26,7 +26,7 @@ interface GalleryContent {
 @Component({
   selector: 'app-cms-gallery',
   templateUrl: './cms-gallery.component.html',
-  styleUrls: ['../admin-shared.css'],
+  styleUrls: ['../admin-theme.css', '../admin-shared.css'],
 })
 export class CmsGalleryComponent implements OnInit {
   content: GalleryContent = {

@@ -1,103 +1,111 @@
-<section class="inquiry-list">
-  <div class="dashboard-cards">
-    <article class="dashboard-card dashboard-card--accent">
-      <span class="dashboard-card__label">New</span>
-      <strong class="dashboard-card__value">{{ counts.new }}</strong>
+<section class="admin-page inquiry-list">
+  <header class="admin-page__header">
+    <h1>Inquiry inbox</h1>
+    <p>Every venue enquiry in one place — filter, follow up, and export for your records.</p>
+  </header>
+
+  <div class="adm-stats">
+    <article class="adm-stat adm-stat--new">
+      <span class="adm-stat__icon">✦</span>
+      <span class="adm-stat__label">New</span>
+      <strong class="adm-stat__value">{{ counts.new }}</strong>
     </article>
-    <article class="dashboard-card">
-      <span class="dashboard-card__label">Today</span>
-      <strong class="dashboard-card__value">{{ counts.today }}</strong>
+    <article class="adm-stat adm-stat--today">
+      <span class="adm-stat__icon">◷</span>
+      <span class="adm-stat__label">Today</span>
+      <strong class="adm-stat__value">{{ counts.today }}</strong>
     </article>
-    <article class="dashboard-card">
-      <span class="dashboard-card__label">This week</span>
-      <strong class="dashboard-card__value">{{ counts.thisWeek }}</strong>
+    <article class="adm-stat adm-stat--week">
+      <span class="adm-stat__icon">▦</span>
+      <span class="adm-stat__label">This week</span>
+      <strong class="adm-stat__value">{{ counts.thisWeek }}</strong>
     </article>
-    <article class="dashboard-card">
-      <span class="dashboard-card__label">Possible duplicates</span>
-      <strong class="dashboard-card__value">{{ duplicateCount }}</strong>
+    <article class="adm-stat adm-stat--warn">
+      <span class="adm-stat__icon">!</span>
+      <span class="adm-stat__label">Duplicates</span>
+      <strong class="adm-stat__value">{{ duplicateCount }}</strong>
     </article>
   </div>
 
-  <div class="event-breakdown" *ngIf="topEventTypes.length">
-    <span class="event-breakdown__label">Top event types</span>
-    <span class="event-chip" *ngFor="let item of topEventTypes">{{ item.name }} · {{ item.count }}</span>
+  <div class="inquiry-chips" *ngIf="topEventTypes.length">
+    <span class="inquiry-chips__label">Popular events</span>
+    <span class="inquiry-chip" *ngFor="let item of topEventTypes">{{ item.name }} · {{ item.count }}</span>
   </div>
 
-  <div class="inquiry-list__toolbar">
-    <span class="stat-pill stat-pill--muted">{{ total }} matching</span>
-    <button type="button" class="btn-secondary" (click)="exportCsv()" [disabled]="exporting">
-      {{ exporting ? 'Exporting…' : 'Export CSV' }}
-    </button>
-  </div>
-
-  <div class="inquiry-list__filters">
-    <label>
-      Status
-      <select [(ngModel)]="statusFilter" (change)="applyFilters()">
-        <option *ngFor="let item of statuses" [value]="item.value">{{ item.label }}</option>
-      </select>
-    </label>
-
-    <label>
-      Event type
-      <select [(ngModel)]="eventTypeFilter" (change)="applyFilters()">
-        <option value="">All events</option>
-        <option *ngFor="let type of eventTypes" [value]="type">{{ type }}</option>
-      </select>
-    </label>
-
-    <label>
-      From
-      <input type="date" [(ngModel)]="dateFrom" (change)="applyFilters()" />
-    </label>
-
-    <label>
-      To
-      <input type="date" [(ngModel)]="dateTo" (change)="applyFilters()" />
-    </label>
-
-    <label class="inquiry-list__search">
-      Search
-      <input
-        type="search"
-        [(ngModel)]="search"
-        placeholder="Name, phone, email…"
-        (keyup.enter)="applyFilters()"
-      />
-    </label>
-
-    <button type="button" class="btn-primary" (click)="applyFilters()">Apply</button>
-    <button type="button" class="btn-link" (click)="clearDateFilters()" *ngIf="dateFrom || dateTo">Clear dates</button>
-  </div>
-
-  <p class="inquiry-list__error" *ngIf="error">{{ error }}</p>
-  <p class="inquiry-list__loading" *ngIf="loading">Loading inquiries…</p>
-
-  <div class="inquiry-table" *ngIf="!loading">
-    <div class="inquiry-table__head">
-      <span>Status</span>
-      <span>Name</span>
-      <span>Event</span>
-      <span>Phone</span>
-      <span>Submitted</span>
+  <article class="admin-card inquiry-filters-card">
+    <div class="inquiry-filters-card__head">
+      <h2>Search &amp; filter</h2>
+      <button type="button" class="btn-secondary" (click)="exportCsv()" [disabled]="exporting">
+        <span class="adm-btn-spinner" *ngIf="exporting" aria-hidden="true"></span>
+        {{ exporting ? 'Exporting…' : '↓ Export CSV' }}
+      </button>
     </div>
 
-    <button
-      type="button"
-      class="inquiry-row"
-      *ngFor="let inquiry of inquiries"
-      (click)="openInquiry(inquiry.id)"
-    >
-      <span class="inquiry-row__status">
-        <span class="status-badge" [attr.data-status]="inquiry.status">{{ statusLabel(inquiry.status) }}</span>
-        <span class="duplicate-badge" *ngIf="inquiry.isDuplicate">Dup</span>
-      </span>
-      <span>{{ inquiry.name }}</span>
-      <span>{{ inquiry.eventType }}</span>
-      <span>{{ inquiry.phone }}</span>
-      <span>{{ formatDate(inquiry.createdAt) }}</span>
-    </button>
+    <div class="inquiry-filters">
+      <label>
+        Status
+        <select [(ngModel)]="statusFilter" (change)="applyFilters()">
+          <option *ngFor="let item of statuses" [value]="item.value">{{ item.label }}</option>
+        </select>
+      </label>
+      <label>
+        Event type
+        <select [(ngModel)]="eventTypeFilter" (change)="applyFilters()">
+          <option value="">All events</option>
+          <option *ngFor="let type of eventTypes" [value]="type">{{ type }}</option>
+        </select>
+      </label>
+      <label>
+        From
+        <input type="date" [(ngModel)]="dateFrom" (change)="applyFilters()" />
+      </label>
+      <label>
+        To
+        <input type="date" [(ngModel)]="dateTo" (change)="applyFilters()" />
+      </label>
+      <label class="inquiry-filters__search">
+        Search
+        <input type="search" [(ngModel)]="search" placeholder="Name, phone, email…" (keyup.enter)="applyFilters()" />
+      </label>
+      <div class="inquiry-filters__actions">
+        <button type="button" class="btn-primary" (click)="applyFilters()">Apply filters</button>
+        <button type="button" class="btn-ghost" (click)="clearDateFilters()" *ngIf="dateFrom || dateTo">Clear dates</button>
+      </div>
+    </div>
+    <p class="admin-hint">{{ total }} inquiries match your filters</p>
+  </article>
 
-    <p class="inquiry-list__empty" *ngIf="!inquiries.length">No inquiries match your filters.</p>
-  </div>
+  <p class="admin-msg admin-msg--error" *ngIf="error">{{ error }}</p>
+
+  <app-admin-loader *ngIf="loading" message="Loading inquiries…"></app-admin-loader>
+
+  <article class="inquiry-table-card" *ngIf="!loading">
+    <div class="inquiry-table">
+      <div class="inquiry-table__head">
+        <span>Lead</span>
+        <span>Event</span>
+        <span>Phone</span>
+        <span>Submitted</span>
+      </div>
+
+      <button type="button" class="inquiry-row" *ngFor="let inquiry of inquiries" (click)="openInquiry(inquiry.id)">
+        <span class="inquiry-row__lead">
+          <span class="inquiry-avatar">{{ inquiry.name.charAt(0) }}</span>
+          <span>
+            <strong>{{ inquiry.name }}</strong>
+            <span class="inquiry-row__badges">
+              <span class="status-badge" [attr.data-status]="inquiry.status">{{ statusLabel(inquiry.status) }}</span>
+              <span class="duplicate-badge" *ngIf="inquiry.isDuplicate">Dup</span>
+            </span>
+          </span>
+        </span>
+        <span class="inquiry-row__event">{{ inquiry.eventType }}</span>
+        <span class="inquiry-row__phone">{{ inquiry.phone }}</span>
+        <span class="inquiry-row__date">{{ formatDate(inquiry.createdAt) }}</span>
+        <span class="inquiry-row__chevron">›</span>
+      </button>
+
+      <p class="inquiry-empty" *ngIf="!inquiries.length">No inquiries match your filters.</p>
+    </div>
+  </article>
 </section>

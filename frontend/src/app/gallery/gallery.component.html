@@ -1,3 +1,6 @@
+<app-page-loader *ngIf="contentLoading" message="Loading gallery…"></app-page-loader>
+
+<ng-container *ngIf="!contentLoading">
 <div class="page-hero gallery-page-hero reveal">
   <div class="page-hero-bg" [style.background-image]="'url(' + pageHeroImage + ')'"></div>
   <div class="page-hero-overlay"></div>
@@ -63,3 +66,4 @@
   </figure>
   <button type="button" class="lightbox-nav lightbox-next" aria-label="Next" (click)="nextImage()">›</button>
 </div>
+</ng-container>

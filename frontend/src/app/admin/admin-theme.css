@@ -1,0 +1,28 @@
+/* Admin design system — scoped to admin shell */
+.admin-app-layout {
+  --adm-bg: #f3efe8;
+  --adm-bg-accent: radial-gradient(ellipse 120% 80% at 100% 0%, rgba(196, 165, 116, 0.18), transparent 55%),
+    radial-gradient(ellipse 80% 60% at 0% 100%, rgba(74, 55, 40, 0.06), transparent 50%),
+    #f3efe8;
+  --adm-sidebar: linear-gradient(175deg, #3d2e24 0%, #2a211a 48%, #1f1814 100%);
+  --adm-sidebar-border: rgba(255, 255, 255, 0.08);
+  --adm-surface: #ffffff;
+  --adm-surface-muted: #faf7f2;
+  --adm-border: rgba(74, 55, 40, 0.1);
+  --adm-text: #3d2e24;
+  --adm-text-soft: #7a6656;
+  --adm-gold: #c4a574;
+  --adm-gold-soft: rgba(196, 165, 116, 0.22);
+  --adm-accent: #9a7b4f;
+  --adm-success: #3d6b4f;
+  --adm-success-bg: #e8f3ec;
+  --adm-warn: #9b4d2a;
+  --adm-warn-bg: #fde8d8;
+  --adm-info: #4a6a8a;
+  --adm-info-bg: #e8f0f8;
+  --adm-shadow: 0 4px 24px rgba(45, 35, 28, 0.06);
+  --adm-shadow-lg: 0 20px 50px rgba(45, 35, 28, 0.1);
+  --adm-radius: 16px;
+  --adm-radius-sm: 12px;
+  --adm-radius-lg: 22px;
+}
