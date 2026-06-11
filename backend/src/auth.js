@@ -51,25 +51,24 @@ function getTokenFromRequest(req) {
   return req.cookies?.[COOKIE_NAME] || null;
 }
 
-function setAuthCookie(res, token) {
+function cookieOptions() {
   const isProduction = process.env.NODE_ENV === 'production';
-  res.cookie(COOKIE_NAME, token, {
+  // Production API (Render) is on a different site than sirivruddhi.com — needs SameSite=None.
+  return {
     httpOnly: true,
     secure: isProduction,
-    sameSite: 'strict',
+    sameSite: isProduction ? 'none' : 'lax',
     maxAge: 7 * 24 * 60 * 60 * 1000,
     path: '/',
-  });
+  };
+}
+
+function setAuthCookie(res, token) {
+  res.cookie(COOKIE_NAME, token, cookieOptions());
 }
 
 function clearAuthCookie(res) {
-  const isProduction = process.env.NODE_ENV === 'production';
-  res.clearCookie(COOKIE_NAME, {
-    httpOnly: true,
-    secure: isProduction,
-    sameSite: 'strict',
-    path: '/',
-  });
+  res.clearCookie(COOKIE_NAME, cookieOptions());
 }
 
 function requireAdmin(req, res, next) {
