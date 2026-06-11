@@ -214,7 +214,19 @@
           <div class="review-card__stars" [attr.aria-label]="review.rating + ' out of 5 stars'">
             <span *ngFor="let star of [0,1,2,3,4]" [class.filled]="isStarFilled(i, star)">★</span>
           </div>
-          <blockquote class="review-card__quote">“{{ review.text }}”</blockquote>
+          <blockquote
+            class="review-card__quote"
+            [class.review-card__quote--long]="isLongReview(review.text)"
+            [class.review-card__quote--clamped]="isLongReview(review.text) && !isReviewExpanded(i)"
+          >“{{ review.text }}”</blockquote>
+          <button
+            *ngIf="isLongReview(review.text)"
+            type="button"
+            class="review-card__more"
+            (click)="toggleReviewExpand(i)"
+          >
+            {{ isReviewExpanded(i) ? 'Show less' : 'Read more' }}
+          </button>
           <footer class="review-card__footer">
             <img
               *ngIf="review.authorPhotoUrl"

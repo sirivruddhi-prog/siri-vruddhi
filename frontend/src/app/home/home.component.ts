@@ -33,6 +33,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   activeSlide = 0;
   activeReviewSlide = 0;
+  expandedReview = -1;
   submitting = false;
   teaserPlaying = false;
   private slideTimer?: ReturnType<typeof setInterval>;
@@ -136,6 +137,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   nextReview(): void {
     if (!this.reviews?.items.length) return;
     this.activeReviewSlide = (this.activeReviewSlide + 1) % this.reviews.items.length;
+    this.expandedReview = -1;
     this.startReviewTimer();
   }
 
@@ -143,17 +145,41 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (!this.reviews?.items.length) return;
     this.activeReviewSlide =
       (this.activeReviewSlide - 1 + this.reviews.items.length) % this.reviews.items.length;
+    this.expandedReview = -1;
     this.startReviewTimer();
   }
 
   goToReview(index: number): void {
     this.activeReviewSlide = index;
+    this.expandedReview = -1;
     this.startReviewTimer();
   }
 
   isStarFilled(reviewIndex: number, starIndex: number): boolean {
     const rating = this.reviews?.items[reviewIndex]?.rating || 0;
     return starIndex < Math.round(rating);
+  }
+
+  isLongReview(text: string): boolean {
+    return (text || '').length > 220;
+  }
+
+  isReviewExpanded(index: number): boolean {
+    return this.expandedReview === index;
+  }
+
+  toggleReviewExpand(index: number): void {
+    if (this.expandedReview === index) {
+      this.expandedReview = -1;
+      this.startReviewTimer();
+      return;
+    }
+    this.expandedReview = index;
+    // Pause auto-rotation while the visitor reads the full review.
+    if (this.reviewTimer) {
+      clearInterval(this.reviewTimer);
+      this.reviewTimer = undefined;
+    }
   }
 
   private startReviewTimer(): void {

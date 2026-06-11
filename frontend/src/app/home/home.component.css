@@ -96,12 +96,13 @@
 .feature-row .feature-card.reveal:nth-child(3) { transition-delay: 0.24s; }
 
 .feature-photo {
-  width: 100%;
   height: 160px;
   object-fit: cover;
   border-radius: var(--radius) var(--radius) 0 0;
   margin: -2rem -2rem 1.25rem;
   width: calc(100% + 4rem);
+  /* Override the global `img { max-width: 100% }` so the photo bleeds past card padding */
+  max-width: calc(100% + 4rem);
   transition: transform 0.6s var(--ease);
 }
 
@@ -329,17 +330,21 @@
 }
 
 .reviews-track {
-  position: relative;
-  min-height: 260px;
+  display: grid;
+  align-items: stretch;
 }
 
 .review-card {
-  position: absolute;
-  inset: 0;
+  grid-area: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 260px;
   opacity: 0;
   transform: translateY(18px);
   pointer-events: none;
-  transition: opacity 0.55s var(--ease), transform 0.55s var(--ease);
+  visibility: hidden;
+  transition: opacity 0.55s var(--ease), transform 0.55s var(--ease), visibility 0.55s;
   background: var(--white);
   border-radius: var(--radius-lg);
   padding: 2.25rem 2rem 1.75rem;
@@ -352,6 +357,7 @@
   opacity: 1;
   transform: translateY(0);
   pointer-events: auto;
+  visibility: visible;
 }
 
 .review-card__quote {
@@ -361,6 +367,40 @@
   line-height: 1.55;
   color: var(--walnut);
   font-style: italic;
+  overflow-wrap: break-word;
+}
+
+/* Long reviews: smaller type so the card stays balanced */
+.review-card__quote--long {
+  font-size: clamp(1rem, 1.6vw, 1.15rem);
+  line-height: 1.65;
+}
+
+.review-card__quote--clamped {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+  overflow: hidden;
+}
+
+.review-card__more {
+  align-self: center;
+  margin: -0.75rem 0 1.25rem;
+  padding: 0.15rem 0.35rem;
+  border: none;
+  background: none;
+  color: var(--bronze);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color 0.25s;
+}
+
+.review-card__more:hover {
+  color: var(--walnut);
+  text-decoration: underline;
 }
 
 .review-card__footer {
