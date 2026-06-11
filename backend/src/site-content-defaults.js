@@ -1,4 +1,5 @@
 const { GALLERY_SEED_ITEMS } = require('./gallery-seed');
+const { buildWriteReviewUrl } = require('./google-reviews');
 const { resolveImageRef } = require('./media');
 
 const DEFAULT_SECTIONS = {
@@ -136,6 +137,38 @@ const DEFAULT_SECTIONS = {
       { icon: '☀️', title: 'Solar Powered', desc: 'Proudly powered by clean solar energy, ensuring robust eco-friendly backup and an environmentally conscious event.' },
     ],
   },
+  reviews: {
+    eyebrow: 'Guest Voices',
+    title: 'What Families Say',
+    lead: 'Heartfelt words from families who celebrated their cherished moments at Siri Vruddhi.',
+    placeId: '',
+    writeReviewUrl: '',
+    viewAllUrl: 'https://maps.app.goo.gl/v7SxsyCN2xEzYUH59',
+    writeReviewLabel: 'Rate us on Google',
+    viewAllLabel: 'See all reviews on Google',
+    rating: null,
+    userRatingCount: null,
+    manualItems: [
+      {
+        authorName: 'Priya & Arjun',
+        rating: 5,
+        text: 'Our wedding felt magical from the foyer welcome to the mantapa ceremony. The team made every detail effortless.',
+        relativeTime: '3 months ago',
+      },
+      {
+        authorName: 'Lakshmi R.',
+        rating: 5,
+        text: 'Beautiful venue with serene outdoor spaces. Guests loved the lawn dinner setup and the Radha Krishna photo wall.',
+        relativeTime: '5 months ago',
+      },
+      {
+        authorName: 'Vikram S.',
+        rating: 5,
+        text: 'Hosted our daughter’s naming ceremony here — spacious halls, spotless rooms, and warm hospitality throughout.',
+        relativeTime: '8 months ago',
+      },
+    ],
+  },
   dining: {
     eyebrow: 'Dining & Comfort',
     title: 'Where Every Meal Becomes a Memory',
@@ -226,6 +259,14 @@ function buildPublicPayload(sections, req) {
       })),
     },
     facilities: sections.facilities,
+    reviews: {
+      ...sections.reviews,
+      writeReviewUrl:
+        (sections.reviews?.writeReviewUrl || '').trim() ||
+        buildWriteReviewUrl(
+          (sections.reviews?.placeId || '').trim() || (process.env.GOOGLE_PLACE_ID || '').trim()
+        ),
+    },
     dining: {
       ...sections.dining,
       src: resolveImageRef({ file: sections.dining?.imageFile, url: sections.dining?.imageUrl, mediaId: sections.dining?.mediaId }, req),

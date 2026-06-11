@@ -176,6 +176,45 @@
     </div>
 
     <div class="admin-accordion">
+      <button type="button" class="admin-accordion__head" (click)="toggle('reviews')">Google reviews</button>
+      <div class="admin-accordion__body" *ngIf="openSection === 'reviews'">
+        <div class="admin-tip">
+          <span class="admin-tip__icon">★</span>
+          <p>
+            Live Google reviews load automatically when <code>GOOGLE_PLACES_API_KEY</code> and
+            <code>GOOGLE_PLACE_ID</code> are set on the backend. Manual reviews below are used as a fallback.
+            Visitors rate via Google — the “Rate us” button opens Google’s review form.
+          </p>
+        </div>
+        <div class="admin-form-grid">
+          <label>Eyebrow <input [(ngModel)]="reviews.eyebrow" /></label>
+          <label>Title <input [(ngModel)]="reviews.title" /></label>
+          <label>Lead <textarea [(ngModel)]="reviews.lead"></textarea></label>
+          <label>Google Place ID <input [(ngModel)]="reviews.placeId" placeholder="Optional — overrides server env" /></label>
+          <label>Write review URL <input [(ngModel)]="reviews.writeReviewUrl" placeholder="Auto-generated from Place ID if empty" /></label>
+          <label>View all URL <input [(ngModel)]="reviews.viewAllUrl" placeholder="Google Maps profile link" /></label>
+          <label>Rate button label <input [(ngModel)]="reviews.writeReviewLabel" /></label>
+          <label>View all button label <input [(ngModel)]="reviews.viewAllLabel" /></label>
+        </div>
+        <h3 class="admin-subhead">Fallback reviews (shown when Google API is unavailable)</h3>
+        <div class="admin-list-item" *ngFor="let r of reviews.manualItems; let i = index">
+          <label>Author <input [(ngModel)]="r.authorName" /></label>
+          <label>Rating (1–5) <input type="number" min="1" max="5" [(ngModel)]="r.rating" /></label>
+          <label>Review text <textarea [(ngModel)]="r.text"></textarea></label>
+          <label>Time label <input [(ngModel)]="r.relativeTime" placeholder="e.g. 2 months ago" /></label>
+          <button type="button" class="btn-danger" (click)="removeReview(i)">Remove</button>
+        </div>
+        <div class="admin-actions">
+          <button type="button" class="btn-secondary" (click)="addReview()">Add fallback review</button>
+          <button type="button" class="btn-primary" (click)="save('reviews')" [disabled]="savingSection === 'reviews'">
+            <span class="adm-btn-spinner" *ngIf="savingSection === 'reviews'" aria-hidden="true"></span>
+            {{ savingSection === 'reviews' ? 'Saving…' : 'Save reviews' }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="admin-accordion">
       <button type="button" class="admin-accordion__head" (click)="toggle('dining')">Dining banner</button>
       <div class="admin-accordion__body" *ngIf="openSection === 'dining'">
         <div class="admin-form-grid">

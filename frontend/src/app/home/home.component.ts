@@ -1,5 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { ContactService, InquiryRequest } from '../contact.service';
+import { ReviewsPayload, ReviewsService } from '../reviews.service';
 import { PublicSiteContent, SiteContentService } from '../site-content.service';
 import { SITE_CONTACT } from '../site-contact';
 
@@ -27,11 +29,16 @@ export class HomeComponent implements OnInit, OnDestroy {
   spaces: SpaceCard[] = [];
   introFeatures: { icon: string; title: string; desc: string; image: string }[] = [];
   facilities: { icon: string; title: string; desc: string }[] = [];
+  reviews: ReviewsPayload | null = null;
 
   activeSlide = 0;
+  activeReviewSlide = 0;
   submitting = false;
   teaserPlaying = false;
   private slideTimer?: ReturnType<typeof setInterval>;
+  private reviewTimer?: ReturnType<typeof setInterval>;
+  private contentSub?: Subscription;
+  private reviewsSub?: Subscription;
 
   inquiry: InquiryRequest = {
     name: '',
@@ -45,27 +52,41 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   constructor(
     private contactService: ContactService,
-    private siteContent: SiteContentService
+    private siteContent: SiteContentService,
+    private reviewsService: ReviewsService
   ) {}
 
   ngOnInit(): void {
-    this.siteContent.load().subscribe({
+    this.contentSub = this.siteContent.watch().subscribe({
       next: (content) => {
+        const firstLoad = this.contentLoading;
         this.applyContent(content);
         this.contentLoading = false;
-        this.scheduleRevealObserver();
-      },
-      error: () => {
-        this.contentLoading = false;
-        this.scheduleRevealObserver();
+        if (firstLoad) {
+          this.scheduleRevealObserver();
+        }
       },
     });
     this.slideTimer = setInterval(() => this.nextSlide(), 6000);
+    this.reviewsSub = this.reviewsService.load().subscribe({
+      next: (reviews) => {
+        this.reviews = reviews;
+        if (reviews.items.length) {
+          this.activeReviewSlide = 0;
+          this.startReviewTimer();
+        }
+      },
+    });
   }
 
   ngOnDestroy(): void {
+    this.contentSub?.unsubscribe();
+    this.reviewsSub?.unsubscribe();
     if (this.slideTimer) {
       clearInterval(this.slideTimer);
+    }
+    if (this.reviewTimer) {
+      clearInterval(this.reviewTimer);
     }
   }
 
@@ -110,6 +131,39 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   goToSlide(index: number): void {
     this.activeSlide = index;
+  }
+
+  nextReview(): void {
+    if (!this.reviews?.items.length) return;
+    this.activeReviewSlide = (this.activeReviewSlide + 1) % this.reviews.items.length;
+    this.startReviewTimer();
+  }
+
+  prevReview(): void {
+    if (!this.reviews?.items.length) return;
+    this.activeReviewSlide =
+      (this.activeReviewSlide - 1 + this.reviews.items.length) % this.reviews.items.length;
+    this.startReviewTimer();
+  }
+
+  goToReview(index: number): void {
+    this.activeReviewSlide = index;
+    this.startReviewTimer();
+  }
+
+  isStarFilled(reviewIndex: number, starIndex: number): boolean {
+    const rating = this.reviews?.items[reviewIndex]?.rating || 0;
+    return starIndex < Math.round(rating);
+  }
+
+  private startReviewTimer(): void {
+    if (this.reviewTimer) {
+      clearInterval(this.reviewTimer);
+    }
+    if (!this.reviews?.items.length) return;
+    this.reviewTimer = setInterval(() => {
+      this.activeReviewSlide = (this.activeReviewSlide + 1) % this.reviews!.items.length;
+    }, 7000);
   }
 
   playTeaser(event: Event): void {

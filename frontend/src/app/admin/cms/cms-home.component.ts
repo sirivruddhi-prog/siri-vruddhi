@@ -14,6 +14,7 @@ export class CmsHomeComponent implements OnInit {
   about: any = { paragraphs: [] };
   spaces: any = { items: [] };
   facilities: any = { items: [] };
+  reviews: any = { manualItems: [] };
   dining: any = { tags: [] };
   contactPanel: any = {};
 
@@ -26,7 +27,7 @@ export class CmsHomeComponent implements OnInit {
   constructor(private admin: AdminService) {}
 
   ngOnInit(): void {
-    const sections = ['hero', 'stats', 'teaser', 'intro', 'about', 'spaces', 'facilities', 'dining', 'contactPanel'];
+    const sections = ['hero', 'stats', 'teaser', 'intro', 'about', 'spaces', 'facilities', 'reviews', 'dining', 'contactPanel'];
     let loaded = 0;
     sections.forEach((key) => {
       this.admin.getSiteSection(key).subscribe({
@@ -103,6 +104,14 @@ export class CmsHomeComponent implements OnInit {
 
   removeFacility(index: number): void {
     this.facilities.items.splice(index, 1);
+  }
+
+  addReview(): void {
+    this.reviews.manualItems.push({ authorName: '', rating: 5, text: '', relativeTime: '' });
+  }
+
+  removeReview(index: number): void {
+    this.reviews.manualItems.splice(index, 1);
   }
 
   addDiningTag(): void {

@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { environment } from '../../environments/environment';
+import { resolveApiUrl } from '../api-url';
 
 export type InquiryStatus = 'new' | 'contacted' | 'visit_scheduled' | 'booked' | 'closed';
 
@@ -82,7 +82,7 @@ export interface MediaUploadResponse {
 
 @Injectable()
 export class AdminService {
-  private readonly baseUrl = `${environment.apiUrl}/admin`;
+  private readonly baseUrl = `${resolveApiUrl()}/admin`;
   private readonly httpOptions = { withCredentials: true };
 
   constructor(private http: HttpClient) {}

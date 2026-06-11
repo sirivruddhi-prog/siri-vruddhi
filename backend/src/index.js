@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser');
 const dotenv = require('dotenv');
 const contactRoutes = require('./routes/contact');
 const siteRoutes = require('./routes/site');
+const reviewsRoutes = require('./routes/reviews');
 const mediaRoutes = require('./routes/media');
 const adminRoutes = require('./routes/admin');
 const { ping, dbType } = require('./db');
@@ -24,6 +25,7 @@ app.use(cookieParser());
 app.use(express.json({ limit: '512kb' }));
 app.use('/api', contactRoutes);
 app.use('/api', siteRoutes);
+app.use('/api', reviewsRoutes);
 app.use('/api', mediaRoutes);
 app.use('/api/admin', adminRoutes);
 

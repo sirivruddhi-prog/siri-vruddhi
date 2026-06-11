@@ -162,6 +162,93 @@
   </section>
 
   <section
+    id="reviews"
+    class="reviews-section reveal"
+    *ngIf="reviews && (reviews.items.length || reviews.writeReviewUrl || reviews.viewAllUrl)"
+  >
+    <div class="section-head centered">
+      <span class="section-eyebrow">{{ reviews.eyebrow }}</span>
+      <h2>{{ reviews.title }}</h2>
+      <p class="section-lead" *ngIf="reviews.lead">{{ reviews.lead }}</p>
+      <div class="reviews-summary" *ngIf="reviews.rating">
+        <div class="reviews-stars" aria-hidden="true">
+          <span *ngFor="let star of [0,1,2,3,4]" [class.filled]="star < (reviews.rating || 0)">★</span>
+        </div>
+        <p class="reviews-rating-text">
+          <strong>{{ reviews.rating | number:'1.1-1' }}</strong>
+          <span *ngIf="reviews.userRatingCount"> · {{ reviews.userRatingCount }} Google reviews</span>
+        </p>
+      </div>
+      <div class="reviews-actions">
+        <a
+          *ngIf="reviews.writeReviewUrl"
+          class="btn btn-primary"
+          [href]="reviews.writeReviewUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {{ reviews.writeReviewLabel }}
+        </a>
+        <a
+          *ngIf="reviews.viewAllUrl"
+          class="btn btn-outline"
+          [href]="reviews.viewAllUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {{ reviews.viewAllLabel }}
+        </a>
+      </div>
+    </div>
+
+    <div class="reviews-slider" *ngIf="reviews.items.length">
+      <button type="button" class="reviews-arrow reviews-arrow--prev" aria-label="Previous review" (click)="prevReview()">‹</button>
+
+      <div class="reviews-track">
+        <article
+          class="review-card"
+          *ngFor="let review of reviews.items; let i = index"
+          [class.active]="i === activeReviewSlide"
+          [attr.aria-hidden]="i !== activeReviewSlide"
+        >
+          <div class="review-card__stars" [attr.aria-label]="review.rating + ' out of 5 stars'">
+            <span *ngFor="let star of [0,1,2,3,4]" [class.filled]="isStarFilled(i, star)">★</span>
+          </div>
+          <blockquote class="review-card__quote">“{{ review.text }}”</blockquote>
+          <footer class="review-card__footer">
+            <img
+              *ngIf="review.authorPhotoUrl"
+              class="review-card__avatar"
+              [src]="review.authorPhotoUrl"
+              [alt]="review.authorName"
+              loading="lazy"
+              referrerpolicy="no-referrer"
+            />
+            <div class="review-card__meta">
+              <cite class="review-card__author">{{ review.authorName }}</cite>
+              <span class="review-card__time" *ngIf="review.relativeTime">{{ review.relativeTime }}</span>
+              <span class="review-card__source" *ngIf="review.source === 'google'">on Google</span>
+            </div>
+          </footer>
+        </article>
+      </div>
+
+      <button type="button" class="reviews-arrow reviews-arrow--next" aria-label="Next review" (click)="nextReview()">›</button>
+    </div>
+
+    <div class="reviews-dots" *ngIf="reviews.items.length > 1" role="tablist" aria-label="Review slides">
+      <button
+        *ngFor="let review of reviews.items; let i = index"
+        type="button"
+        class="reviews-dot"
+        [class.active]="i === activeReviewSlide"
+        [attr.aria-label]="'Review ' + (i + 1)"
+        (click)="goToReview(i)"
+      ></button>
+    </div>
+  </section>
+
+  <section
     id="dining"
     class="dining-banner reveal"
     [style.--dining-bg]="'url(' + diningBannerImage + ')'"

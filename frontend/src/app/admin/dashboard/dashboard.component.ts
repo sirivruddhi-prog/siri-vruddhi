@@ -103,6 +103,7 @@ export class DashboardComponent implements OnInit {
       about: 'About section',
       spaces: 'Spaces grid',
       facilities: 'Facilities',
+      reviews: 'Google reviews',
       dining: 'Dining banner',
       contactPanel: 'Contact form',
       gallery: 'Gallery',

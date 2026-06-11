@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { environment } from '../environments/environment';
+import { resolveApiUrl } from './api-url';
 import { Observable } from 'rxjs';
 
 export interface InquiryRequest {
@@ -18,7 +18,7 @@ export interface InquiryResponse {
 
 @Injectable({ providedIn: 'root' })
 export class ContactService {
-  private apiUrl = environment.apiUrl;
+  private readonly apiUrl = resolveApiUrl();
 
   constructor(private http: HttpClient) {}
 

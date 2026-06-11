@@ -1,4 +1,5 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { PublicSiteContent, SiteContentService } from '../site-content.service';
 import { GalleryItem } from '../venue-images';
 
@@ -7,7 +8,7 @@ import { GalleryItem } from '../venue-images';
   templateUrl: './gallery.component.html',
   styleUrls: ['./gallery.component.css']
 })
-export class GalleryComponent implements OnInit {
+export class GalleryComponent implements OnInit, OnDestroy {
   contentLoading = true;
   content: PublicSiteContent | null = null;
   pageHeroImage = '';
@@ -16,24 +17,28 @@ export class GalleryComponent implements OnInit {
   filteredItems: GalleryItem[] = [];
   lightboxOpen = false;
   lightboxIndex = 0;
+  private contentSub?: Subscription;
 
   constructor(private siteContent: SiteContentService) {}
 
   ngOnInit(): void {
-    this.siteContent.load().subscribe({
+    this.contentSub = this.siteContent.watch().subscribe({
       next: (content) => {
+        const firstLoad = this.contentLoading;
         this.content = content;
         this.pageHeroImage = content.gallery.pageHeroSrc || this.siteContent.img(content.gallery.pageHeroFile || '');
         this.categories = ['All', ...content.gallery.categories];
         this.filterCategory('All');
         this.contentLoading = false;
-        this.scheduleRevealObserver();
-      },
-      error: () => {
-        this.contentLoading = false;
-        this.scheduleRevealObserver();
+        if (firstLoad) {
+          this.scheduleRevealObserver();
+        }
       },
     });
+  }
+
+  ngOnDestroy(): void {
+    this.contentSub?.unsubscribe();
   }
 
   filterCategory(category: string): void {
