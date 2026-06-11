@@ -250,3 +250,8 @@ node scripts/test-db.js
 | `RESEND_API_KEY` | from [resend.com](https://resend.com) |
 | `RESEND_FROM` | `Siri Vruddhi <onboarding@resend.dev>` |
 | `NOTIFY_EMAIL` | `sirivruddhi@gmail.com` |
+| `ADMIN_PASSWORD` | Same value as `backend/.env` (Render → Environment) |
+| `ADMIN_JWT_SECRET` | Same value as `backend/.env` (Render → Environment) |
+| `ADMIN_EMAIL` | `sirivruddhi@gmail.com` |
+
+**Admin module:** Import `backend/schema-migration-admin.sql` in phpMyAdmin, add the three `ADMIN_*` vars on Render, rebuild frontend, upload to Hostinger, then open `https://sirivruddhi.com/admin`.

@@ -1,0 +1,69 @@
+<section class="inquiry-list">
+  <div class="inquiry-list__toolbar">
+    <div class="inquiry-list__stats">
+      <span class="stat-pill stat-pill--new">New: {{ counts.new }}</span>
+      <span class="stat-pill">This week: {{ counts.thisWeek }}</span>
+      <span class="stat-pill stat-pill--muted">{{ total }} total</span>
+    </div>
+    <button type="button" class="btn-secondary" (click)="exportCsv()" [disabled]="exporting">
+      {{ exporting ? 'Exporting…' : 'Export CSV' }}
+    </button>
+  </div>
+
+  <div class="inquiry-list__filters">
+    <label>
+      Status
+      <select [(ngModel)]="statusFilter" (change)="applyFilters()">
+        <option *ngFor="let item of statuses" [value]="item.value">{{ item.label }}</option>
+      </select>
+    </label>
+
+    <label>
+      Event type
+      <select [(ngModel)]="eventTypeFilter" (change)="applyFilters()">
+        <option value="">All events</option>
+        <option *ngFor="let type of eventTypes" [value]="type">{{ type }}</option>
+      </select>
+    </label>
+
+    <label class="inquiry-list__search">
+      Search
+      <input
+        type="search"
+        [(ngModel)]="search"
+        placeholder="Name, phone, email…"
+        (keyup.enter)="applyFilters()"
+      />
+    </label>
+
+    <button type="button" class="btn-primary" (click)="applyFilters()">Apply</button>
+  </div>
+
+  <p class="inquiry-list__error" *ngIf="error">{{ error }}</p>
+  <p class="inquiry-list__loading" *ngIf="loading">Loading inquiries…</p>
+
+  <div class="inquiry-table" *ngIf="!loading">
+    <div class="inquiry-table__head">
+      <span>Status</span>
+      <span>Name</span>
+      <span>Event</span>
+      <span>Phone</span>
+      <span>Submitted</span>
+    </div>
+
+    <button
+      type="button"
+      class="inquiry-row"
+      *ngFor="let inquiry of inquiries"
+      (click)="openInquiry(inquiry.id)"
+    >
+      <span class="status-badge" [attr.data-status]="inquiry.status">{{ statusLabel(inquiry.status) }}</span>
+      <span>{{ inquiry.name }}</span>
+      <span>{{ inquiry.eventType }}</span>
+      <span>{{ inquiry.phone }}</span>
+      <span>{{ formatDate(inquiry.createdAt) }}</span>
+    </button>
+
+    <p class="inquiry-list__empty" *ngIf="!inquiries.length">No inquiries match your filters.</p>
+  </div>
+</section>

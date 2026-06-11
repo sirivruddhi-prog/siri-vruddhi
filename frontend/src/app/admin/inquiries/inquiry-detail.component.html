@@ -1,0 +1,58 @@
+<section class="inquiry-detail" *ngIf="!loading && inquiry as item">
+  <button type="button" class="inquiry-detail__back" (click)="goBack()">← Back to inbox</button>
+
+  <header class="inquiry-detail__header">
+    <div>
+      <h1>{{ item.name }}</h1>
+      <p>{{ item.eventType }} · submitted {{ formatDate(item.createdAt) }}</p>
+    </div>
+    <span class="status-badge" [attr.data-status]="item.status">{{ item.status }}</span>
+  </header>
+
+  <div class="inquiry-detail__actions">
+    <a class="action-link" [href]="phoneHref(item.phone)">Call</a>
+    <a class="action-link" [href]="whatsappHref(item.phone)" target="_blank" rel="noopener">WhatsApp</a>
+    <a class="action-link" [href]="emailHref(item.email)">Email</a>
+  </div>
+
+  <div class="inquiry-detail__grid">
+    <article class="detail-card">
+      <h2>Contact details</h2>
+      <dl>
+        <div><dt>Name</dt><dd>{{ item.name }}</dd></div>
+        <div><dt>Phone</dt><dd>{{ item.phone }}</dd></div>
+        <div><dt>Email</dt><dd>{{ item.email }}</dd></div>
+        <div><dt>Event type</dt><dd>{{ item.eventType }}</dd></div>
+        <div><dt>Message</dt><dd>{{ item.message || '—' }}</dd></div>
+        <div><dt>Last updated</dt><dd>{{ formatDate(item.updatedAt) }}</dd></div>
+      </dl>
+    </article>
+
+    <article class="detail-card">
+      <h2>Follow-up</h2>
+
+      <label for="inquiry-status">Status</label>
+      <select id="inquiry-status" [(ngModel)]="selectedStatus">
+        <option *ngFor="let status of statuses" [value]="status.value">{{ status.label }}</option>
+      </select>
+
+      <label for="admin-notes">Internal notes</label>
+      <textarea
+        id="admin-notes"
+        rows="6"
+        [(ngModel)]="adminNotes"
+        placeholder="Called 10 Jun, visit scheduled Sunday…"
+      ></textarea>
+
+      <p class="inquiry-detail__error" *ngIf="error">{{ error }}</p>
+      <p class="inquiry-detail__saved" *ngIf="saveMessage">{{ saveMessage }}</p>
+
+      <button type="button" class="btn-primary" (click)="save()" [disabled]="saving">
+        {{ saving ? 'Saving…' : 'Save changes' }}
+      </button>
+    </article>
+  </div>
+</section>
+
+<p class="inquiry-detail__loading" *ngIf="loading">Loading inquiry…</p>
+<p class="inquiry-detail__error" *ngIf="!loading && error && !inquiry">{{ error }}</p>

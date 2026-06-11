@@ -6,6 +6,10 @@ import { GalleryComponent } from './gallery/gallery.component';
 const routes: Routes = [
   { path: '', component: HomeComponent, title: 'Siri Vruddhi — Event Venue' },
   { path: 'gallery', component: GalleryComponent, title: 'Gallery — Siri Vruddhi' },
+  {
+    path: 'admin',
+    loadChildren: () => import('./admin/admin.module').then((m) => m.AdminModule),
+  },
   { path: '**', redirectTo: '' }
 ];
 

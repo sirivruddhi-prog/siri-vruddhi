@@ -1,0 +1,25 @@
+<div class="admin-login">
+  <div class="admin-login__card">
+    <p class="admin-login__brand">Siri Vruddhi</p>
+    <h1>Admin sign in</h1>
+    <p class="admin-login__hint">Venue inquiries only — no public signup.</p>
+
+    <form (ngSubmit)="submit()">
+      <label for="admin-password">Password</label>
+      <input
+        id="admin-password"
+        type="password"
+        name="password"
+        [(ngModel)]="password"
+        autocomplete="current-password"
+        required
+      />
+
+      <p class="admin-login__error" *ngIf="error">{{ error }}</p>
+
+      <button type="submit" [disabled]="loading || !password">
+        {{ loading ? 'Signing in…' : 'Sign in' }}
+      </button>
+    </form>
+  </div>
+</div>

@@ -17,7 +17,7 @@ services:
       - key: DB_TYPE
         value: mysql
       - key: CORS_ORIGINS
-        value: https://sirivruddhi.com,https://www.sirivruddhi.com
+        value: https://sirivruddhi.com,https://www.sirivruddhi.com,http://localhost:4200
       - key: DB_PORT
         value: "3306"
       - key: DB_SSL
@@ -36,3 +36,9 @@ services:
         value: Siri Vruddhi <onboarding@resend.dev>
       - key: RESEND_API_KEY
         sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: ADMIN_JWT_SECRET
+        sync: false
+      - key: ADMIN_EMAIL
+        value: sirivruddhi@gmail.com

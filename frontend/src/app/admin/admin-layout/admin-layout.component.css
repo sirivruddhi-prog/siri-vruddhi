@@ -1,0 +1,50 @@
+.admin-shell {
+  min-height: 100vh;
+  background: var(--stone);
+}
+
+.admin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  background: var(--walnut);
+  color: var(--white);
+}
+
+.admin-header__brand {
+  font-family: var(--font-brand);
+  font-size: 1.35rem;
+}
+
+.admin-header__email {
+  font-size: 0.85rem;
+  opacity: 0.85;
+}
+
+.admin-header__logout {
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: transparent;
+  color: inherit;
+  border-radius: 999px;
+  padding: 0.45rem 1rem;
+  font: inherit;
+  cursor: pointer;
+}
+
+.admin-header__logout:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.admin-main {
+  padding: 1.25rem 1.5rem 2rem;
+}
+
+@media (max-width: 640px) {
+  .admin-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

@@ -8,5 +8,8 @@ CREATE TABLE IF NOT EXISTS inquiries (
   phone VARCHAR(32) NOT NULL,
   event_type VARCHAR(128) NOT NULL,
   message TEXT,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  status ENUM('new','contacted','visit_scheduled','booked','closed') NOT NULL DEFAULT 'new',
+  admin_notes TEXT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP
 );

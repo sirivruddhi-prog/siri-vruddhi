@@ -1,0 +1,15 @@
+<div class="admin-shell">
+  <header class="admin-header">
+    <div>
+      <p class="admin-header__brand">Siri Vruddhi Admin</p>
+      <p class="admin-header__email">{{ email }}</p>
+    </div>
+    <button type="button" class="admin-header__logout" (click)="logout()" [disabled]="loggingOut">
+      {{ loggingOut ? 'Signing out…' : 'Logout' }}
+    </button>
+  </header>
+
+  <main class="admin-main">
+    <router-outlet></router-outlet>
+  </main>
+</div>

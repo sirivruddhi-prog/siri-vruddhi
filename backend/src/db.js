@@ -70,7 +70,10 @@ async function execute(query, params) {
       phone,
       event_type: eventType,
       message,
+      status: 'new',
+      admin_notes: null,
       created_at: new Date().toISOString(),
+      updated_at: null,
     };
 
     localDb.inquiries.push(inquiry);
@@ -98,4 +101,5 @@ module.exports = {
   execute,
   ping,
   dbType,
+  mysqlPool,
 };
