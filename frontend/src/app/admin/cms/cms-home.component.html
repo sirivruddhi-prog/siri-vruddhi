@@ -22,6 +22,14 @@
           <label>Eyebrow <input [(ngModel)]="hero.eyebrow" /></label>
           <label>Welcome line <input [(ngModel)]="hero.welcome" /></label>
           <label>Tagline <textarea [(ngModel)]="hero.tagline"></textarea></label>
+          <label>Rotating taglines <span class="optional">(one per line — cycles on homepage)</span>
+            <textarea
+              rows="4"
+              [ngModel]="heroTaglinesText"
+              (ngModelChange)="onHeroTaglinesChange($event)"
+              placeholder="Optional extra taglines, one per line"
+            ></textarea>
+          </label>
         </div>
         <div class="admin-list-item admin-list-item--fields-2" *ngFor="let slide of hero.slides; let i = index">
           <app-media-upload label="Upload slide image" [previewUrl]="slide.url || ''" (uploaded)="applySlideUpload($event, slide)"></app-media-upload>

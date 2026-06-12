@@ -17,6 +17,11 @@ const DEFAULT_SECTIONS = {
     welcome: 'Welcome to',
     tagline:
       'A sacred, elegant destination where weddings, engagements, upanayanam, naming ceremonies, and treasured celebrations come alive in timeless beauty.',
+    taglines: [
+      'A sacred, elegant destination where weddings, engagements, upanayanam, naming ceremonies, and treasured celebrations come alive in timeless beauty.',
+      'Where every wedding, engagement, and cherished ceremony unfolds in timeless elegance.',
+      'Nelamangala\'s serene estate for weddings, rituals, and celebrations that feel truly sacred.',
+    ],
     slides: [
       { file: 'hero-1.jpg', alt: 'Indoor ceremony with guests at Siri Vruddhi' },
       { file: 'Siri Vruddhi Entrance.JPG', alt: 'Main entrance to Siri Vruddhi venue' },

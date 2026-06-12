@@ -1,4 +1,9 @@
-<app-page-loader *ngIf="contentLoading" message="Loading gallery…"></app-page-loader>
+<div class="page-skeleton page-skeleton--gallery" *ngIf="contentLoading" aria-busy="true" aria-label="Loading gallery">
+  <div class="page-skeleton__hero"></div>
+  <div class="page-skeleton__cards">
+    <span></span><span></span><span></span><span></span><span></span><span></span>
+  </div>
+</div>
 
 <ng-container *ngIf="!contentLoading">
 <div class="page-hero gallery-page-hero reveal">
@@ -24,7 +29,7 @@
     </button>
   </div>
 
-  <div class="gallery-grid" *ngIf="filteredItems.length; else emptyGallery">
+  <div class="gallery-grid" [@galleryGrid]="galleryKey" *ngIf="filteredItems.length; else emptyGallery">
     <button
       type="button"
       class="gallery-item"

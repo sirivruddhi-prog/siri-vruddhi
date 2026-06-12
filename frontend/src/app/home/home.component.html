@@ -1,7 +1,21 @@
-<app-page-loader *ngIf="contentLoading" message="Loading venue content…"></app-page-loader>
+<div class="page-skeleton" *ngIf="contentLoading" aria-busy="true" aria-label="Loading venue content">
+  <div class="page-skeleton__hero"></div>
+  <div class="page-skeleton__stats">
+    <span></span><span></span><span></span><span></span>
+  </div>
+  <div class="page-skeleton__block"></div>
+  <div class="page-skeleton__cards">
+    <span></span><span></span><span></span>
+  </div>
+</div>
 
 <ng-container *ngIf="!contentLoading">
-<section class="hero-banner" aria-label="Venue showcase">
+<section
+  class="hero-banner"
+  aria-label="Venue showcase"
+  [style.--hero-tilt-x]="heroTiltX + 'px'"
+  [style.--hero-tilt-y]="heroTiltY + 'px'"
+>
   <div class="hero-slides">
     <div
       *ngFor="let slide of heroSlides; let i = index"
@@ -18,7 +32,7 @@
     <span class="hero-eyebrow">{{ content?.hero.eyebrow }}</span>
     <p class="hero-welcome">{{ content?.hero.welcome }}</p>
     <h1 class="brand-title">Siri Vruddhi</h1>
-    <p class="hero-tagline">{{ content?.hero.tagline }}</p>
+    <p class="hero-tagline" [class.hero-tagline--fade]="taglineFading">{{ activeTagline }}</p>
     <div class="cta">
       <a class="btn btn-primary" routerLink="/" fragment="contact">Plan Your Event</a>
       <a class="btn btn-ghost" routerLink="/" fragment="spaces">Explore Spaces</a>
@@ -49,14 +63,14 @@
 
 <section id="stats" class="stats-bar reveal stats-animate">
   <div class="stats-inner">
-    <div class="stat" *ngFor="let s of stats; let i = index" [style.--stat-delay]="i * 0.12 + 's'">
-      <span class="stat-value">{{ s.value }}</span>
+    <div class="stat" *ngFor="let s of animatedStats; let i = index" [style.--stat-delay]="i * 0.12 + 's'">
+      <span class="stat-value">{{ s.display }}</span>
       <span class="stat-label">{{ s.label }}</span>
     </div>
   </div>
 </section>
 
-<section class="teaser-video-section reveal" id="teaser">
+<section class="teaser-video-section reveal" id="teaser" [class.teaser-in-view]="teaserInView">
   <div class="teaser-inner">
     <div class="section-head centered">
       <span class="section-eyebrow">{{ content?.teaser.eyebrow }}</span>
@@ -109,8 +123,8 @@
     </div>
   </section>
 
-  <section id="about" class="about-split reveal">
-    <div class="about-visual">
+  <section id="about" class="about-split reveal" data-parallax-section>
+    <div class="about-visual parallax-visual">
       <div class="about-frame">
         <img [src]="aboutImage" alt="Siri Vruddhi exterior view" loading="lazy" />
       </div>
@@ -134,7 +148,17 @@
       <p class="section-lead">{{ content?.spaces.lead }}</p>
     </div>
     <div class="spaces-grid">
-      <article class="space-card" *ngFor="let space of spaces; let i = index" [style.--delay]="i * 0.1 + 's'">
+      <article
+        class="space-card"
+        *ngFor="let space of spaces; let i = index"
+        [class.expanded]="expandedSpace === i"
+        [style.--delay]="i * 0.1 + 's'"
+        (click)="toggleSpace(i)"
+        (keydown.enter)="toggleSpace(i)"
+        tabindex="0"
+        role="button"
+        [attr.aria-expanded]="expandedSpace === i"
+      >
         <div class="space-card-image" *ngIf="space.image">
           <img [src]="space.image" [alt]="space.title" loading="lazy" />
         </div>
@@ -142,6 +166,7 @@
         <h3>{{ space.title }}</h3>
         <p>{{ space.desc }}</p>
         <span class="space-detail">{{ space.detail }}</span>
+        <span class="space-card-hint">{{ expandedSpace === i ? 'Show less' : 'Tap for details' }}</span>
       </article>
     </div>
   </section>
@@ -170,6 +195,24 @@
       <span class="section-eyebrow">{{ reviews.eyebrow }}</span>
       <h2>{{ reviews.title }}</h2>
       <p class="section-lead" *ngIf="reviews.lead">{{ reviews.lead }}</p>
+      <div class="reviews-avatar-stack" *ngIf="reviewAvatars.length">
+        <ng-container *ngFor="let avatar of reviewAvatars; let i = index">
+          <img
+            *ngIf="avatar.photo"
+            class="reviews-avatar-stack__img"
+            [src]="avatar.photo"
+            [alt]="avatar.name"
+            [style.--stack-index]="i"
+            loading="lazy"
+            referrerpolicy="no-referrer"
+          />
+          <span
+            *ngIf="!avatar.photo"
+            class="reviews-avatar-stack__fallback"
+            [style.--stack-index]="i"
+          >{{ avatar.name.charAt(0) }}</span>
+        </ng-container>
+      </div>
       <div class="reviews-summary" *ngIf="reviews.rating">
         <div class="reviews-stars" aria-hidden="true">
           <span *ngFor="let star of [0,1,2,3,4]" [class.filled]="star < (reviews.rating || 0)">★</span>
@@ -264,6 +307,7 @@
     id="dining"
     class="dining-banner reveal"
     [style.--dining-bg]="'url(' + diningBannerImage + ')'"
+    [style.--dining-parallax]="diningParallax + 'px'"
   >
     <div class="dining-content">
       <span class="section-eyebrow light">{{ content?.dining.eyebrow }}</span>
@@ -296,21 +340,24 @@
       </div>
     </div>
 
-    <form class="contact-form" (ngSubmit)="submitInquiry()">
+    <form class="contact-form" [class.form-shake]="formShake" [class.form-success]="formSuccess" (ngSubmit)="submitInquiry()">
       <div class="form-row">
-        <div class="form-field">
+        <div class="form-field" [ngClass]="fieldClass('name')">
           <label for="name">Your Name</label>
-          <input id="name" name="name" [(ngModel)]="inquiry.name" required placeholder="Full name" />
+          <input id="name" name="name" [(ngModel)]="inquiry.name" required placeholder="Full name" (blur)="touchField('name')" />
+          <span class="field-check" *ngIf="touched.name && isFieldValid('name')" aria-hidden="true">✓</span>
         </div>
-        <div class="form-field">
+        <div class="form-field" [ngClass]="fieldClass('email')">
           <label for="email">Email</label>
-          <input id="email" name="email" type="email" [(ngModel)]="inquiry.email" required placeholder="you@email.com" />
+          <input id="email" name="email" type="email" [(ngModel)]="inquiry.email" required placeholder="you@email.com" (blur)="touchField('email')" />
+          <span class="field-check" *ngIf="touched.email && isFieldValid('email')" aria-hidden="true">✓</span>
         </div>
       </div>
       <div class="form-row">
-        <div class="form-field">
+        <div class="form-field" [ngClass]="fieldClass('phone')">
           <label for="phone">Phone</label>
-          <input id="phone" name="phone" [(ngModel)]="inquiry.phone" required placeholder="+91 XXXXX XXXXX" />
+          <input id="phone" name="phone" [(ngModel)]="inquiry.phone" required placeholder="+91 XXXXX XXXXX" (blur)="touchField('phone')" />
+          <span class="field-check" *ngIf="touched.phone && isFieldValid('phone')" aria-hidden="true">✓</span>
         </div>
         <div class="form-field">
           <label for="eventType">Event Type</label>
@@ -333,7 +380,10 @@
         <span class="btn-spinner" *ngIf="submitting" aria-hidden="true"></span>
         {{ submitting ? 'Sending…' : 'Send Inquiry' }}
       </button>
-      <div *ngIf="statusMessage" class="notice" [class.error]="statusError">{{ statusMessage }}</div>
+      <div *ngIf="statusMessage" class="notice" [class.error]="statusError" [class.notice--success]="formSuccess">
+        <span class="notice__icon" *ngIf="formSuccess" aria-hidden="true">✓</span>
+        {{ statusMessage }}
+      </div>
     </form>
   </section>
 </main>

@@ -8,6 +8,7 @@ import { AdminService, MediaUploadResponse } from '../admin.service';
 })
 export class CmsHomeComponent implements OnInit {
   hero: any = {};
+  heroTaglinesText = '';
   stats: any = { items: [] };
   teaser: any = {};
   intro: any = { features: [] };
@@ -33,6 +34,10 @@ export class CmsHomeComponent implements OnInit {
       this.admin.getSiteSection(key).subscribe({
         next: (res) => {
           (this as any)[key === 'contactPanel' ? 'contactPanel' : key] = res.content;
+          if (key === 'hero') {
+            const heroContent = res.content as { taglines?: string[] };
+            this.heroTaglinesText = (heroContent.taglines || []).join('\n');
+          }
           loaded += 1;
           if (loaded === sections.length) this.loading = false;
         },
@@ -48,11 +53,22 @@ export class CmsHomeComponent implements OnInit {
     this.openSection = this.openSection === section ? '' : section;
   }
 
+  onHeroTaglinesChange(value: string): void {
+    this.heroTaglinesText = value;
+    this.hero.taglines = value
+      .split('\n')
+      .map((line: string) => line.trim())
+      .filter(Boolean);
+  }
+
   save(section: string): void {
     if (this.savingSection) return;
     this.savingSection = section;
     this.message = '';
     this.error = '';
+    if (section === 'hero') {
+      this.onHeroTaglinesChange(this.heroTaglinesText);
+    }
     const content = (this as any)[section];
     this.admin.saveSiteSection(section, content).subscribe({
       next: () => {

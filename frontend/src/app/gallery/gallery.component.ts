@@ -1,4 +1,5 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { animate, query, stagger, style, transition, trigger } from '@angular/animations';
 import { Subscription } from 'rxjs';
 import { PublicSiteContent, SiteContentService } from '../site-content.service';
 import { GalleryItem } from '../venue-images';
@@ -6,7 +7,19 @@ import { GalleryItem } from '../venue-images';
 @Component({
   selector: 'app-gallery',
   templateUrl: './gallery.component.html',
-  styleUrls: ['./gallery.component.css']
+  styleUrls: ['./gallery.component.css'],
+  animations: [
+    trigger('galleryGrid', [
+      transition('* => *', [
+        query(':enter', [
+          style({ opacity: 0, transform: 'scale(0.96) translateY(12px)' }),
+          stagger(35, [
+            animate('320ms cubic-bezier(0.22, 1, 0.36, 1)', style({ opacity: 1, transform: 'scale(1) translateY(0)' })),
+          ]),
+        ], { optional: true }),
+      ]),
+    ]),
+  ],
 })
 export class GalleryComponent implements OnInit, OnDestroy {
   contentLoading = true;
@@ -14,6 +27,7 @@ export class GalleryComponent implements OnInit, OnDestroy {
   pageHeroImage = '';
   categories = ['All'];
   activeCategory = 'All';
+  galleryKey = 0;
   filteredItems: GalleryItem[] = [];
   lightboxOpen = false;
   lightboxIndex = 0;
@@ -51,6 +65,7 @@ export class GalleryComponent implements OnInit, OnDestroy {
     }));
     this.filteredItems =
       category === 'All' ? items : items.filter((item) => item.category === category);
+    this.galleryKey += 1;
   }
 
   openLightbox(index: number): void {

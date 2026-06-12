@@ -1,1 +1,151 @@
-/* Component-scoped overrides — global styles in styles.css */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  z-index: 1200;
+  pointer-events: none;
+  background: rgba(154, 123, 79, 0.12);
+}
+
+.scroll-progress::after {
+  content: '';
+  display: block;
+  height: 100%;
+  width: calc(var(--progress, 0) * 100%);
+  background: linear-gradient(90deg, var(--bronze), var(--bronze-light));
+  transition: width 0.12s linear;
+}
+
+.journey-rail {
+  position: fixed;
+  right: 1.25rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 900;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.journey-rail__dot {
+  position: relative;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  border: none;
+  padding: 0;
+  background: rgba(154, 123, 79, 0.28);
+  cursor: pointer;
+  transition: transform 0.25s var(--ease), background 0.25s;
+}
+
+.journey-rail__dot.active {
+  background: var(--bronze);
+  transform: scale(1.35);
+}
+
+.journey-rail__label {
+  position: absolute;
+  right: 1.1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--walnut);
+  background: rgba(255, 255, 255, 0.92);
+  padding: 0.25rem 0.55rem;
+  border-radius: 999px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+  box-shadow: var(--shadow);
+}
+
+.journey-rail__dot:hover .journey-rail__label,
+.journey-rail__dot.active .journey-rail__label {
+  opacity: 1;
+}
+
+.route-shell {
+  min-height: 50vh;
+}
+
+.sticky-cta {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 950;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.5rem;
+  padding: 0.65rem 0.85rem calc(0.65rem + env(safe-area-inset-bottom));
+  background: rgba(250, 247, 242, 0.96);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(154, 123, 79, 0.15);
+  transform: translateY(110%);
+  transition: transform 0.35s var(--ease);
+}
+
+.sticky-cta.visible {
+  transform: translateY(0);
+}
+
+.sticky-cta .btn {
+  padding: 0.75rem 1rem;
+  font-size: 0.78rem;
+}
+
+.sticky-cta__call {
+  min-width: 5.5rem;
+}
+
+.back-to-top {
+  position: fixed;
+  right: 1.25rem;
+  bottom: 5.5rem;
+  z-index: 940;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  border: 1px solid rgba(154, 123, 79, 0.25);
+  background: var(--white);
+  color: var(--walnut);
+  font-size: 1.1rem;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(12px);
+  transition: opacity 0.3s, transform 0.3s, visibility 0.3s;
+}
+
+.back-to-top.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.back-to-top:hover {
+  background: var(--accent-soft);
+}
+
+@media (max-width: 1100px) {
+  .journey-rail {
+    display: none;
+  }
+}
+
+@media (min-width: 769px) {
+  .sticky-cta {
+    display: none;
+  }
+
+  .back-to-top {
+    bottom: 1.5rem;
+  }
+}

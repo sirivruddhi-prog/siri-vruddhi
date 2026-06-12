@@ -1,5 +1,18 @@
 /* ─── Hero wow effects ─── */
 
+.hero-slides {
+  transform: translate3d(var(--hero-tilt-x, 0), var(--hero-tilt-y, 0), 0);
+  transition: transform 0.35s var(--ease);
+}
+
+.hero-tagline {
+  transition: opacity 0.4s var(--ease);
+}
+
+.hero-tagline--fade {
+  opacity: 0;
+}
+
 .hero-glow {
   position: absolute;
   inset: 0;
@@ -563,6 +576,74 @@
 
 @media (max-width: 576px) {
   .facilities-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Teaser cinematic entry */
+.teaser-video-frame {
+  transition: transform 0.6s var(--ease), box-shadow 0.6s;
+}
+
+.teaser-in-view .teaser-video-frame {
+  transform: translateY(0) scale(1);
+  box-shadow: var(--shadow-lg);
+}
+
+.teaser-in-view .teaser-play-btn {
+  animation: teaserPlayPulse 2s ease-in-out 0.5s 2;
+}
+
+@keyframes teaserPlayPulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(154, 123, 79, 0.35); }
+  50% { transform: scale(1.06); box-shadow: 0 0 0 12px rgba(154, 123, 79, 0); }
+}
+
+.parallax-visual {
+  transition: transform 0.2s linear;
+}
+
+.about-split.is-visible .parallax-visual {
+  transform: translateY(-4px);
+}
+
+/* Reviews avatar stack */
+.reviews-avatar-stack {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.75rem;
+  padding-left: 0.5rem;
+}
+
+.reviews-avatar-stack__img,
+.reviews-avatar-stack__fallback {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  border: 2px solid var(--white);
+  margin-left: calc(var(--stack-index, 0) * -0.55rem);
+  object-fit: cover;
+  box-shadow: var(--shadow);
+}
+
+.reviews-avatar-stack__fallback {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bronze);
+  color: var(--stone);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+@media (max-width: 768px) {
+  .page-skeleton__stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .page-skeleton__cards {
     grid-template-columns: 1fr;
   }
 }

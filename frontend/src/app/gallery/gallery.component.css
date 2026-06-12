@@ -31,6 +31,31 @@
   transition: all 0.3s var(--ease);
 }
 
+.gallery-filters {
+  position: relative;
+}
+
+.filter-btn {
+  position: relative;
+}
+
+.filter-btn.active::after {
+  content: '';
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  bottom: 0.2rem;
+  height: 2px;
+  background: var(--bronze);
+  border-radius: 2px;
+  animation: filterUnderline 0.3s var(--ease);
+}
+
+@keyframes filterUnderline {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
 .filter-btn:hover,
 .filter-btn.active {
   background: var(--walnut);

@@ -13,6 +13,7 @@ export interface PublicSiteContent {
     eyebrow: string;
     welcome: string;
     tagline: string;
+    taglines?: string[];
     slides: { file?: string; alt: string; src?: string; url?: string; mediaId?: number }[];
   };
   stats: { items: { value: string; label: string }[] };
